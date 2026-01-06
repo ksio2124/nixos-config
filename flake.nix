@@ -23,26 +23,25 @@
       nixosConfigurations = {
         xieshi =
           let
-            username = "jack";
             system = "x86_64-linux";
-            specialArgs = { inherit username system; };
+            specialArgs = { inherit system; };
           in
           nixpkgs.lib.nixosSystem {
             modules = [
               nur.modules.nixos.default
-              # nur.legacyPackages."${system}".repos.iopq.modules.xraya
-              ./nixos/configuration.nix
-              # home-manager.nixosModules.home-manager
-              # {
-              #   home-manager.extraSpecialArgs = { inherit nur; };
-              #   # extraSpecialArgs = {inherit inputs; };
-              #   # home-manager.nixpkgs.overlays = [ nur.overlays.default ];
-              #   #  nixpkgs.overlays = [ (final: prev:  nur.overlays.default) ];
-              #   home-manager.useUserPackages = true;
-              #   home-manager.users.${username} = ./users/${username}/home.nix;
-              # }
+              ./hosts/xieshi/configuration.nix
             ];
           };
+        themis = 
+          let 
+            system = "x86_64-linux";
+            specialArgs = { inherit system; };
+          in 
+          nixpkgs.lib.nixosSystem {
+            modules = [
+              nur.modules.nixos.default
+              ./hosts/themis/configuration.nix
+            ];
       };
       homeConfigurations."jack" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
