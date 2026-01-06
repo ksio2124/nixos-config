@@ -29,7 +29,7 @@
     pkgs.protonup-ng
     pkgs.lutris
     pkgs.bottles
-    # pkgs.heroic
+    pkgs.heroic
     # unstable.stremio
     pkgs.calibre
     pkgs.unciv

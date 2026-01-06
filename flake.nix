@@ -21,7 +21,7 @@
     }:
     {
       nixosConfigurations = {
-        nixos =
+        xieshi =
           let
             username = "jack";
             system = "x86_64-linux";

@@ -21,7 +21,12 @@ in
   boot.kernelParams = [ "i915.enable_guc=2" ];
   hardware.enableAllFirmware = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  swapDevices =[{
+    device = "/var/lib/swapfile";
+    size = 16 * 1024;
+  }];
+
+  networking.hostName = "xieshi"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # Configure network proxy if necessary
