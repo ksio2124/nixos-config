@@ -9,7 +9,7 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "uas" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "usb_storage" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
@@ -18,7 +18,13 @@
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-eaafc4f3-7bbb-49b1-b432-6984c6a617a7".device = "/dev/disk/by-uuid/eaafc4f3-7bbb-49b1-b432-6984c6a617a7";
+  boot.initrd.luks.devices."luks-eaafc4f3-7bbb-49b1-b432-6984c6a617a7" = {
+    device = "/dev/disk/by-uuid/eaafc4f3-7bbb-49b1-b432-6984c6a617a7";
+    allowDiscards = true;
+    keyFileSize = 4096;
+    keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
+    fallbackToPassword = true;
+  };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/665F-060E";
@@ -26,7 +32,10 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  swapDevices = [ ];
+  swapDevices =[{
+    device = "/var/lib/swapfile";
+    size = 16 * 1024;
+  }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
