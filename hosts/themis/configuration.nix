@@ -13,6 +13,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./router.nix
   ];
 
   # Bootloader.
@@ -25,6 +26,7 @@
   boot.supportedFilesystems = {
     zfs = true;
   };
+  boot.zfs.extraPools = [ "mypool" ];
   boot.kernelParams = [ "i915.enable_guc=2" ];
   networking.hostName = "themis"; # Define your hostname.
   networking.hostId = "0e144610";
@@ -38,7 +40,7 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  # networking.networkmanager.enable = true;
   systemd.sleep.extraConfig = ''
     AllowSuspend=no
     AllowHibernation=no
