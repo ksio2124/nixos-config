@@ -71,7 +71,7 @@
   services.dnsmasq = {
     enable = true;
     alwaysKeepRunning = true;
-    extraConfig = ''
+    settings = ''
       interface=br0
       domain=example.com,10.0.0.1
       # ^ Domain and Address of the host.
