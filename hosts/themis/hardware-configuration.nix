@@ -9,7 +9,7 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "uas" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "usb_storage"];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
@@ -18,7 +18,14 @@
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-302884b2-eb84-4c96-a1b3-f86c7c23cda4".device = "/dev/disk/by-uuid/302884b2-eb84-4c96-a1b3-f86c7c23cda4";
+  # boot.initrd.luks.devices."luks-302884b2-eb84-4c96-a1b3-f86c7c23cda4".device = "/dev/disk/by-uuid/302884b2-eb84-4c96-a1b3-f86c7c23cda4";
+  boot.initrd.luks.devices."luks-302884b2-eb84-4c96-a1b3-f86c7c23cda4" = {
+    device = "/dev/disk/by-uuid/302884b2-eb84-4c96-a1b3-f86c7c23cda4";
+    allowDiscards = true;
+    keyFileSize = 4096;
+    keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
+    fallbackToPassword = true;
+  };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/8B2B-F32B";

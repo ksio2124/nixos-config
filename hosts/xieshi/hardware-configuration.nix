@@ -18,13 +18,16 @@
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-eaafc4f3-7bbb-49b1-b432-6984c6a617a7" = {
-    device = "/dev/disk/by-uuid/eaafc4f3-7bbb-49b1-b432-6984c6a617a7";
-    allowDiscards = true;
-    keyFileSize = 4096;
-    keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
-    fallbackToPassword = true;
-  };
+  boot.initrd.luks.devices."luks-eaafc4f3-7bbb-49b1-b432-6984c6a617a7".device = "/dev/disk/by-uuid/eaafc4f3-7bbb-49b1-b432-6984c6a617a7";
+
+
+  # boot.initrd.luks.devices."luks-eaafc4f3-7bbb-49b1-b432-6984c6a617a7" = {
+  #   device = "/dev/disk/by-uuid/eaafc4f3-7bbb-49b1-b432-6984c6a617a7";
+  #   allowDiscards = true;
+  #   keyFileSize = 4096;
+  #   keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
+  #   fallbackToPassword = true;
+  # };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/665F-060E";
