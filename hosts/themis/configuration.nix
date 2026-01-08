@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -17,13 +22,10 @@
   # This setting is usually set to true in configuration.nix
   # generated at installation time. So we force it to false
   # for now.
-  # boot.loader.systemd-boot.enable = lib.mkForce false;
-
-  # boot.lanzaboote = {
-  #   enable = true;
-  #   pkiBundle = "/var/lib/sbctl";
-  # };
-
+  boot.supportedFilesystems = {
+    zfs = true;
+  };
+  boot.kernelParams = [ "i915.enable_guc=2" ];
   networking.hostName = "themis"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   nix.settings.experimental-features = [
