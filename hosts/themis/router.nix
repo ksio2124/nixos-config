@@ -67,76 +67,48 @@
       };
     };
   };
+  services.resolved.enable = false;
+  
   services.dnsmasq = {
-  enable = true;
-  alwaysKeepRunning = true;
-  settings = {
-    # Network Interface
-    interface = "br0";
-    
-    # Domain and host address
-    domain = "example.com,10.0.0.1";
-    address = "/example.com/10.0.0.1";
+    enable = true;
+    alwaysKeepRunning = true;
+    settings = {
+      # Network Interface
+      interface = "br0";
 
-    # DHCP Configuration
-    dhcp-range = [ "10.0.0.10,10.0.0.254,5m" ];
-    
-    # DHCP Options
-    dhcp-option = [
-      "3,10.0.0.1"               # Default Gateway (Router)
-      "121,10.0.0.0/24,10.0.0.1" # Classless Static Route
-    ];
+      # Domain and host address
+      domain = "example.com,10.0.0.1";
+      address = "/example.com/10.0.0.1";
 
-    # Static IP Assignments
-    # Note: Use a list if you have multiple hosts
-    # dhcp-host = [ "AA:BB:CC:DD:EE:FF,10.0.0.2" ];
+      # DHCP Configuration
+      dhcp-range = [ "10.0.0.10,10.0.0.254,5m" ];
 
-    # DNS Server Settings
-    listen-address = [ "127.0.0.1" "10.0.0.1" ];
-    expand-hosts = true;
-    
-    # Upstream DNS Servers
-    server = [
-      "1.1.1.1"
-      "8.8.8.8"
-    ];
+      # DHCP Options
+      dhcp-option = [
+        "3,10.0.0.1" # Default Gateway (Router)
+        "121,10.0.0.0/24,10.0.0.1" # Classless Static Route
+      ];
+
+      # Static IP Assignments
+      # Note: Use a list if you have multiple hosts
+      # dhcp-host = [ "AA:BB:CC:DD:EE:FF,10.0.0.2" ];
+
+      # DNS Server Settings
+      listen-address = [
+        "127.0.0.1"
+        "10.0.0.1"
+      ];
+      expand-hosts = true;
+
+      # Upstream DNS Servers
+      server = [
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
+    };
   };
-};
 
-  # services.dnsmasq = {
-  #   enable = true;
-  #   alwaysKeepRunning = true;
-  #   extraConfig = ''
-  #     interface=br0
-  #     domain=example.com,10.0.0.1
-  #     # ^ Domain and Address of the host.
-  #     dhcp-range=10.0.0.10,10.0.0.254,5m
-  #     # ^ All IP addresses between that range will be handed out with a 5 minute lease time.
-  #     # It also reserves the first 10 addresses for static IP's.
-  #     dhcp-option=3,10.0.0.1
-  #     # ^ This is the primary DNS. DNSMasq will also be the DNS server, 
-  #     # since it can cache. You can point this wherever you wish.
-  #     dhcp-option=121,10.0.0.0/24.10.0.0.1
-  #     # ^ This is a classless static route. I'm not 100% sure what it does, 
-  #     # but things seem to work better with it. Apparently Windows ignores this.
-
-  #     # From here you can set up static IP's for your devices, if you want.
-  #     dhcp-host:AA:BB:CC:DD:EE:FF,10.0.0.2
-  #     # Repeat as needed.
-
-  #     # DNS
-  #     listen-address=1,127.0.0.1,10.0.0.1
-  #     # It listens on both the local and the bridge interface.
-  #     expand-hosts
-  #     # This will allow you to refer to devices by their hostname.
-  #     server=1.1.1.1  
-  #     # ^ This is Cloudflare's DNS server. You can use whatever you want.
-  #     server=8.8.8.8
-  #     # ^ We're using Google's DNS as backup.
-  #     address=/example.com/10.0.0.1
-  #     # ^ This is a static DNS entry. It will resolve example.com to 10.0.0.1, or in other words, the router.
-  #   '';
-  # };
+  networking.firewall.allowedTCPPorts = [ 22 ];
   networking.firewall.interfaces."br0" = {
     allowedUDPPorts = [
       53
