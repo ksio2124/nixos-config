@@ -23,7 +23,7 @@
       home-manager,
       nur,
       nvf,
-      lanzaboote
+      lanzaboote,
       ...
     }:
     {
