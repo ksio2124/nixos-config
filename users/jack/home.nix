@@ -60,6 +60,7 @@
     pkgs.lzip
     pkgs.retroarch-free
     pkgs.cachix
+    pkgs.sbctl
   ];
   dconf = {
     enable = true;
