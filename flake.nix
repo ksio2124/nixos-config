@@ -42,15 +42,15 @@
               nur.modules.nixos.default
               ./hosts/themis/configuration.nix
             ];
+          };
       };
       homeConfigurations."jack" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit nur;};
-	modules = [
+	      modules = [
           nvf.homeManagerModules.default #
           ./users/jack/home.nix 
         ];
       };
     };
-  };
 }
