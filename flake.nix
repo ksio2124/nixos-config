@@ -9,6 +9,12 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+
+      # Optional but recommended to limit the size of your system closure.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -39,6 +45,7 @@
           in 
           nixpkgs.lib.nixosSystem {
             modules = [
+              lanzaboote.nixosModules.lanzaboote
               nur.modules.nixos.default
               ./hosts/themis/configuration.nix
             ];
