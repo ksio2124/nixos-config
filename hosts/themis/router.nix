@@ -49,7 +49,7 @@
     interfaces = {
       "WAN" = {
         useDHCP = true;
-        tempAddresses = "disabled"; # Disable Temp Addresses for our ISP's sake.
+        # tempAddresses = "disabled"; # Disable Temp Addresses for our ISP's sake.
       };
       # And on the Bridge, we're going to statically assign ourselves an IP
       "br0" = {
