@@ -23,6 +23,7 @@
       home-manager,
       nur,
       nvf,
+      lanzaboote
       ...
     }:
     {
