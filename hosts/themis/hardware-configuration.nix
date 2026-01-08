@@ -48,8 +48,15 @@
   };
 
   # swap devices is also encrypted
-  boot.initrd.luks.devices."luks-0deec53c-037f-44d6-89b0-45aa2077dcda".device =
-    "/dev/disk/by-uuid/0deec53c-037f-44d6-89b0-45aa2077dcda";
+  # boot.initrd.luks.devices."luks-0deec53c-037f-44d6-89b0-45aa2077dcda".device =
+  #   "/dev/disk/by-uuid/0deec53c-037f-44d6-89b0-45aa2077dcda";
+    boot.initrd.luks.devices."luks-0deec53c-037f-44d6-89b0-45aa2077dcda" = {
+    device = "/dev/disk/by-uuid/0deec53c-037f-44d6-89b0-45aa2077dcda";
+    allowDiscards = true;
+    keyFileSize = 4096;
+    keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
+    fallbackToPassword = true;
+  };
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/8B2B-F32B";
