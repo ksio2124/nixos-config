@@ -47,6 +47,10 @@
     fallbackToPassword = true;
   };
 
+  # swap devices is also encrypted
+  boot.initrd.luks.devices."luks-0deec53c-037f-44d6-89b0-45aa2077dcda".device =
+    "/dev/disk/by-uuid/0deec53c-037f-44d6-89b0-45aa2077dcda";
+
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/8B2B-F32B";
     fsType = "vfat";

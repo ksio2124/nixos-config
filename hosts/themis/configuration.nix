@@ -24,8 +24,6 @@
   #   pkiBundle = "/var/lib/sbctl";
   # };
 
-  # boot.initrd.luks.devices."luks-0deec53c-037f-44d6-89b0-45aa2077dcda".device =
-  #   "/dev/disk/by-uuid/0deec53c-037f-44d6-89b0-45aa2077dcda";
   networking.hostName = "themis"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   nix.settings.experimental-features = [
