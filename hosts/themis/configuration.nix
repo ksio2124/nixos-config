@@ -27,6 +27,7 @@
   };
   boot.kernelParams = [ "i915.enable_guc=2" ];
   networking.hostName = "themis"; # Define your hostname.
+  networking.hostId = "0e144610";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   nix.settings.experimental-features = [
     "nix-command"
