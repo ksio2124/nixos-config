@@ -155,7 +155,7 @@
               # dhcp-option 121 (Classless Static Route)
               # Format: "destination-prefix/length, next-hop"
               name = "classless-static-route";
-              data = "10.0.0.0/24, 10.0.0.1";
+              data = "24, 10.0.0.0, 10.0.0.1";
             }
           ];
 
