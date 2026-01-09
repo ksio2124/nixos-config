@@ -155,7 +155,7 @@
               # dhcp-option 121 (Classless Static Route)
               # Format: "destination-prefix/length, next-hop"
               name = "classless-static-route";
-              data = "24, 10.0.0.0, 10.0.0.1";
+              data = "10.0.0.0/24 - 10.0.0.1";
             }
           ];
 
@@ -241,16 +241,16 @@
         ];
       };
       forward-zone = [
-        {
-          name = ".";
-          forward-tls-upstream = "yes";
-          # Cloudflare DoT servers
-          forward-addr = [
-            "1.1.1.1@853#cloudflare-dns.com"
-            "1.0.0.1@853#cloudflare-dns.com"
-          ];
-        }
+    {
+      name = ".";
+      forward-tls-upstream = "yes";
+      # Cloudflare DoT servers
+      forward-addr = [
+        "1.1.1.1@853#cloudflare-dns.com"
+        "1.0.0.1@853#cloudflare-dns.com"
       ];
+    }
+  ];
     };
   };
 
