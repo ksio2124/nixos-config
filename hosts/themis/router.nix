@@ -42,7 +42,7 @@
       enable = true;
       externalInterface = "WAN";
       internalInterfaces = [ "br0" ];
-      internalIPs = [ "10.0.0.0/24" ];
+      internalIPs = [ "192.168.1.0/24" ];
       # You can customize this to your network, I like the 10.0.0.0 address range
       #because it allows you to refer to other devices like `ssh 10.1`.
     };
@@ -56,7 +56,7 @@
       "br0" = {
         ipv4.addresses = [
           {
-            address = "10.0.0.1";
+            address = "192.168.1.1";
             prefixLength = 24;
           }
         ];
@@ -128,9 +128,9 @@
       subnet4 = [
         {
           id = 1;
-          subnet = "10.0.0.0/24";
+          subnet = "192.168.1.0/24";
           pools = [
-            { pool = "10.0.0.10 - 10.0.0.254"; }
+            { pool = "192.168.1.10 - 192.168.1.254"; }
           ];
 
           # Replicating "5m" lease time
@@ -140,12 +140,12 @@
             {
               # dhcp-option 3 (Router)
               name = "routers";
-              data = "10.0.0.1";
+              data = "192.168.1.1";
             }
             {
               # dhcp-option 6 (DNS) - Pointing to your local address 10.0.0.1
               name = "domain-name-servers";
-              data = "10.0.0.1";
+              data = "192.168.1.1";
             }
             {
               # Replicating 'domain = example.com'
@@ -179,7 +179,7 @@
         # Port for Unbound to listen for local clients (plain DNS)
         interface = [
           "127.0.0.1"
-          "10.0.0.1"
+          "192.168.1.1"
         ];
 
         # Required for DoT upstreams
@@ -209,7 +209,7 @@
         # Prevent unauthorized access
         access-control = [
           "127.0.0.0/8 allow"
-          "10.0.0.0/24 allow" # Replace with your local subnet
+          "192.168.1.0/24 allow" # Replace with your local subnet
           "0.0.0.0/0 refuse" # Block everyone else
         ];
 
