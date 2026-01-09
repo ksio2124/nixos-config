@@ -151,12 +151,6 @@
               name = "domain-name";
               data = "example.com";
             }
-            {
-              # dhcp-option 121 (Classless Static Route)
-              # Format: "destination-prefix/length, next-hop"
-              name = "classless-static-route";
-              data = "10.0.0.0/24 - 10.0.0.1";
-            }
           ];
 
           # Replicating dhcp-host (Static Assignments)
