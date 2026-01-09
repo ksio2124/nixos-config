@@ -115,6 +115,7 @@
     settings = {
       interfaces-config = {
         interfaces = [ "br0" ];
+        service-sockets-max-retries = 20;
       };
 
       lease-database = {
