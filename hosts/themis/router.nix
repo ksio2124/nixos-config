@@ -68,7 +68,7 @@
     };
   };
   services.resolved.enable = false;
-  
+
   services.dnsmasq = {
     enable = true;
     alwaysKeepRunning = true;
@@ -102,8 +102,9 @@
 
       # Upstream DNS Servers
       server = [
-        "1.1.1.1"
-        "8.8.8.8"
+        "192.168.1.1"
+        # "1.1.1.1"
+        # "8.8.8.8"
       ];
     };
   };
