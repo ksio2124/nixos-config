@@ -249,15 +249,17 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  # networking.firewall.allowedTCPPorts = [ 22 ];
   networking.firewall.interfaces."br0" = {
     allowedUDPPorts = [
       53
       67
+      22
     ];
     allowedTCPPorts = [
       53
       67
+      22
     ];
   };
 }
