@@ -70,46 +70,6 @@
   };
   services.resolved.enable = false;
 
-  # services.dnsmasq = {
-  #   enable = true;
-  #   alwaysKeepRunning = true;
-  #   settings = {
-  #     # Network Interface
-  #     interface = "br0";
-
-  #     # Domain and host address
-  #     domain = "example.com,10.0.0.1";
-  #     address = "/example.com/10.0.0.1";
-
-  #     # DHCP Configuration
-  #     dhcp-range = [ "10.0.0.10,10.0.0.254,5m" ];
-
-  #     # DHCP Options
-  #     dhcp-option = [
-  #       "3,10.0.0.1" # Default Gateway (Router)
-  #       "121,10.0.0.0/24,10.0.0.1" # Classless Static Route
-  #     ];
-
-  #     # Static IP Assignments
-  #     # Note: Use a list if you have multiple hosts
-  #     # dhcp-host = [ "AA:BB:CC:DD:EE:FF,10.0.0.2" ];
-
-  #     # DNS Server Settings
-  #     listen-address = [
-  #       "127.0.0.1"
-  #       "10.0.0.1"
-  #     ];
-  #     expand-hosts = true;
-
-  #     # Upstream DNS Servers
-  #     server = [
-  #       "192.168.1.1"
-  #       # "1.1.1.1"
-  #       # "8.8.8.8"
-  #     ];
-  #   };
-  # };
-
   services.kea.dhcp4 = {
     enable = true;
     settings = {
@@ -173,6 +133,7 @@
   };
   services.unbound = {
     enable = true;
+    # blocklist.enable = true;
     settings = {
       server = {
 
@@ -249,17 +210,18 @@
     };
   };
 
-  # networking.firewall.allowedTCPPorts = [ 22 ];
   networking.firewall.interfaces."br0" = {
     allowedUDPPorts = [
       53
       67
       22
+      80
     ];
     allowedTCPPorts = [
       53
       67
       22
+      80
     ];
   };
 }

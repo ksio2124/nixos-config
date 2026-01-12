@@ -14,6 +14,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./router.nix
+    ./server.nix
   ];
 
   # Bootloader.
@@ -30,6 +31,7 @@
   boot.kernelParams = [ "i915.enable_guc=2" ];
   networking.hostName = "themis"; # Define your hostname.
   networking.hostId = "0e144610";
+  powerManagement.powertop.enable = true;
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   nix.settings.experimental-features = [
     "nix-command"

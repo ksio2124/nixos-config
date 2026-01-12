@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "flake for all systems";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
@@ -16,6 +16,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+
+
+# Get the hash of the latest master
+# nix shell nixpkgs#nurl --command nurl https://github.com/StevenBlack/hosts master
+# > fetchFromGitHub {
+#   owner = "StevenBlack";
+#   repo = "hosts";
+#   rev = "master";
+#   hash = "sha256-fPMGNj1dXrbxJDxiC8U41NLz1vL5m3Ayw8uC1HJm4sU="; # <-- this
+# }
+
+# # Update it in flake.nix
+    blocklist.url = "github:mirosval/unbound-blocklist";
   };
   outputs =
     {
@@ -26,6 +39,7 @@
       nvf,
       lanzaboote,
       vscode-server,
+      blocklist,
       ...
     }:
     {
@@ -51,6 +65,7 @@
               lanzaboote.nixosModules.lanzaboote
               nur.modules.nixos.default
               vscode-server.nixosModules.default
+              # blocklist.nixosModules.default
               ./hosts/themis/configuration.nix
             ];
           };

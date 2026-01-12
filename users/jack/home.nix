@@ -61,6 +61,8 @@
     pkgs.retroarch-free
     pkgs.cachix
     pkgs.sbctl
+    pkgs.speedtest-cli
+    pkgs.btop
   ];
   dconf = {
     enable = true;
