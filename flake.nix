@@ -25,6 +25,7 @@
       nur,
       nvf,
       lanzaboote,
+      vscode,
       ...
     }:
     {
