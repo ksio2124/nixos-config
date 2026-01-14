@@ -63,6 +63,8 @@
     pkgs.sbctl
     pkgs.speedtest-cli
     pkgs.btop
+    pkgs.ndisc6
+    pkgs.mtr
   ];
   dconf = {
     enable = true;
