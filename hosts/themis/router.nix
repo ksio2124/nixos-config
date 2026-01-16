@@ -265,12 +265,14 @@
           ct state invalid drop
           ct state established,related accept
 
-          icmpv6 type {
+          iifname "wan" icmpv6 type {
             destination-unreachable, packet-too-big, time-exceeded,
             parameter-problem, echo-request,
             nd-neighbor-solicit, nd-neighbor-advert,
             nd-router-solicit, nd-router-advert
           } accept
+
+          iifname "wan" udp dport dhcpv6-client udp sport dhcpv6-server counter accept comment "Allow DHCPv6 client"
 
           icmp type echo-request accept
 
