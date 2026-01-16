@@ -65,6 +65,7 @@
     pkgs.btop
     pkgs.ndisc6
     pkgs.mtr
+    pkgs.iperf3
   ];
   dconf = {
     enable = true;
@@ -162,7 +163,6 @@
       pkgs.vscode-extensions.continue.continue
       pkgs.vscode-extensions.ritwickdey.liveserver
       pkgs.vscode-extensions.ms-vscode-remote.remote-ssh
-      # pkgs.vscode-extensions.ms-vscode-remote.vscode-remote-extensionpack
     ];
   };
   programs.firefox = {

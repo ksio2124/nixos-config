@@ -200,7 +200,6 @@ in
   programs.steam.gamescopeSession.enable = true;
 
   programs.zsh.enable = true;
-  programs.adb.enable = true;
 
   virtualisation.waydroid.enable = true;
   # Some programs need SUID wrappers, can be configured further or are

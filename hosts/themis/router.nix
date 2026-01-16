@@ -99,6 +99,7 @@
         IPv6Forwarding = true;
         IPv6AcceptRA = true;
       };
+      dhcpV6Config.WithoutRA = "solicit";
       # Security: Don't let the WAN tell us to change our DNS
       dhcpV4Config.UseDNS = false;
       dhcpV6Config.UseDNS = false;
