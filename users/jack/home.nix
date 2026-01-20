@@ -66,6 +66,9 @@
     pkgs.ndisc6
     pkgs.mtr
     pkgs.iperf3
+    pkgs.age
+    pkgs.sops
+    pkgs.ssh-to-age
   ];
   dconf = {
     enable = true;

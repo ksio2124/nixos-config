@@ -278,6 +278,7 @@
 
           iifname "br0" tcp dport { 22, 80 } accept
           iifname "br0" udp dport { 53, 67, 68 } accept
+          iifname "wan" tcp dport {22, 80, 443} accept
         }
 
         chain forward {
@@ -303,27 +304,13 @@
 
     '';
   };
-
-  # networking.nat = {
-  #   enable = true;
-  #   externalInterface = "wan";
-  #   internalInterfaces = [ "br0" ];
-  #   internalIPs = [ "192.168.1.0/24" ];
-  # };
-
-  # networking.firewall.interfaces."br0" = {
-  #   allowedUDPPorts = [
-  #     53 # dns
-  #     67 # dhcp
-  #     22 # ssh
-  #     80 # http
-
-  #   ];
-  #   allowedTCPPorts = [
-  #     53
-  #     67
-  #     22
-  #     80
-  #   ];
-  # };
+  sops.secrets."cloudflare-ddns/credentials" = {
+    # owner = "nextcloud";
+    # group = "nextcloud";
+  };
+  services.cloudflare-ddns = {
+    enable = true;
+    credentialsFile = config.sops.secrets."cloudflare-ddns/credentials".path;
+    domains = [ "cowgoesmoopiggoesoink.com" "nextcloud.cowgoesmoopiggoesoink.com"];
+  };
 }
