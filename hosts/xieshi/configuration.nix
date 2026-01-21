@@ -238,8 +238,17 @@ in
   systemd.network.enable = true;
   systemd.network.wait-online.enable = false;
 
-
+  sops.defaultSopsFile = ./secrets/config.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.sshKeyPaths = [ "/home/jack/.ssh/xieshi" ];
+  sops.age.keyFile = "/home/jack/.config/sops/age/key.txt";
+  sops.age.generateKey = true;
   # wireguard
+  sops.secrets."wireguard/PrivateKey" = {
+    mode = "640";
+    owner = "systemd-network";
+    group = "systemd-network";
+  };
   systemd.network = {
     networks."50-wg0" = {
       matchConfig.Name = "wg0";
@@ -247,12 +256,12 @@ in
       address = [
         # /32 and /128 specifies a single address
         # for use on this wg peer machine
-        "fd31:bf08:57cb::7/128"
-        "192.168.26.7/32"
+        "fd31:bf08:57cb::8/128"
+        "192.168.2.2/32"
       ];
     };
 
-        netdevs."50-wg0" = {
+    netdevs."50-wg0" = {
       netdevConfig = {
         Kind = "wireguard";
         Name = "wg0";
@@ -262,25 +271,25 @@ in
         ListenPort = 51820;
 
         # ensure file is readable by `systemd-network` user
-        PrivateKeyFile = config.age.secrets.wg-key-vps.path;
+        PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
 
         # To automatically create routes for everything in AllowedIPs,
         # add RouteTable=main
         RouteTable = "main";
 
-        # FirewallMark marks all packets send and received by wg0 
-        # with the number 42, which can be used to define policy rules on these packets. 
+        # FirewallMark marks all packets send and received by wg0
+        # with the number 42, which can be used to define policy rules on these packets.
         FirewallMark = 42;
       };
       wireguardPeers = [
         {
-          # laptop wg conf
-          PublicKey = "ronr+8v670J0CPb0xT5QLGMWDfE7+1g7HmC6YMdCIDk=";
+          # themis
+          PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
           AllowedIPs = [
-            "fd31:bf08:57cb::9/128"
-            "192.168.26.9/32"
+            "fd31:bf08:57cb::7/128"
+            "192.168.2.1/32"
           ];
-          Endpoint = "192.168.1.26:51820";
+          Endpoint = "cowgoesmoopiggoesoink.com:51820";
 
           # RouteTable can also be set in wireguardPeers
           # RouteTable in wireguardConfig will then be ignored.

@@ -161,21 +161,20 @@
         # with the number 42, which can be used to define policy rules on these packets.
         FirewallMark = 42;
       };
-      # wireguardPeers = [
-      #   {
-      #     # laptop wg conf
-      #     PublicKey = "ronr+8v670J0CPb0xT5QLGMWDfE7+1g7HmC6YMdCIDk=";
-      #     AllowedIPs = [
-      #       "fd31:bf08:57cb::9/128"
-      #       "192.168.26.9/32"
-      #     ];
-      #     Endpoint = "192.168.1.26:51820";
+      wireguardPeers = [
+        {
+          # xieshi
+          PublicKey = "/mmnnC+MQiUcIBbSCmsqbDWqFIaOa6AnVj2c9PWgjBg=";
+          AllowedIPs = [
+            "fd31:bf08:57cb::8/128"
+            "192.168.2.2/32"
+          ];
 
-      #     # RouteTable can also be set in wireguardPeers
-      #     # RouteTable in wireguardConfig will then be ignored.
-      #     # RouteTable = 1000;
-      #   }
-      # ];
+          # RouteTable can also be set in wireguardPeers
+          # RouteTable in wireguardConfig will then be ignored.
+          # RouteTable = 1000;
+        }
+      ];
     };
   };
 
