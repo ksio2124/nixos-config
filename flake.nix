@@ -20,6 +20,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # microvm = {
+    #   url = "github:microvm-nix/microvm.nix";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     # Get the hash of the latest master
@@ -71,6 +76,7 @@
               nur.modules.nixos.default
               vscode-server.nixosModules.default
               sops-nix.nixosModules.sops
+              # microvm.nixosModules.microvm
               # blocklist.nixosModules.default
               ./hosts/themis/configuration.nix
             ];

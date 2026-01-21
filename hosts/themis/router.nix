@@ -21,6 +21,21 @@
     "10-wan" = {
       matchConfig.MACAddress = "00:e0:ed:93:e5:58";
       linkConfig.Name = "wan";
+      linkConfig.MTUBytes = 9000;
+      linkConfig.TransmitQueueLength = 1000;
+      linkConfig = {
+        RxBufferSize = 4096;
+        TxBufferSize = 4096;
+        # GenericSegmentationOffload = false;
+        # GenericReceiveOffload = false;        
+      };
+      # extraConfig = ''
+      #   [Link]
+      #   UseAdaptiveRxCoalesce=yes
+      #   UseAdaptiveTxCoalesce=yes
+      # ''
+      # linkConfig.UseAdaptiveRxCoalesce = true;      # Dynamic interrupt handling
+      # linkConfig.UseAdaptiveTxCoalesce = true;
     };
     "10-lan0" = {
       matchConfig.MACAddress = "00:e0:ed:93:e5:59";
@@ -167,6 +182,9 @@
   boot.kernel.sysctl = {
     "net.core.rmem_max" = 4194304; # 4MB
     "net.core.wmem_max" = 4194304; # 4MB
+    "net.core.netdev_max_backlog" = 25000;
+    "net.ipv4.tcp_fastopen" = 3;
+    "net.core.busy_poll" = 1;
   };
   services.unbound = {
     enable = true;
@@ -311,6 +329,9 @@
   services.cloudflare-ddns = {
     enable = true;
     credentialsFile = config.sops.secrets."cloudflare-ddns/credentials".path;
-    domains = [ "cowgoesmoopiggoesoink.com" "nextcloud.cowgoesmoopiggoesoink.com"];
+    domains = [
+      "cowgoesmoopiggoesoink.com"
+      "nextcloud.cowgoesmoopiggoesoink.com"
+    ];
   };
 }

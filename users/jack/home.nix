@@ -69,6 +69,9 @@
     pkgs.age
     pkgs.sops
     pkgs.ssh-to-age
+    pkgs.ethtool
+    pkgs.pciutils
+    pkgs.lsof
   ];
   dconf = {
     enable = true;
