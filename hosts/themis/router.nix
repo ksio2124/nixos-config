@@ -16,7 +16,7 @@
   networking.useDHCP = false; # We will define this per-interface
   networking.useNetworkd = true;
   networking.networkmanager.enable = lib.mkForce false;
-
+  systemd.network.enable = true;
   systemd.network.links = {
     "10-wan" = {
       matchConfig.MACAddress = "00:e0:ed:93:e5:58";
@@ -27,7 +27,7 @@
         RxBufferSize = 4096;
         TxBufferSize = 4096;
         # GenericSegmentationOffload = false;
-        # GenericReceiveOffload = false;        
+        # GenericReceiveOffload = false;
       };
       # extraConfig = ''
       #   [Link]
@@ -120,6 +120,65 @@
       dhcpV6Config.UseDNS = false;
     };
   };
+
+  # wireguard setup
+
+  sops.secrets."wireguard/PrivateKey" = {
+    mode = "640";
+    owner = "systemd-network";
+    group = "systemd-network";
+  };
+  systemd.network = {
+
+    networks."50-wg0" = {
+      matchConfig.Name = "wg0";
+
+      address = [
+        # /32 and /128 specifies a single address
+        # for use on this wg peer machine
+        "fd31:bf08:57cb::7/128"
+        "192.168.2.1/32"
+      ];
+    };
+
+    netdevs."50-wg0" = {
+      netdevConfig = {
+        Kind = "wireguard";
+        Name = "wg0";
+      };
+
+      wireguardConfig = {
+        ListenPort = 51820;
+
+        # ensure file is readable by `systemd-network` user
+        PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
+
+        # To automatically create routes for everything in AllowedIPs,
+        # add RouteTable=main
+        RouteTable = "main";
+
+        # FirewallMark marks all packets send and received by wg0
+        # with the number 42, which can be used to define policy rules on these packets.
+        FirewallMark = 42;
+      };
+      # wireguardPeers = [
+      #   {
+      #     # laptop wg conf
+      #     PublicKey = "ronr+8v670J0CPb0xT5QLGMWDfE7+1g7HmC6YMdCIDk=";
+      #     AllowedIPs = [
+      #       "fd31:bf08:57cb::9/128"
+      #       "192.168.26.9/32"
+      #     ];
+      #     Endpoint = "192.168.1.26:51820";
+
+      #     # RouteTable can also be set in wireguardPeers
+      #     # RouteTable in wireguardConfig will then be ignored.
+      #     # RouteTable = 1000;
+      #   }
+      # ];
+    };
+  };
+
   services.resolved.enable = false;
 
   services.kea.dhcp4 = {
@@ -296,7 +355,7 @@
 
           iifname "br0" tcp dport { 22, 80 } accept
           iifname "br0" udp dport { 53, 67, 68 } accept
-          iifname "wan" tcp dport {22, 80, 443} accept
+          iifname "wan" tcp dport {22, 80, 443, 51820} accept
         }
 
         chain forward {

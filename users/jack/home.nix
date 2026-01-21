@@ -72,6 +72,7 @@
     pkgs.ethtool
     pkgs.pciutils
     pkgs.lsof
+    pkgs.wireguard-tools
   ];
   dconf = {
     enable = true;
