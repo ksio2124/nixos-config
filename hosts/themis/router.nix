@@ -364,6 +364,7 @@
           ct state invalid drop
           ct state established,related accept
           iifname "br0" oifname "wan" accept
+          iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
         }
 
         chain forward_mangle {
