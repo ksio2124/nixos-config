@@ -1,7 +1,12 @@
 keys:
   - &host_themis age1ewzzu8ewd35e5d06y0uzu9y2ylltjw39p29n5e2fyv50qer8jvgqxd560p
+  - &host_xieshi age1q0l9vqu6mzp4y98dc0d5vlxrnt4wv4tcalfqq8rw3dfs06uk4dfsqx096y
 creation_rules:
   - path_regex: hosts/themis/secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:
         - *host_themis
+  - path_regex: hosts/xieshi/secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+        - *host_xieshi

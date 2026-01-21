@@ -63,6 +63,7 @@
             modules = [
               nur.modules.nixos.default
               ./hosts/xieshi/configuration.nix
+              sops-nix.nixosModules.sops
             ];
           };
         themis =

@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs,... }:
+{ config, pkgs, ... }:
 
 let
   waydroid-script = pkgs.nur.repos.ataraxiasjel.waydroid-script;
@@ -22,7 +22,10 @@ in
 
   networking.hostName = "xieshi"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -36,7 +39,7 @@ in
 
   ];
   # Enable networking
-  networking.networkmanager.enable = true;
+  # networking.networkmanager.enable = true;
   hardware.sensor.iio.enable = true;
 
   # Set your time zone.
@@ -220,6 +223,72 @@ in
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  networking.useNetworkd = true;
+  networking.networkmanager.enable = false;
+  networking.wireless.iwd = {
+    enable = true;
+    settings = {
+      Settings = {
+        AutoConnect = true;
+      };
+    };
+  };
+  networking.wireless.enable = false;
+  systemd.network.enable = true;
+  systemd.network.wait-online.enable = false;
+
+
+  # wireguard
+  systemd.network = {
+    networks."50-wg0" = {
+      matchConfig.Name = "wg0";
+
+      address = [
+        # /32 and /128 specifies a single address
+        # for use on this wg peer machine
+        "fd31:bf08:57cb::7/128"
+        "192.168.26.7/32"
+      ];
+    };
+
+        netdevs."50-wg0" = {
+      netdevConfig = {
+        Kind = "wireguard";
+        Name = "wg0";
+      };
+
+      wireguardConfig = {
+        ListenPort = 51820;
+
+        # ensure file is readable by `systemd-network` user
+        PrivateKeyFile = config.age.secrets.wg-key-vps.path;
+
+        # To automatically create routes for everything in AllowedIPs,
+        # add RouteTable=main
+        RouteTable = "main";
+
+        # FirewallMark marks all packets send and received by wg0 
+        # with the number 42, which can be used to define policy rules on these packets. 
+        FirewallMark = 42;
+      };
+      wireguardPeers = [
+        {
+          # laptop wg conf
+          PublicKey = "ronr+8v670J0CPb0xT5QLGMWDfE7+1g7HmC6YMdCIDk=";
+          AllowedIPs = [
+            "fd31:bf08:57cb::9/128"
+            "192.168.26.9/32"
+          ];
+          Endpoint = "192.168.1.26:51820";
+
+          # RouteTable can also be set in wireguardPeers
+          # RouteTable in wireguardConfig will then be ignored.
+          # RouteTable = 1000;
+        }
+      ];
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

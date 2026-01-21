@@ -73,6 +73,9 @@
     pkgs.pciutils
     pkgs.lsof
     pkgs.wireguard-tools
+    # pkgs.gnomeExtensions.tophat
+    pkgs.gnomeExtensions.caffeine
+    pkgs.gnomeExtensions.astra-monitor
   ];
   dconf = {
     enable = true;
@@ -80,6 +83,8 @@
       "org/gnome/shell" = {
         disable-user-extensions = false; # enables user extensions
         enabled-extensions = [
+          pkgs.gnomeExtensions.astra-monitor.extensionUuid
+          pkgs.gnomeExtensions.caffeine.extensionUuid
           # Put UUIDs of extensions that you want to enable here.
           # If the extension you want to enable is packaged in nixpkgs,
           # you can easily get its UUID by accessing its extensionUuid
