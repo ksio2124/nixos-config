@@ -137,7 +137,7 @@
         # /32 and /128 specifies a single address
         # for use on this wg peer machine
         "fd31:bf08:57cb::7/128"
-        "192.168.2.1/32"
+        "192.168.2.1/24"
       ];
     };
 

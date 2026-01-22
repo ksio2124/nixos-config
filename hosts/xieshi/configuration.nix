@@ -193,6 +193,7 @@ in
     pkgs.protonup-ng
     pkgs.mangohud
     waydroid-script
+    pkgs.impala
   ];
 
   environment.sessionVariables = {
@@ -257,7 +258,7 @@ in
         # /32 and /128 specifies a single address
         # for use on this wg peer machine
         "fd31:bf08:57cb::8/128"
-        "192.168.2.2/32"
+        "192.168.2.2/24"
       ];
     };
 
@@ -285,11 +286,13 @@ in
         {
           # themis
           PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
+                      #  fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=
           AllowedIPs = [
             "fd31:bf08:57cb::7/128"
             "192.168.2.1/32"
           ];
-          Endpoint = "cowgoesmoopiggoesoink.com:51820";
+          # need to fix ipv6 connection on the router side
+          Endpoint = "198.27.128.181:51820";
 
           # RouteTable can also be set in wireguardPeers
           # RouteTable in wireguardConfig will then be ignored.

@@ -76,6 +76,8 @@
     # pkgs.gnomeExtensions.tophat
     pkgs.gnomeExtensions.caffeine
     pkgs.gnomeExtensions.astra-monitor
+    # pkgs.termshark
+    pkgs.wireshark
   ];
   dconf = {
     enable = true;
