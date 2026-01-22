@@ -137,7 +137,7 @@
         # /32 and /128 specifies a single address
         # for use on this wg peer machine
         "fd31:bf08:57cb::7/128"
-        "192.168.2.1/24"
+        "192.168.2.1/32"
       ];
     };
 
@@ -354,7 +354,7 @@
 
           iifname "br0" tcp dport { 80 } accept
           iifname "br0" udp dport { 53, 67, 68 } accept
-          iifname "wan" tcp dport {22, 80, 443} accept
+          iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
         }
