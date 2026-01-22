@@ -6,8 +6,15 @@
 
 let
   waydroid-script = pkgs.nur.repos.ataraxiasjel.waydroid-script;
+  wireplumber_0_5_12_pkgs = import (builtins.fetchTree {
+    type = "github";
+    owner = "nixos";
+    repo = "nixpkgs";
+    rev = "871b9fd269ff6246794583ce4ee1031e1da71895";
+  }) { inherit (pkgs) system; };
+  wireplumber_0_5_12 = wireplumber_0_5_12_pkgs.wireplumber;
 in
-
+# with pkgs;
 {
   imports = [
     # Include the results of the hardware scan.
@@ -152,6 +159,10 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    wireplumber = {
+      enable = true;
+      package = wireplumber_0_5_12;
+    };
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
 
@@ -286,13 +297,14 @@ in
         {
           # themis
           PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
-                      #  fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=
+          #  fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=
           AllowedIPs = [
             "fd31:bf08:57cb::7/128"
             "192.168.2.1/32"
           ];
           # need to fix ipv6 connection on the router side
-          Endpoint = "198.27.128.181:51820";
+          # Endpoint = "198.27.128.181:51820";
+          Endpoint = "cowgoesmoopiggoesoink.com:51820";
 
           # RouteTable can also be set in wireguardPeers
           # RouteTable in wireguardConfig will then be ignored.
