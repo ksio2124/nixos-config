@@ -50,12 +50,17 @@
 
   # Enable networking
   # networking.networkmanager.enable = true;
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  '';
+  # systemd.sleep.extraConfig = ''
+  #   AllowSuspend=no
+  #   AllowHibernation=no
+  #   AllowHybridSleep=no
+  #   AllowSuspendThenHibernate=no
+  # '';
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
+
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
