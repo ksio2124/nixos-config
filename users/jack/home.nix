@@ -2,6 +2,10 @@
 {
   # pkgs
   nixpkgs.overlays = [ nur.overlays.default ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "ciscoPacketTracer8-8.2.2"
+     "qtwebengine-5.15.19"
+  ];
   home.username = "jack";
   home.homeDirectory = "/home/jack";
   home.packages = [
@@ -61,7 +65,6 @@
     pkgs.retroarch-free
     pkgs.cachix
     pkgs.sbctl
-    pkgs.speedtest-cli
     pkgs.btop
     pkgs.ndisc6
     pkgs.mtr
@@ -77,9 +80,15 @@
     pkgs.gnomeExtensions.caffeine
     pkgs.gnomeExtensions.astra-monitor
     pkgs.gnomeExtensions.power-tracker
+    pkgs.gnomeExtensions.bluetooth-battery-meter
+    pkgs.gnomeExtensions.gsconnect
     # pkgs.termshark
     pkgs.wireshark
     pkgs.remmina
+    pkgs.qjackctl
+    pkgs.carla
+    pkgs.ciscoPacketTracer8
+    pkgs.stremio
     # pkgs.gnomeExtensions.
   ];
   dconf = {
@@ -91,6 +100,8 @@
           pkgs.gnomeExtensions.astra-monitor.extensionUuid
           pkgs.gnomeExtensions.caffeine.extensionUuid
           pkgs.gnomeExtensions.power-tracker.extensionUuid
+          pkgs.gnomeExtensions.bluetooth-battery-meter.extensionUuid
+          pkgs.gnomeExtensions.gsconnect.extensionUuid
           # Put UUIDs of extensions that you want to enable here.
           # If the extension you want to enable is packaged in nixpkgs,
           # you can easily get its UUID by accessing its extensionUuid
