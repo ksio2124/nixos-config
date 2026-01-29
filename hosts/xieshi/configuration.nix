@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   waydroid-script = pkgs.nur.repos.ataraxiasjel.waydroid-script;
@@ -22,13 +22,25 @@ in
   ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
+  # boot.loader.systemd-boot.enable = true;
+  # Lanzaboote currently replaces the systemd-boot module.
+  # This setting is usually set to true in configuration.nix
+  # generated at installation time. So we force it to false
+  # for now.
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelParams = [ "i915.enable_guc=2" ];
   hardware.enableAllFirmware = true;
 
   networking.hostName = "xieshi"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  nix.settings.download-buffer-size = 524288000;
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
@@ -170,6 +182,7 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+  services.lact.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;

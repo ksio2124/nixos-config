@@ -76,8 +76,11 @@
     # pkgs.gnomeExtensions.tophat
     pkgs.gnomeExtensions.caffeine
     pkgs.gnomeExtensions.astra-monitor
+    pkgs.gnomeExtensions.power-tracker
     # pkgs.termshark
     pkgs.wireshark
+    pkgs.remmina
+    # pkgs.gnomeExtensions.
   ];
   dconf = {
     enable = true;
@@ -87,6 +90,7 @@
         enabled-extensions = [
           pkgs.gnomeExtensions.astra-monitor.extensionUuid
           pkgs.gnomeExtensions.caffeine.extensionUuid
+          pkgs.gnomeExtensions.power-tracker.extensionUuid
           # Put UUIDs of extensions that you want to enable here.
           # If the extension you want to enable is packaged in nixpkgs,
           # you can easily get its UUID by accessing its extensionUuid

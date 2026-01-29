@@ -61,6 +61,7 @@
           in
           nixpkgs.lib.nixosSystem {
             modules = [
+              lanzaboote.nixosModules.lanzaboote
               nur.modules.nixos.default
               ./hosts/xieshi/configuration.nix
               sops-nix.nixosModules.sops
