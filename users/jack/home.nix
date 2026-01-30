@@ -4,8 +4,9 @@
   nixpkgs.overlays = [ nur.overlays.default ];
   nixpkgs.config.permittedInsecurePackages = [
     "ciscoPacketTracer8-8.2.2"
-     "qtwebengine-5.15.19"
+    "qtwebengine-5.15.19"
   ];
+  
   home.username = "jack";
   home.homeDirectory = "/home/jack";
   home.packages = [
@@ -79,7 +80,6 @@
     # pkgs.gnomeExtensions.tophat
     pkgs.gnomeExtensions.caffeine
     pkgs.gnomeExtensions.astra-monitor
-    pkgs.gnomeExtensions.power-tracker
     pkgs.gnomeExtensions.bluetooth-battery-meter
     pkgs.gnomeExtensions.gsconnect
     # pkgs.termshark
@@ -89,7 +89,7 @@
     pkgs.carla
     pkgs.ciscoPacketTracer8
     pkgs.stremio
-    # pkgs.gnomeExtensions.
+    pkgs.firejail
   ];
   dconf = {
     enable = true;
@@ -99,7 +99,6 @@
         enabled-extensions = [
           pkgs.gnomeExtensions.astra-monitor.extensionUuid
           pkgs.gnomeExtensions.caffeine.extensionUuid
-          pkgs.gnomeExtensions.power-tracker.extensionUuid
           pkgs.gnomeExtensions.bluetooth-battery-meter.extensionUuid
           pkgs.gnomeExtensions.gsconnect.extensionUuid
           # Put UUIDs of extensions that you want to enable here.
@@ -234,6 +233,13 @@
     enable = true;
     enableZshIntegration = true;
   };
+
+
+networking.firewall = rec {
+  allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
+  allowedUDPPortRanges = allowedTCPPortRanges;
+};
+
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "25.05";
