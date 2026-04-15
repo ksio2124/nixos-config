@@ -1,29 +1,26 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {
   config,
   pkgs,
   lib,
   ...
-}:
-
-{
+}: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./router.nix
     ./server.nix
   ];
-
+  nix.settings.download-buffer-size = 524288000;
   sops.defaultSopsFile = ./secrets/config.yaml;
   sops.defaultSopsFormat = "yaml";
-  sops.age.sshKeyPaths = [ "/home/jack/.ssh/themis" ];
+  sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];
   sops.age.keyFile = "/home/jack/.config/sops/age/key.txt";
   sops.age.generateKey = true;
-  sops.secrets.example_key = { };
-  sops.secrets."myservice/my_subdir/my_secret" = { };
+  sops.secrets.example_key = {};
+  sops.secrets."myservice/my_subdir/my_secret" = {};
   # Bootloader.
   # boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -34,8 +31,8 @@
   boot.supportedFilesystems = {
     zfs = true;
   };
-  boot.zfs.extraPools = [ "mypool" ];
-  boot.kernelParams = [ "i915.enable_guc=2" ];
+  boot.zfs.extraPools = ["mypool"];
+  boot.kernelParams = ["i915.enable_guc=2"];
   networking.hostName = "themis"; # Define your hostname.
   networking.hostId = "0e144610";
   powerManagement.powertop.enable = true;
@@ -80,7 +77,6 @@
   };
 
   hardware.nvidia = {
-
     # Modesetting is required.
     modesetting.enable = true;
 
@@ -224,5 +220,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
-
 }

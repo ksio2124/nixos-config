@@ -3,10 +3,15 @@
   pkgs,
   lib,
   ...
-}:
-
-{
-
+}: {
+  nixpkgs.overlays = [
+    (self: super: {
+      wordpressPackages = builtins.fetchGit {
+        url = "https://git.helsinki.tools/helsinki-systems/wp4nix";
+        ref = "master";
+      };
+    })
+  ];
   services.nginx = {
     enable = true;
 
@@ -42,27 +47,26 @@
       # This might create errors
       proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
     '';
-
   };
-  services.home-assistant = {
-    enable = true;
-    extraComponents = [
-      # Components required to complete the onboarding
-      "analytics"
-      "google_translate"
-      "met"
-      "radio_browser"
-      "shopping_list"
-      # Recommended for fast zlib compression
-      # https://www.home-assistant.io/integrations/isal
-      "isal"
-    ];
-    config = {
-      # Includes dependencies for a basic setup
-      # https://www.home-assistant.io/integrations/default_config/
-      default_config = { };
-    };
-  };
+  # services.home-assistant = {
+  #   enable = true;
+  #   extraComponents = [
+  #     # Components required to complete the onboarding
+  #     "analytics"
+  #     "google_translate"
+  #     "met"
+  #     "radio_browser"
+  #     "shopping_list"
+  #     # Recommended for fast zlib compression
+  #     # https://www.home-assistant.io/integrations/isal
+  #     "isal"
+  #   ];
+  #   config = {
+  #     # Includes dependencies for a basic setup
+  #     # https://www.home-assistant.io/integrations/default_config/
+  #     default_config = { };
+  #   };
+  # };
 
   # https://discourse.nixos.org/t/remove-nextcloud-entirely-from-server/31314
   # rm -rf /var/lib/nextcloud
@@ -76,12 +80,13 @@
     enable = true;
     hostName = "nextcloud.cowgoesmoopiggoesoink.com";
     https = true;
-    package = pkgs.nextcloud32;
+    package = pkgs.nextcloud33;
     # [...]
     # Instead of using pkgs.nextcloud29Packages.apps or similar,
     # we'll reference the package version specified in services.nextcloud.package
     extraApps = {
-      inherit (config.services.nextcloud.package.packages.apps)
+      inherit
+        (config.services.nextcloud.package.packages.apps)
         calendar
         contacts
         mail
@@ -90,6 +95,7 @@
         tasks
         cospend
         phonetrack
+        news
         ;
     };
     extraAppsEnable = true;
@@ -112,7 +118,56 @@
     acceptTerms = true;
     certs = {
       ${config.services.nextcloud.hostName}.email = "ksio2124@protonmail.ch";
+      "wordpress.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
     };
   };
 
+  containers.wordpress = {
+    autoStart = true;
+    privateNetwork = true;
+    hostAddress = "10.0.0.1";
+    # hostBridge = "tap0"; # Specify the bridge name
+    localAddress = "10.0.0.3";
+    config = {
+      config,
+      pkgs,
+      lib,
+      ...
+    }: let
+      wordpress-theme-responsive = pkgs.stdenv.mkDerivation rec {
+        name = "responsive";
+        version = "4.7.9";
+        src = pkgs.fetchzip {
+          url = "https://downloads.wordpress.org/theme/responsive.${version}.zip";
+          hash = "sha256-7K/pwD1KAuipeOAOLXd2wqOUEhwk+uNGIllVWzDHzp0=";
+        };
+        installPhase = "mkdir -p $out; cp -R * $out/";
+      };
+    in {
+      services.wordpress.sites."wordpress.cowgoesmoopiggoesoink.com" = {
+        settings = {
+          # Needed to run behind reverse proxy
+          FORCE_SSL_ADMIN = true;
+        };
+        extraConfig = ''
+          $_SERVER['HTTPS']='on';
+        '';
+        themes = {
+          inherit (pkgs.wordpressPackages.themes) twentytwentyfive;
+          inherit wordpress-theme-responsive;
+        };
+      };
+      networking.firewall.allowedTCPPorts = [80];
+      system.stateVersion = "26.05"; # Required for running NixOS containers
+    };
+  };
+  services.nginx.virtualHosts."wordpress.cowgoesmoopiggoesoink.com" = {
+    #  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
+    forceSSL = true;
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "http://10.0.0.3";
+      # return = "301 http://example.com$request_uri";
+    };
+  };
 }

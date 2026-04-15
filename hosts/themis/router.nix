@@ -3,9 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-
-{
+}: {
   # tested somehow i needed this?
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = 1;
@@ -84,7 +82,7 @@
     # 5. Configure the Bridge IP
     "40-br0" = {
       matchConfig.Name = "br0";
-      address = [ "192.168.1.1/24" ];
+      address = ["192.168.1.1/24"];
       networkConfig = {
         IPv4Forwarding = true;
         IPv6Forwarding = true;
@@ -99,7 +97,7 @@
         # Managed = false; # Set 'true' only if using Kea/DHCPv6
         # OtherInformation = true;
         EmitDNS = true;
-        DNS = [ "_linklocal" ];
+        DNS = ["_linklocal"];
         # Autonomous = true;
       };
       linkConfig.RequiredForOnline = "no";
@@ -121,6 +119,23 @@
     };
   };
 
+  # Adding Tap for container
+
+  # Define the TAP device
+  # systemd.network.netdevs."60-tap0" = {
+  #   netdevConfig = {
+  #     Kind = "tap";
+  #     Name = "tap0";
+  #   };
+  # };
+
+  # Optional: Configure the interface (e.g., set IP or keep it UP)
+  # systemd.network.networks."60-tap0" = {
+  #   matchConfig.Name = "tap0";
+  #   linkConfig.ActivationPolicy = "always-up";
+  #   address = ["10.0.0.1/32"];
+  #   #networkConfig.Address = "10.0.0.1/24"; # Optional IP assignment
+  # };
   # wireguard setup
 
   sops.secrets."wireguard/PrivateKey" = {
@@ -129,7 +144,6 @@
     group = "systemd-network";
   };
   systemd.network = {
-
     networks."50-wg0" = {
       matchConfig.Name = "wg0";
 
@@ -184,7 +198,7 @@
     enable = true;
     settings = {
       interfaces-config = {
-        interfaces = [ "br0" ];
+        interfaces = ["br0"];
         service-sockets-max-retries = 20;
       };
 
@@ -200,7 +214,7 @@
           id = 1;
           subnet = "192.168.1.0/24";
           pools = [
-            { pool = "192.168.1.10 - 192.168.1.254"; }
+            {pool = "192.168.1.10 - 192.168.1.254";}
           ];
 
           # Replicating "5m" lease time
@@ -249,7 +263,6 @@
     # blocklist.enable = true;
     settings = {
       server = {
-
         # Port for Unbound to listen for local clients (plain DNS)
         interface = [
           "127.0.0.1"
@@ -352,7 +365,7 @@
 
           icmp type echo-request accept
 
-          iifname "br0" tcp dport { 80 } accept
+          iifname "br0" tcp dport { 80, 443} accept
           iifname "br0" udp dport { 53, 67, 68 } accept
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
@@ -366,6 +379,8 @@
           ct state established,related accept
           iifname "br0" oifname "wan" accept
           iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
+          iifname "ve-*" oifname "wan" accept
+          iifname "ve-*" drop
         }
 
         chain forward_mangle {
@@ -393,6 +408,7 @@
     domains = [
       "cowgoesmoopiggoesoink.com"
       "nextcloud.cowgoesmoopiggoesoink.com"
+      "wordpress.cowgoesmoopiggoesoink.com"
     ];
   };
 }

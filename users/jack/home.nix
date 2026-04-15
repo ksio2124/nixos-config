@@ -92,7 +92,7 @@
     pkgs.qjackctl
     pkgs.carla
     # pkgs.ciscoPacketTracer8
-    pkgs.cisco-packet-tracer_9
+    #pkgs.cisco-packet-tracer_9
     # pkgs.stremio
     pkgs.firejail
     pkgs.unigine-superposition
@@ -138,6 +138,8 @@
       withRuby = false;
       enable = true;
     };
+    ripgrep.enable = true;
+    fd.enable = true;
   };
 
   programs.zellij = {
