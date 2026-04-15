@@ -1,19 +1,24 @@
-{ pkgs, nur, ... }:
 {
+  pkgs,
+  nur,
+  ...
+}: {
+  #services.nginx.enable = true;
+  #services.nginx.user = "www-data";
   # pkgs
-  nixpkgs.overlays = [ nur.overlays.default ];
+  nixpkgs.overlays = [nur.overlays.default];
   nixpkgs.config.permittedInsecurePackages = [
     "ciscoPacketTracer8-8.2.2"
     "qtwebengine-5.15.19"
   ];
-  
+
   home.username = "jack";
   home.homeDirectory = "/home/jack";
   home.packages = [
     pkgs.nixd
     pkgs.alejandra
     pkgs.lshw
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
     pkgs.discord
     pkgs.zoom-us
     pkgs.vlc
@@ -25,8 +30,6 @@
     pkgs.signal-desktop
     pkgs.xdotool
     pkgs.jq
-    pkgs.youtube-music
-    pkgs.spotify
     pkgs.libva-utils
     pkgs.godot_4
     pkgs.gpu-screen-recorder-gtk
@@ -97,6 +100,9 @@
     pkgs.gns3-server
     pkgs.freetube
     pkgs.kiwix
+    pkgs.opencode
+    pkgs.statix
+    pkgs.deadnix
   ];
   dconf = {
     enable = true;
@@ -127,7 +133,11 @@
       #   hwdec = "vaapi";
       # };
     };
-    neovim.enable = true;
+    neovim = {
+      withPython3 = false;
+      withRuby = false;
+      enable = true;
+    };
   };
 
   programs.zellij = {
@@ -144,8 +154,10 @@
   nixpkgs.config.allowUnfree = true;
   programs.git = {
     enable = true;
-    userName = "jack";
-    userEmail = "ksio2124@protonmail.ch";
+    settings.user = {
+      name = "jack";
+      email = "ksio2124@protonmail.ch";
+    };
   };
   programs.texlive = {
     enable = true;
@@ -208,7 +220,7 @@
   programs.firefox = {
     enable = true;
     profiles.default = {
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         bitwarden
         react-devtools
@@ -231,12 +243,32 @@
   programs.nvf = {
     enable = true;
     settings = {
+      vim.theme = {
+        enable = true;
+        name = "tokyonight";
+        style = "moon";
+      };
+      vim.lsp.enable = true;
+      vim.lsp.formatOnSave = true;
+      vim.diagnostics.enable = true;
+      vim.telescope.enable = true;
+      vim.diagnostics.config = {
+        float.source = "always";
+      };
+      #vim.diagnostics.config.virtual_lines = true;
+      #vim.diagnostics.nvim-lint.enable = true;
+      vim.git.enable = true;
+      vim.statusline.lualine.enable = true;
+      vim.treesitter.enable = true;
+      vim.autocomplete.nvim-cmp.enable = true;
+      vim.filetree.nvimTree.enable = true;
+      vim.tabline.nvimBufferline.enable = true;
       vim.languages = {
         nix.enable = true;
+        nix.treesitter.enable = true;
         nix.extraDiagnostics.enable = true;
         nix.format.enable = true;
-        nix.lsp.enable = true;
-        nix.treesitter.enable = true;
+        nix.lsp.servers = ["nixd"];
       };
     };
   };
@@ -246,10 +278,9 @@
     # enableZshIntegration = true;
   };
 
-
-
   # The state version is required and should stay at the version you
   # originally installed.
   home.stateVersion = "25.05";
 }
 # Install firefox.
+
