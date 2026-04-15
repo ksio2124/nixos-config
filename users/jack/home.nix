@@ -34,9 +34,10 @@
     pkgs.protonup-ng
     pkgs.lutris
     pkgs.bottles
-    pkgs.heroic
+    # pkgs.heroic
     # unstable.stremio
     pkgs.calibre
+    pkgs.pdfarranger
     pkgs.unciv
     pkgs.logseq
     pkgs.devenv
@@ -87,9 +88,15 @@
     pkgs.remmina
     pkgs.qjackctl
     pkgs.carla
-    pkgs.ciscoPacketTracer8
-    pkgs.stremio
+    # pkgs.ciscoPacketTracer8
+    pkgs.cisco-packet-tracer_9
+    # pkgs.stremio
     pkgs.firejail
+    pkgs.unigine-superposition
+    pkgs.gns3-gui
+    pkgs.gns3-server
+    pkgs.freetube
+    pkgs.kiwix
   ];
   dconf = {
     enable = true;
@@ -114,7 +121,12 @@
     chromium.enable = true;
     obs-studio.enable = true;
     yt-dlp.enable = true;
-    mpv.enable = true;
+    mpv = {
+      enable = true;
+      # config = {
+      #   hwdec = "vaapi";
+      # };
+    };
     neovim.enable = true;
   };
 
@@ -231,14 +243,10 @@
 
   services.ssh-agent = {
     enable = true;
-    enableZshIntegration = true;
+    # enableZshIntegration = true;
   };
 
 
-networking.firewall = rec {
-  allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-  allowedUDPPortRanges = allowedTCPPortRanges;
-};
 
   # The state version is required and should stay at the version you
   # originally installed.
