@@ -362,7 +362,7 @@
           } accept
 
           iifname "wan" udp dport dhcpv6-client udp sport dhcpv6-server counter accept comment "Allow DHCPv6 client"
-
+          iifname "ve-*" drop
           icmp type echo-request accept
 
           iifname "br0" tcp dport { 80, 443} accept
@@ -370,6 +370,7 @@
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
+
         }
 
         chain forward {
@@ -379,8 +380,6 @@
           ct state established,related accept
           iifname "br0" oifname "wan" accept
           iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
-          iifname "ve-*" oifname "wan" accept
-          iifname "ve-*" drop
         }
 
         chain forward_mangle {
