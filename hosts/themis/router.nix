@@ -408,6 +408,7 @@
       "cowgoesmoopiggoesoink.com"
       "nextcloud.cowgoesmoopiggoesoink.com"
       "wordpress.cowgoesmoopiggoesoink.com"
+      "nextcloud2.cowgoesmoopiggoesoink.com"
     ];
   };
 }

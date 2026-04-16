@@ -119,9 +119,69 @@
     certs = {
       ${config.services.nextcloud.hostName}.email = "ksio2124@protonmail.ch";
       "wordpress.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
+      "nextcloud2.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
     };
   };
+  containers.nextcloud = {
+    autoStart = true;
+    privateNetwork = true;
+    hostAddress = "10.0.0.5";
+    localAddress = "10.0.0.6";
+    bindMounts."/run/secrets/nextcloud/adminpass" = {
+      hostPath = config.sops.secrets."nextcloud/adminpass".path;
+      isReadOnly = true;
+    };
+    #   containers.my-container.bindMounts."/run/secrets/db-pass" = {
+    # hostPath = config.sops.secrets."my-db-pass".path;
+    # isReadOnly = true;
 
+    # bindMounts.config.sops.secrets."nextcloud/adminpass".path ;
+    config = {
+      config,
+      pkgs,
+      lib,
+      ...
+    }: {
+      services.nextcloud = {
+        enable = true;
+        hostName = "nextcloud2.cowgoesmoopiggoesoink.com";
+        # https = true;
+        package = pkgs.nextcloud33;
+        # [...]
+        # Instead of using pkgs.nextcloud29Packages.apps or similar,
+        # we'll reference the package version specified in services.nextcloud.package
+        extraApps = {
+          inherit
+            (config.services.nextcloud.package.packages.apps)
+            calendar
+            contacts
+            mail
+            notes
+            onlyoffice
+            tasks
+            cospend
+            phonetrack
+            news
+            ;
+        };
+        extraAppsEnable = true;
+        # datadir = "/mypool/nextcloud/";
+        database.createLocally = true;
+        configureRedis = true;
+        config = {
+          adminuser = "ksio2124";
+          dbtype = "mysql";
+          adminpassFile = "/run/secrets/nextcloud/adminpass";
+        };
+        settings = {
+          trusted_proxies = ["10.0.0.5"]; # The Host's container IP
+          overwriteprotocol = "https";
+        };
+      };
+      networking.firewall.allowedTCPPorts = [80];
+      system.stateVersion = "26.05"; # Required for running NixOS containers
+    };
+  };
   containers.wordpress = {
     autoStart = true;
     privateNetwork = true;
@@ -161,6 +221,16 @@
       system.stateVersion = "26.05"; # Required for running NixOS containers
     };
   };
+  services.nginx.virtualHosts."nextcloud2.cowgoesmoopiggoesoink.com" = {
+    #  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
+    forceSSL = true;
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "http://10.0.0.6";
+      # return = "301 http://example.com$request_uri";
+    };
+  };
+
   services.nginx.virtualHosts."wordpress.cowgoesmoopiggoesoink.com" = {
     #  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
     forceSSL = true;
