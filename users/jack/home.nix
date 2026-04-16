@@ -3,8 +3,6 @@
   nur,
   ...
 }: {
-  #services.nginx.enable = true;
-  #services.nginx.user = "www-data";
   # pkgs
   nixpkgs.overlays = [nur.overlays.default];
   nixpkgs.config.permittedInsecurePackages = [
@@ -248,6 +246,8 @@
     enable = true;
   };
 
+  programs.ssh.startAgent = true;
+
   programs.nvf = {
     enable = true;
     settings = {
@@ -263,8 +263,6 @@
       vim.diagnostics.config = {
         float.source = "always";
       };
-      #vim.diagnostics.config.virtual_lines = true;
-      #vim.diagnostics.nvim-lint.enable = true;
       vim.git.enable = true;
       vim.statusline.lualine.enable = true;
       vim.treesitter.enable = true;
@@ -279,11 +277,6 @@
         nix.lsp.servers = ["nixd"];
       };
     };
-  };
-
-  services.ssh-agent = {
-    enable = true;
-    # enableZshIntegration = true;
   };
 
   # The state version is required and should stay at the version you
