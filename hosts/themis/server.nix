@@ -4,14 +4,6 @@
   lib,
   ...
 }: {
-  nixpkgs.overlays = [
-    (self: super: {
-      wordpressPackages = builtins.fetchGit {
-        url = "https://git.helsinki.tools/helsinki-systems/wp4nix";
-        ref = "master";
-      };
-    })
-  ];
   services.nginx = {
     enable = true;
 
@@ -20,6 +12,7 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+    clientMaxBodySize = "200G";
 
     # Only allow PFS-enabled ciphers with AES256
     sslCiphers = "AES256+EECDH:AES256+EDH:!aNULL";
@@ -72,54 +65,12 @@
   # rm -rf /var/lib/nextcloud
   # ^ to remove nextcloud completely
 
-  sops.secrets."nextcloud/adminpass" = {
-    owner = "nextcloud";
-    group = "nextcloud";
-  };
-  services.nextcloud = {
-    enable = true;
-    hostName = "nextcloud.cowgoesmoopiggoesoink.com";
-    https = true;
-    package = pkgs.nextcloud33;
-    # [...]
-    # Instead of using pkgs.nextcloud29Packages.apps or similar,
-    # we'll reference the package version specified in services.nextcloud.package
-    extraApps = {
-      inherit
-        (config.services.nextcloud.package.packages.apps)
-        calendar
-        contacts
-        mail
-        notes
-        onlyoffice
-        tasks
-        cospend
-        phonetrack
-        news
-        ;
-    };
-    extraAppsEnable = true;
-    datadir = "/mypool/nextcloud/";
-    database.createLocally = true;
-    configureRedis = true;
-    config = {
-      adminuser = "ksio2124";
-      dbtype = "mysql";
-      adminpassFile = config.sops.secrets."nextcloud/adminpass".path;
-    };
-  };
-
-  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
-    forceSSL = true;
-    enableACME = true;
-  };
-
+  sops.secrets."nextcloud/adminpass" = {};
   security.acme = {
     acceptTerms = true;
     certs = {
-      ${config.services.nextcloud.hostName}.email = "ksio2124@protonmail.ch";
       "wordpress.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
-      "nextcloud2.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
+      "nextcloud.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
     };
   };
   containers.nextcloud = {
@@ -129,27 +80,30 @@
     localAddress = "10.0.0.6";
     bindMounts."/run/secrets/nextcloud/adminpass" = {
       hostPath = config.sops.secrets."nextcloud/adminpass".path;
-      isReadOnly = true;
     };
-    #   containers.my-container.bindMounts."/run/secrets/db-pass" = {
-    # hostPath = config.sops.secrets."my-db-pass".path;
-    # isReadOnly = true;
-
-    # bindMounts.config.sops.secrets."nextcloud/adminpass".path ;
+    bindMounts."/mypool/nextcloud/" = {
+      hostPath = "/mypool/nextcloud/";
+      isReadOnly = false;
+    };
     config = {
       config,
       pkgs,
       lib,
       ...
     }: {
+      services.nginx.virtualHosts."nextcloud.cowgoesmoopiggoesoink.com" = {
+        extraConfig = ''
+
+          # Disable buffering to avoid disk I/O bottlenecks during upload
+          proxy_buffering off;
+          fastcgi_request_buffering off;
+        '';
+      };
       services.nextcloud = {
         enable = true;
-        hostName = "nextcloud2.cowgoesmoopiggoesoink.com";
-        # https = true;
+        maxUploadSize = "200G";
+        hostName = "nextcloud.cowgoesmoopiggoesoink.com";
         package = pkgs.nextcloud33;
-        # [...]
-        # Instead of using pkgs.nextcloud29Packages.apps or similar,
-        # we'll reference the package version specified in services.nextcloud.package
         extraApps = {
           inherit
             (config.services.nextcloud.package.packages.apps)
@@ -165,9 +119,9 @@
             ;
         };
         extraAppsEnable = true;
-        # datadir = "/mypool/nextcloud/";
+        datadir = "/mypool/nextcloud/";
         database.createLocally = true;
-        configureRedis = true;
+        caching.redis = true;
         config = {
           adminuser = "ksio2124";
           dbtype = "mysql";
@@ -176,6 +130,7 @@
         settings = {
           trusted_proxies = ["10.0.0.5"]; # The Host's container IP
           overwriteprotocol = "https";
+          log_type = "file";
         };
       };
       networking.firewall.allowedTCPPorts = [80];
@@ -221,23 +176,24 @@
       system.stateVersion = "26.05"; # Required for running NixOS containers
     };
   };
-  services.nginx.virtualHosts."nextcloud2.cowgoesmoopiggoesoink.com" = {
-    #  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
+  services.nginx.virtualHosts."nextcloud.cowgoesmoopiggoesoink.com" = {
+    extraConfig = ''
+      client_max_body_size 200G;
+      proxy_buffering off;
+      fastcgi_request_buffering off; # Critical for speed
+    '';
     forceSSL = true;
     enableACME = true;
     locations."/" = {
       proxyPass = "http://10.0.0.6";
-      # return = "301 http://example.com$request_uri";
     };
   };
 
   services.nginx.virtualHosts."wordpress.cowgoesmoopiggoesoink.com" = {
-    #  services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
     forceSSL = true;
     enableACME = true;
     locations."/" = {
       proxyPass = "http://10.0.0.3";
-      # return = "301 http://example.com$request_uri";
     };
   };
 }

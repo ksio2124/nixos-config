@@ -362,6 +362,7 @@
           } accept
 
           iifname "wan" udp dport dhcpv6-client udp sport dhcpv6-server counter accept comment "Allow DHCPv6 client"
+          iifname "ve-*" ip daddr "10.0.0.5" accept
           iifname "ve-*" drop
           icmp type echo-request accept
 
@@ -397,10 +398,7 @@
 
     '';
   };
-  sops.secrets."cloudflare-ddns/credentials" = {
-    # owner = "nextcloud";
-    # group = "nextcloud";
-  };
+  sops.secrets."cloudflare-ddns/credentials" = {};
   services.cloudflare-ddns = {
     enable = true;
     credentialsFile = config.sops.secrets."cloudflare-ddns/credentials".path;
@@ -408,7 +406,6 @@
       "cowgoesmoopiggoesoink.com"
       "nextcloud.cowgoesmoopiggoesoink.com"
       "wordpress.cowgoesmoopiggoesoink.com"
-      "nextcloud2.cowgoesmoopiggoesoink.com"
     ];
   };
 }
