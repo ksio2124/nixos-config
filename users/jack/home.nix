@@ -195,6 +195,7 @@
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
   };
   programs.fzf = {
     enable = true;
@@ -240,13 +241,24 @@
   programs.wezterm = {
     enable = true;
     enableZshIntegration = true;
+    extraConfig = ''
+      local wezterm = require 'wezterm'
+      local config = wezterm.config_builder()
+      config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
+      -- https://github.com/wezterm/wezterm/issues/4962
+      config.enable_wayland = false
+      return config
+
+    '';
   };
 
   programs.home-manager = {
     enable = true;
   };
 
-  programs.ssh.startAgent = true;
+  services.ssh-agent = {
+    enable = true;
+  };
 
   programs.nvf = {
     enable = true;
