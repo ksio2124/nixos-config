@@ -235,7 +235,13 @@
     settings = {
       font.normal.family = "FiraCode Nerd Font";
       window.opacity = 0.95;
+      selection.save_to_clipboard = true;
     };
+  };
+
+  programs.wezterm = {
+    enable = true;
+    enableZshIntegration = true;
   };
 
   programs.home-manager = {
