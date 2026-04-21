@@ -101,6 +101,8 @@
     pkgs.opencode
     pkgs.statix
     pkgs.deadnix
+    (pkgs.ffmpeg-full.override
+      {withUnfree = true;})
   ];
   dconf = {
     enable = true;
@@ -138,11 +140,6 @@
     };
     ripgrep.enable = true;
     fd.enable = true;
-  };
-
-  programs.zellij = {
-    enable = true;
-    # enableZshIntegration = true;
   };
 
   programs.mcfly = {
@@ -228,23 +225,6 @@
     enable = true;
     enableZshIntegration = true; # Since you're using ZSH
   };
-  programs.vscode = {
-    enable = true;
-    extensions = [
-      pkgs.vscode-extensions.jnoortheen.nix-ide
-      pkgs.vscode-extensions.github.copilot
-      pkgs.vscode-extensions.github.copilot-chat
-      pkgs.vscode-extensions.esbenp.prettier-vscode
-      pkgs.vscode-extensions.dbaeumer.vscode-eslint
-      pkgs.vscode-extensions.biomejs.biome
-      pkgs.vscode-extensions.bradlc.vscode-tailwindcss
-      pkgs.vscode-extensions.james-yu.latex-workshop
-      pkgs.vscode-extensions.eamodio.gitlens
-      pkgs.vscode-extensions.continue.continue
-      pkgs.vscode-extensions.ritwickdey.liveserver
-      pkgs.vscode-extensions.ms-vscode-remote.remote-ssh
-    ];
-  };
   programs.firefox = {
     enable = true;
     profiles.default = {
@@ -256,22 +236,15 @@
     };
   };
 
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      font.normal.family = "FiraCode Nerd Font";
-      window.opacity = 0.95;
-      selection.save_to_clipboard = true;
-    };
-  };
-
   programs.wezterm = {
     enable = true;
     enableZshIntegration = true;
     extraConfig = ''
       local wezterm = require 'wezterm'
       local config = wezterm.config_builder()
-      config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
+      config.color_scheme = 'Tokyo Night'
+      config.window_background_opacity = 0.9
+      config.window_decorations = "TITLE | RESIZE"
       -- https://github.com/wezterm/wezterm/issues/4962
       config.enable_wayland = false
       return config
