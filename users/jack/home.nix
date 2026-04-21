@@ -303,6 +303,7 @@
         float.source = "always";
       };
       vim.git.enable = true;
+      vim.autopairs.nvim-autopairs.enable = true;
       vim.statusline.lualine.enable = true;
       vim.treesitter.enable = true;
       vim.autocomplete.nvim-cmp.enable = true;
