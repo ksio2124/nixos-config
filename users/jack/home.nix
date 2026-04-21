@@ -253,6 +253,12 @@
   programs.nvf = {
     enable = true;
     settings = {
+      vim.extraPlugins = with pkgs.vimPlugins; {
+        vim-nftables = {
+          package = vim-nftables;
+          # setup = "require('vim-nftables').setup {}";
+        };
+      };
       vim.theme = {
         enable = true;
         name = "tokyonight";

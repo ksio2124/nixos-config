@@ -345,58 +345,7 @@
   networking.firewall.enable = false;
   networking.nftables = {
     enable = true;
-    ruleset = ''
-      table inet filter {
-        chain input {
-          type filter hook input priority filter; policy drop;
-
-          iifname "lo" accept
-          ct state invalid drop
-          ct state established,related accept
-
-          iifname "wan" icmpv6 type {
-            destination-unreachable, packet-too-big, time-exceeded,
-            parameter-problem, echo-request,
-            nd-neighbor-solicit, nd-neighbor-advert,
-            nd-router-solicit, nd-router-advert
-          } accept
-
-          iifname "wan" udp dport dhcpv6-client udp sport dhcpv6-server counter accept comment "Allow DHCPv6 client"
-          iifname "ve-*" ip daddr "10.0.0.5" accept
-          iifname "ve-*" drop
-          icmp type echo-request accept
-
-          iifname "br0" tcp dport { 80, 443} accept
-          iifname "br0" udp dport { 53, 67, 68 } accept
-          iifname "wan" tcp dport {80, 443} accept
-          iifname "wan" udp dport {51820} accept
-          iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
-
-        }
-
-        chain forward {
-          type filter hook forward priority filter; policy drop;
-
-          ct state invalid drop
-          ct state established,related accept
-          iifname "br0" oifname "wan" accept
-          iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
-        }
-
-        chain forward_mangle {
-          type filter hook forward priority mangle;
-          tcp flags syn tcp option maxseg size set rt mtu
-        }
-      }
-
-      table ip nat {
-        chain postrouting {
-          type nat hook postrouting priority srcnat;
-          oifname "wan" masquerade
-        }
-      }
-
-    '';
+    ruleset = builtins.readFile ./firewall.nft;
   };
   sops.secrets."cloudflare-ddns/credentials" = {};
   services.cloudflare-ddns = {
