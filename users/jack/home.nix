@@ -283,11 +283,14 @@
       vim.filetree.nvimTree.enable = true;
       vim.tabline.nvimBufferline.enable = true;
       vim.languages = {
-        nix.enable = true;
-        nix.treesitter.enable = true;
-        nix.extraDiagnostics.enable = true;
-        nix.format.enable = true;
-        nix.lsp.servers = ["nixd"];
+        enableExtraDiagnostics = true;
+        enableFormat = true;
+        enableTreesitter = true;
+        nix = {
+          enable = true;
+          lsp.servers = ["nixd"];
+        };
+        lua.enable = true;
       };
     };
   };
