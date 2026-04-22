@@ -219,8 +219,8 @@
           }
         ];
       };
+      system.stateVersion = "26.05";
     };
-    system.stateVersion = "26.05";
   };
   services.nginx.virtualHosts."anki-sync-server.cowgoesmoopiggoesoink.com" = {
     forceSSL = true;
