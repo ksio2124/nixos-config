@@ -29,30 +29,24 @@
     ...
   }: {
     nixosConfigurations = {
-      xieshi = let
+      xieshi = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit system;};
-      in
-        nixpkgs.lib.nixosSystem {
-          modules = [
-            lanzaboote.nixosModules.lanzaboote
-            nur.modules.nixos.default
-            ./hosts/xieshi/configuration.nix
-            sops-nix.nixosModules.sops
-          ];
-        };
-      themis = let
+        modules = [
+          lanzaboote.nixosModules.lanzaboote
+          nur.modules.nixos.default
+          ./hosts/xieshi/configuration.nix
+          sops-nix.nixosModules.sops
+        ];
+      };
+      themis = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit system;};
-      in
-        nixpkgs.lib.nixosSystem {
-          modules = [
-            lanzaboote.nixosModules.lanzaboote
-            nur.modules.nixos.default
-            sops-nix.nixosModules.sops
-            ./hosts/themis/configuration.nix
-          ];
-        };
+        modules = [
+          lanzaboote.nixosModules.lanzaboote
+          nur.modules.nixos.default
+          sops-nix.nixosModules.sops
+          ./hosts/themis/configuration.nix
+        ];
+      };
     };
     homeConfigurations."jack" = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
