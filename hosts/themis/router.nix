@@ -355,6 +355,7 @@
       "cowgoesmoopiggoesoink.com"
       "nextcloud.cowgoesmoopiggoesoink.com"
       "wordpress.cowgoesmoopiggoesoink.com"
+      "anki-sync-server.cowgoesmoopiggoesoink.com"
     ];
   };
 }
