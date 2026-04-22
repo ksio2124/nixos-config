@@ -209,7 +209,8 @@
     }: {
       services.anki-sync-server = {
         enable = true;
-        address = "127.0.0.1";
+        address = "10.0.0.8";
+        openFirewall = true;
         users = [
           {
             username = "bob";
