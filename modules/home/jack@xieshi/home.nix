@@ -3,14 +3,14 @@
   self,
   ...
 }: {
-  flake.homeConfigurations.jack = inputs.home-manager.lib.homeManagerConfiguration {
+  flake.homeConfigurations."jack@xieshi" = inputs.home-manager.lib.homeManagerConfiguration {
     pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
     modules = [
-      self.homeModules.homeJack
+      self.homeModules."homeJack@xieshi"
     ];
   };
 
-  flake.homeModules.homeJack = {pkgs, ...}: {
+  flake.homeModules."homeJack@xieshi" = {pkgs, ...}: {
     # pkgs
     imports = [
       inputs.nvf.homeManagerModules.default
