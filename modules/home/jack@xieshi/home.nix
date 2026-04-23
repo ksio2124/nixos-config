@@ -14,6 +14,7 @@
     # pkgs
     imports = [
       self.homeModules.homeEditor
+      self.homeModules.homeShell
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
     nixpkgs.config.permittedInsecurePackages = [
@@ -119,13 +120,13 @@
       fd.enable = true;
     };
 
-    programs.mcfly = {
-      enable = true;
-      enableZshIntegration = true;
-      fzf.enable = true;
-    };
+    # programs.mcfly = {
+    #   enable = true;
+    #   enableZshIntegration = true;
+    #   fzf.enable = true;
+    # };
 
-    nixpkgs.config.allowUnfree = true;
+    # nixpkgs.config.allowUnfree = true;
     programs.git = {
       enable = true;
       settings.user = {
@@ -139,69 +140,37 @@
         inherit (tpkgs) scheme-full;
       };
     };
-    programs.direnv = {
-      enable = true;
-      enableZshIntegration = true; # Since you're using ZSH
-      nix-direnv = {
-        enable = true;
-      };
-    };
+    # programs.direnv = {
+    #   enable = true;
+    #   enableZshIntegration = true; # Since you're using ZSH
+    #   nix-direnv = {
+    #     enable = true;
+    #   };
+    # };
     programs.navi = {
       enable = true;
       enableZshIntegration = true; # Since you're using ZSH
     };
-    programs.starship = {
-      enable = true;
-      enableZshIntegration = true; # Since you're using zsh
-      settings = {
-        # Example settings
-        nix_shell = {
-          symbol = "❄️ ";
-          format = "via [$symbol$state( \($name\))]($style) ";
-        };
-        character = {
-          success_symbol = "[➜](bold green)";
-          error_symbol = "[✗](bold red)";
-        };
-      };
-    };
+    # programs.starship = {
+    #   enable = true;
+    #   enableZshIntegration = true; # Since you're using zsh
+    #   settings = {
+    #     # Example settings
+    #     nix_shell = {
+    #       symbol = "❄️ ";
+    #       format = "via [$symbol$state( \($name\))]($style) ";
+    #     };
+    #     character = {
+    #       success_symbol = "[➜](bold green)";
+    #       error_symbol = "[✗](bold red)";
+    #     };
+    #   };
+    # };
 
-    programs.zsh = {
-      enable = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
-      historySubstringSearch = {
-        enable = true;
-        searchDownKey = ["$key[Down]"];
-        searchUpKey = ["$key[Up]"];
-      };
-      history = {
-        append = true;
-        findNoDups = true;
-        ignoreAllDups = true;
-        saveNoDups = true;
-      };
-      initContent = ''
-        # Enable the menu select widget
-        zstyle ':completion:*' menu no
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-
-        # Optional: Better visuals (highlight current selection)
-        zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
-
-        zstyle 'completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-      '';
-      plugins = [
-        {
-          name = "fzf-tab";
-          src = "${pkgs.zsh-fzf-tab}/share/fzf-tab";
-        }
-      ];
-    };
-    programs.fzf = {
-      enable = true;
-      enableZshIntegration = true; # Since you're using ZSH
-    };
+    # programs.fzf = {
+    #   enable = true;
+    #   enableZshIntegration = true; # Since you're using ZSH
+    # };
     programs.firefox = {
       enable = true;
       profiles.default = {
@@ -223,9 +192,9 @@
       enable = true;
     };
 
-    services.ssh-agent = {
-      enable = true;
-    };
+    # services.ssh-agent = {
+    #   enable = true;
+    # };
 
     # The state version is required and should stay at the version you
     # originally installed.
