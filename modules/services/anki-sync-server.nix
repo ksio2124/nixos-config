@@ -8,8 +8,7 @@
       config = {...}: {
         services.anki-sync-server = {
           enable = true;
-          address = "127.0.0.1";
-          port = 80;
+          address = "10.0.0.8";
           openFirewall = true;
           users = [
             {
@@ -22,10 +21,10 @@
       };
     };
     services.nginx.virtualHosts."anki-sync-server.cowgoesmoopiggoesoink.com" = {
-      # forceSSL = true;
-      # enableACME = true;
+      forceSSL = true;
+      enableACME = true;
       locations."/" = {
-        proxyPass = "http://10.0.0.8";
+        proxyPass = "http://10.0.0.8:27701/";
       };
     };
   };
