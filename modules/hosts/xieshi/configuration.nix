@@ -107,6 +107,8 @@
     };
     environment.sessionVariables = {
       LIBVA_DRIVER_NAME = "iHD";
+      EDITOR = "nvim";
+      VISUAL = "nvim";
       # LIBVA_DRIVER_NAME = "nvidia";
     };
 
@@ -202,6 +204,7 @@
     #   #  wget
     # ];
     environment.systemPackages = [
+      pkgs.neovim
       pkgs.protonup-ng
       pkgs.mangohud
       #waydroid-script

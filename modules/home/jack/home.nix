@@ -97,6 +97,7 @@
       pkgs.deadnix
       pkgs.wl-clipboard
       pkgs.anki
+      pkgs.wesnoth
       (pkgs.ffmpeg-full.override
         {withUnfree = true;})
     ];
@@ -128,9 +129,15 @@
         withPython3 = false;
         withRuby = false;
         enable = true;
+        defaultEditor = true;
       };
       ripgrep.enable = true;
       fd.enable = true;
+    };
+
+    home.sessionVariables = {
+      EDITOR = "nvim";
+      VISUAL = "nvim";
     };
 
     programs.mcfly = {
@@ -182,6 +189,10 @@
 
     programs.zsh = {
       enable = true;
+      sessionVariables = {
+        EDITOR = "nvim";
+        VISUAL = "nvim";
+      };
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       historySubstringSearch = {
