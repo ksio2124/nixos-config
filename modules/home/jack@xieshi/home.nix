@@ -13,7 +13,7 @@
   flake.homeModules."homeJack@xieshi" = {pkgs, ...}: {
     # pkgs
     imports = [
-      inputs.nvf.homeManagerModules.default
+      self.homeModules.homeEditor
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
     nixpkgs.config.permittedInsecurePackages = [
@@ -115,19 +115,8 @@
         #   hwdec = "vaapi";
         # };
       };
-      neovim = {
-        withPython3 = false;
-        withRuby = false;
-        enable = true;
-        defaultEditor = true;
-      };
       ripgrep.enable = true;
       fd.enable = true;
-    };
-
-    home.sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
     };
 
     programs.mcfly = {
@@ -179,10 +168,6 @@
 
     programs.zsh = {
       enable = true;
-      sessionVariables = {
-        EDITOR = "nvim";
-        VISUAL = "nvim";
-      };
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       historySubstringSearch = {
@@ -240,47 +225,6 @@
 
     services.ssh-agent = {
       enable = true;
-    };
-
-    programs.nvf = {
-      enable = true;
-      settings = {
-        vim.extraPlugins = with pkgs.vimPlugins; {
-          vim-nftables = {
-            package = vim-nftables;
-            # setup = "require('vim-nftables').setup {}";
-          };
-        };
-        vim.theme = {
-          enable = true;
-          name = "tokyonight";
-          style = "moon";
-        };
-        vim.lsp.enable = true;
-        vim.lsp.formatOnSave = true;
-        vim.diagnostics.enable = true;
-        vim.telescope.enable = true;
-        vim.diagnostics.config = {
-          float.source = "always";
-        };
-        vim.git.enable = true;
-        vim.autopairs.nvim-autopairs.enable = true;
-        vim.statusline.lualine.enable = true;
-        vim.treesitter.enable = true;
-        vim.autocomplete.nvim-cmp.enable = true;
-        vim.filetree.nvimTree.enable = true;
-        vim.tabline.nvimBufferline.enable = true;
-        vim.languages = {
-          enableExtraDiagnostics = true;
-          enableFormat = true;
-          enableTreesitter = true;
-          nix = {
-            enable = true;
-            lsp.servers = ["nixd"];
-          };
-          lua.enable = true;
-        };
-      };
     };
 
     # The state version is required and should stay at the version you
