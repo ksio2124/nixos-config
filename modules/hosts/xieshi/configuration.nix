@@ -195,9 +195,6 @@
     };
     programs.firefox.enable = true;
 
-    # Allow unfree packages
-    nixpkgs.config.allowUnfree = true;
-
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     # environment.systemPackages = with pkgs; [
@@ -248,7 +245,7 @@
     sops.defaultSopsFile = ./secrets/config.yaml;
     sops.defaultSopsFormat = "yaml";
     sops.age.sshKeyPaths = ["/home/jack/.ssh/xieshi"];
-    sops.age.keyFile = "/home/jack/.config/sops/age/key.txt";
+    sops.age.keyFile = "/home/jack/.config/sops/age/keys.txt";
     sops.age.generateKey = true;
     # wireguard
     sops.secrets."wireguard/PrivateKey" = {
@@ -276,31 +273,18 @@
 
         wireguardConfig = {
           ListenPort = 51820;
-
-          # ensure file is readable by `systemd-network` user
           PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
-
-          # To automatically create routes for everything in AllowedIPs,
-          # add RouteTable=main
           RouteTable = "main";
-
-          # FirewallMark marks all packets send and received by wg0
-          # with the number 42, which can be used to define policy rules on these packets.
           FirewallMark = 42;
         };
         wireguardPeers = [
           {
-            # themis
             PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
             AllowedIPs = [
               "fd31:bf08:57cb::7/128"
               "192.168.2.1/32"
             ];
             Endpoint = "cowgoesmoopiggoesoink.com:51820";
-
-            # RouteTable can also be set in wireguardPeers
-            # RouteTable in wireguardConfig will then be ignored.
-            # RouteTable = 1000;
           }
         ];
       };

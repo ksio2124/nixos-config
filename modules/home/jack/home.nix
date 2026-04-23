@@ -72,6 +72,8 @@
       pkgs.mtr
       pkgs.iperf3
       pkgs.sops
+      pkgs.age
+      pkgs.ssh-to-age
       pkgs.ethtool
       pkgs.pciutils
       pkgs.lsof

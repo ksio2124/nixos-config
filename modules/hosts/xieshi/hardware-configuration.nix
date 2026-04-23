@@ -42,7 +42,7 @@
         encrypted = {
           enable = true;
           label = "swap";
-          blkDev = "dev/disk/by-uuid/df3ea360-e128-4f09-9379-7e29e4f19a09";
+          blkDev = "/dev/disk/by-uuid/df3ea360-e128-4f09-9379-7e29e4f19a09";
         };
       }
     ];
