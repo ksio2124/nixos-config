@@ -102,6 +102,7 @@
     pkgs.statix
     pkgs.deadnix
     pkgs.wl-clipboard
+    pkgs.anki
     (pkgs.ffmpeg-full.override
       {withUnfree = true;})
   ];

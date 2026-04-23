@@ -1,27 +1,14 @@
 {
-  flake.nixosModules.anki-sync-server = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
-    security.acme = {
-      acceptTerms = true;
-    };
+  flake.nixosModules.anki-sync-server = {...}: {
     containers.anki-sync-server = {
       autoStart = true;
       privateNetwork = true;
       hostAddress = "10.0.0.7";
       localAddress = "10.0.0.8";
-      config = {
-        config,
-        pkgs,
-        lib,
-        ...
-      }: {
+      config = {...}: {
         services.anki-sync-server = {
           enable = true;
-          address = "10.0.0.8";
+          address = "127.0.0.1";
           port = 80;
           openFirewall = true;
           users = [
@@ -35,8 +22,8 @@
       };
     };
     services.nginx.virtualHosts."anki-sync-server.cowgoesmoopiggoesoink.com" = {
-      forceSSL = true;
-      enableACME = true;
+      # forceSSL = true;
+      # enableACME = true;
       locations."/" = {
         proxyPass = "http://10.0.0.8";
       };

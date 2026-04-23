@@ -58,7 +58,7 @@
       certs = {
         "wordpress.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
         "nextcloud.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
-        "anki-sync-server.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
+        # "anki-sync-server.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
       };
     };
   };

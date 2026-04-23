@@ -1,10 +1,5 @@
 {
-  flake.nixosModules.nextcloud = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.nextcloud = {config, ...}: {
     sops.secrets."nextcloud/adminpass" = {};
     containers.nextcloud = {
       autoStart = true;
@@ -21,7 +16,6 @@
       config = {
         config,
         pkgs,
-        lib,
         ...
       }: {
         services.nginx.virtualHosts."nextcloud.cowgoesmoopiggoesoink.com" = {

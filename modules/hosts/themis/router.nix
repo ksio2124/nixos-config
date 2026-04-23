@@ -2,6 +2,7 @@
   flake.nixosModules.hostThemis = {
     pkgs,
     lib,
+    config,
     ...
   }: {
     # tested somehow i needed this?
