@@ -27,7 +27,7 @@
       fsType = "ext4";
     };
 
-    boot.loader.systemd-boot.enable = lib.mkForce false;
+    boot.loader.systemd-boot.enable = false;
 
     boot.lanzaboote = {
       enable = true;
