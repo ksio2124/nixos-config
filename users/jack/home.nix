@@ -101,6 +101,7 @@
     pkgs.opencode
     pkgs.statix
     pkgs.deadnix
+    pkgs.wl-clipboard
     (pkgs.ffmpeg-full.override
       {withUnfree = true;})
   ];

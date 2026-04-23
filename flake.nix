@@ -17,44 +17,50 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    import-tree.url = "github:vic/import-tree";
   };
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    nur,
-    nvf,
-    lanzaboote,
-    sops-nix,
-    ...
-  }: {
-    nixosConfigurations = {
-      xieshi = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          lanzaboote.nixosModules.lanzaboote
-          nur.modules.nixos.default
-          ./hosts/xieshi/configuration.nix
-          sops-nix.nixosModules.sops
-        ];
-      };
-      themis = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          lanzaboote.nixosModules.lanzaboote
-          nur.modules.nixos.default
-          sops-nix.nixosModules.sops
-          ./hosts/themis/configuration.nix
-        ];
-      };
-    };
-    homeConfigurations."jack" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      extraSpecialArgs = {inherit nur;};
-      modules = [
-        nvf.homeManagerModules.default
-        ./users/jack/home.nix
-      ];
-    };
-  };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;}
+    (inputs.import-tree ./modules);
+  # outputs = {
+  #   self,
+  #   nixpkgs,
+  #   home-manager,
+  #   nur,
+  #   nvf,
+  #   lanzaboote,
+  #   sops-nix,
+  #   ...
+  # }: {
+  #   nixosConfigurations = {
+  #     xieshi = nixpkgs.lib.nixosSystem {
+  #       system = "x86_64-linux";
+  #       modules = [
+  #         lanzaboote.nixosModules.lanzaboote
+  #         nur.modules.nixos.default
+  #         ./hosts/xieshi/configuration.nix
+  #         sops-nix.nixosModules.sops
+  #       ];
+  #     };
+  #     themis = nixpkgs.lib.nixosSystem {
+  #       system = "x86_64-linux";
+  #       modules = [
+  #         lanzaboote.nixosModules.lanzaboote
+  #         nur.modules.nixos.default
+  #         sops-nix.nixosModules.sops
+  #         ./hosts/themis/configuration.nix
+  #       ];
+  #     };
+  #   };
+  #   homeConfigurations."jack" = home-manager.lib.homeManagerConfiguration {
+  #     pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  #     extraSpecialArgs = {inherit nur;};
+  #     modules = [
+  #       nvf.homeManagerModules.default
+  #       ./users/jack/home.nix
+  #     ];
+  #   };
+  # };
 }
