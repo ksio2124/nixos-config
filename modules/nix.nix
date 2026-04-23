@@ -1,4 +1,4 @@
-{inputs, ...}: {
+_: {
   flake.nixosModules.nix = {pkgs, ...}: {
     programs.direnv = {
       enable = true;

@@ -29,12 +29,15 @@
               style = "moon";
             };
             lsp = {
+              lightbulb.enable = true;
               enable = true;
               formatOnSave = true;
+              # trouble.enable = true;
             };
             diagnostics = {
               enable = true;
-              config.float.source = "always";
+              config.virtual_lines = true;
+              # config.float.source = "always";
             };
             telescope.enable = true;
 

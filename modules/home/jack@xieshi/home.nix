@@ -15,19 +15,16 @@
     imports = [
       self.homeModules.homeEditor
       self.homeModules.homeShell
+      self.homeModules.homeSystem_tools
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
-    nixpkgs.config.permittedInsecurePackages = [
-      "ciscoPacketTracer8-8.2.2"
-      "qtwebengine-5.15.19"
-    ];
 
     home.username = "jack";
     home.homeDirectory = "/home/jack";
     home.packages = [
       pkgs.nixd
       pkgs.alejandra
-      pkgs.lshw
+      # pkgs.lshw
       pkgs.nixfmt
       pkgs.discord
       pkgs.zoom-us
@@ -38,9 +35,9 @@
       pkgs.gimp
       pkgs.figma-linux
       pkgs.signal-desktop
-      pkgs.xdotool
+      # pkgs.xdvotool
       pkgs.jq
-      pkgs.libva-utils
+      # pkgs.libva-utils
       pkgs.godot_4
       pkgs.gpu-screen-recorder-gtk
       pkgs.mangohud
@@ -54,31 +51,21 @@
       pkgs.freecad
       pkgs.tesseract
       pkgs.imagemagickBig
-      pkgs.poppler-utils
+      # pkgs.poppler-utils
       pkgs.google-chrome
       pkgs.xournalpp
-      pkgs.nvtopPackages.full
+      # pkgs.nvtopPackages.full
       pkgs.lzip
       pkgs.retroarch-free
-      pkgs.sbctl
-      pkgs.btop
-      pkgs.ndisc6
-      pkgs.mtr
-      pkgs.iperf3
-      pkgs.sops
-      pkgs.age
-      pkgs.ssh-to-age
-      pkgs.ethtool
-      pkgs.pciutils
-      pkgs.lsof
-      pkgs.wireguard-tools
+      # pkgs.sbctl
+      # pkgs.btop
       pkgs.gnomeExtensions.caffeine
       pkgs.gnomeExtensions.astra-monitor
       pkgs.gnomeExtensions.bluetooth-battery-meter
       pkgs.gnomeExtensions.gsconnect
       pkgs.wireshark
-      pkgs.qjackctl
-      pkgs.carla
+      # pkgs.qjackctl
+      # pkgs.carla
       pkgs.cisco-packet-tracer_9
       pkgs.unigine-superposition
       pkgs.freetube
@@ -120,57 +107,13 @@
       fd.enable = true;
     };
 
-    # programs.mcfly = {
-    #   enable = true;
-    #   enableZshIntegration = true;
-    #   fzf.enable = true;
-    # };
-
-    # nixpkgs.config.allowUnfree = true;
-    programs.git = {
-      enable = true;
-      settings.user = {
-        name = "jack";
-        email = "ksio2124@protonmail.ch";
-      };
-    };
     programs.texlive = {
       enable = true;
       extraPackages = tpkgs: {
         inherit (tpkgs) scheme-full;
       };
     };
-    # programs.direnv = {
-    #   enable = true;
-    #   enableZshIntegration = true; # Since you're using ZSH
-    #   nix-direnv = {
-    #     enable = true;
-    #   };
-    # };
-    programs.navi = {
-      enable = true;
-      enableZshIntegration = true; # Since you're using ZSH
-    };
-    # programs.starship = {
-    #   enable = true;
-    #   enableZshIntegration = true; # Since you're using zsh
-    #   settings = {
-    #     # Example settings
-    #     nix_shell = {
-    #       symbol = "❄️ ";
-    #       format = "via [$symbol$state( \($name\))]($style) ";
-    #     };
-    #     character = {
-    #       success_symbol = "[➜](bold green)";
-    #       error_symbol = "[✗](bold red)";
-    #     };
-    #   };
-    # };
 
-    # programs.fzf = {
-    #   enable = true;
-    #   enableZshIntegration = true; # Since you're using ZSH
-    # };
     programs.firefox = {
       enable = true;
       profiles.default = {
@@ -187,14 +130,6 @@
       enableZshIntegration = true;
       extraConfig = builtins.readFile ./wezterm.lua;
     };
-
-    programs.home-manager = {
-      enable = true;
-    };
-
-    # services.ssh-agent = {
-    #   enable = true;
-    # };
 
     # The state version is required and should stay at the version you
     # originally installed.

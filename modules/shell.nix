@@ -1,8 +1,4 @@
-{
-  inputs,
-  self,
-  ...
-}: {
+_: {
   flake.homeModules.homeShell = {pkgs, ...}: {
     # pkgs
     imports = [
@@ -73,7 +69,17 @@
         };
       };
       home-manager.enable = true;
+      git = {
+        enable = true;
+        settings.user = {
+          name = "jack";
+          email = "ksio2124@protonmail.ch";
+        };
+      };
+      ripgrep.enable = true;
+      fd.enable = true;
     };
+
     services.ssh-agent.enable = true;
 
     nixpkgs.config.allowUnfree = true;
