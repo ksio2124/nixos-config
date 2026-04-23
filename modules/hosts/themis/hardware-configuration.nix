@@ -39,6 +39,7 @@
       device = "/dev/disk/by-uuid/302884b2-eb84-4c96-a1b3-f86c7c23cda4";
       allowDiscards = true;
       keyFileSize = 4096;
+      keyFileTimeout = 5;
       keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
       fallbackToPassword = true;
     };
@@ -50,6 +51,7 @@
       device = "/dev/disk/by-uuid/0deec53c-037f-44d6-89b0-45aa2077dcda";
       allowDiscards = true;
       keyFileSize = 4096;
+      keyFileTimeout = 5;
       keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
       fallbackToPassword = true;
     };
