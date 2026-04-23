@@ -23,5 +23,6 @@
       username = "jack";
       homeDirectory = "/home/jack";
     };
+    home.stateVersion = "25.05";
   };
 }
