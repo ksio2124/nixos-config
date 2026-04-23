@@ -11,19 +11,15 @@
   flake.nixosModules.hostThemis = {
     config,
     pkgs,
-    lib,
     ...
   }: {
     imports = [
       inputs.lanzaboote.nixosModules.lanzaboote
       inputs.nur.modules.nixos.default
       inputs.sops-nix.nixosModules.sops
-      #./hosts/themis/configuration.nix
-
-      # Include the results of the hardware scan.
-      # ./hardware-configuration.nix
-      # ./router.nix
-      # ./server.nix
+      self.nixosModules.nextcloud
+      self.nixosModules.anki-sync-server
+      self.nixosModules.wordpress
     ];
     nix.settings.download-buffer-size = 524288000;
     sops.defaultSopsFile = ./secrets/config.yaml;
@@ -33,13 +29,7 @@
     sops.age.generateKey = true;
     sops.secrets.example_key = {};
     sops.secrets."myservice/my_subdir/my_secret" = {};
-    # Bootloader.
-    # boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
-    # Lanzaboote currently replaces the systemd-boot module.
-    # This setting is usually set to true in configuration.nix
-    # generated at installation time. So we force it to false
-    # for now.
     boot.supportedFilesystems = {
       zfs = true;
     };
@@ -48,23 +38,10 @@
     networking.hostName = "themis"; # Define your hostname.
     networking.hostId = "0e144610";
     powerManagement.powertop.enable = true;
-    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     nix.settings.experimental-features = [
       "nix-command"
       "flakes"
     ];
-    # Configure network proxy if necessary
-    # networking.proxy.default = "http://user:password@proxy:port/";
-    # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-    # Enable networking
-    # networking.networkmanager.enable = true;
-    # systemd.sleep.extraConfig = ''
-    #   AllowSuspend=no
-    #   AllowHibernation=no
-    #   AllowHybridSleep=no
-    #   AllowSuspendThenHibernate=no
-    # '';
     systemd.targets.sleep.enable = false;
     systemd.targets.suspend.enable = false;
     systemd.targets.hibernate.enable = false;
@@ -89,32 +66,12 @@
     };
 
     hardware.nvidia = {
-      # Modesetting is required.
       modesetting.enable = true;
-
-      # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-      # Enable this if you have graphical corruption issues or application crashes after waking
-      # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
-      # of just the bare essentials.
       powerManagement.enable = false;
-
-      # Fine-grained power management. Turns off GPU when not in use.
-      # Experimental and only works on modern Nvidia GPUs (Turing or newer).
       powerManagement.finegrained = false;
-
-      # Use the NVidia open source kernel module (not to be confused with the
-      # independent third-party "nouveau" open source driver).
-      # Support is limited to the Turing and later architectures. Full list of
-      # supported GPUs is at:
-      # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-      # Only available from driver 515.43.04+
       open = false;
-
-      # Enable the Nvidia settings menu,
-      # accessible via `nvidia-settings`.
       nvidiaSettings = true;
 
-      # Optionally, you may need to select the appropriate driver version for your specific GPU.
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
 
@@ -159,18 +116,7 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      # If you want to use JACK applications, uncomment this
-      #jack.enable = true;
-
-      # use the example session manager (no others are packaged yet so this is enabled by default,
-      # no need to redefine it in your config for now)
-      #media-session.enable = true;
     };
-
-    # Enable touchpad support (enabled default in most desktopManager).
-    # services.xserver.libinput.enable = true;
-
-    # Define a user account. Don't forget to set a password with ‘passwd’.
     users.users.jack = {
       isNormalUser = true;
       description = "jack";
@@ -197,19 +143,7 @@
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
-      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-      #  wget
     ];
-
-    # Some programs need SUID wrappers, can be configured further or are
-    # started in user sessions.
-    # programs.mtr.enable = true;
-    # programs.gnupg.agent = {
-    #   enable = true;
-    #   enableSSHSupport = true;
-    # };
-
-    # List services that you want to enable:
 
     # Enable the OpenSSH daemon.
     services.openssh = {

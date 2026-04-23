@@ -1,6 +1,5 @@
 {
   flake.nixosModules.hostThemis = {
-    config,
     pkgs,
     lib,
     ...
@@ -25,16 +24,7 @@
         linkConfig = {
           RxBufferSize = 4096;
           TxBufferSize = 4096;
-          # GenericSegmentationOffload = false;
-          # GenericReceiveOffload = false;
         };
-        # extraConfig = ''
-        #   [Link]
-        #   UseAdaptiveRxCoalesce=yes
-        #   UseAdaptiveTxCoalesce=yes
-        # ''
-        # linkConfig.UseAdaptiveRxCoalesce = true;      # Dynamic interrupt handling
-        # linkConfig.UseAdaptiveTxCoalesce = true;
       };
       "10-lan0" = {
         matchConfig.MACAddress = "00:e0:ed:93:e5:59";
@@ -120,25 +110,6 @@
       };
     };
 
-    # Adding Tap for container
-
-    # Define the TAP device
-    # systemd.network.netdevs."60-tap0" = {
-    #   netdevConfig = {
-    #     Kind = "tap";
-    #     Name = "tap0";
-    #   };
-    # };
-
-    # Optional: Configure the interface (e.g., set IP or keep it UP)
-    # systemd.network.networks."60-tap0" = {
-    #   matchConfig.Name = "tap0";
-    #   linkConfig.ActivationPolicy = "always-up";
-    #   address = ["10.0.0.1/32"];
-    #   #networkConfig.Address = "10.0.0.1/24"; # Optional IP assignment
-    # };
-    # wireguard setup
-
     sops.secrets."wireguard/PrivateKey" = {
       mode = "640";
       owner = "systemd-network";
@@ -184,10 +155,6 @@
               "fd31:bf08:57cb::8/128"
               "192.168.2.2/32"
             ];
-
-            # RouteTable can also be set in wireguardPeers
-            # RouteTable in wireguardConfig will then be ignored.
-            # RouteTable = 1000;
           }
         ];
       };
@@ -237,15 +204,6 @@
                 name = "domain-name";
                 data = "example.com";
               }
-            ];
-
-            # Replicating dhcp-host (Static Assignments)
-            reservations = [
-              # {
-              #   hw-address = "AA:BB:CC:DD:EE:FF";
-              #   ip-address = "10.0.0.2";
-              #   hostname = "static-host";
-              # }
             ];
           }
         ];
@@ -346,18 +304,7 @@
     networking.firewall.enable = false;
     networking.nftables = {
       enable = true;
-      ruleset = builtins.readFile ./firewall.nft;
-    };
-    sops.secrets."cloudflare-ddns/credentials" = {};
-    services.cloudflare-ddns = {
-      enable = true;
-      credentialsFile = config.sops.secrets."cloudflare-ddns/credentials".path;
-      domains = [
-        "cowgoesmoopiggoesoink.com"
-        "nextcloud.cowgoesmoopiggoesoink.com"
-        "wordpress.cowgoesmoopiggoesoink.com"
-        "anki-sync-server.cowgoesmoopiggoesoink.com"
-      ];
+      rulesetFile = ./firewall.nft;
     };
   };
 }
