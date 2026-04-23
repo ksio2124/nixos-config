@@ -20,8 +20,8 @@
       self.nixosModules.nextcloud
       self.nixosModules.anki-sync-server
       self.nixosModules.wordpress
+      self.nixosModules.nix
     ];
-    nix.settings.download-buffer-size = 524288000;
     sops.defaultSopsFile = ./secrets/config.yaml;
     sops.defaultSopsFormat = "yaml";
     sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];
@@ -38,10 +38,7 @@
     networking.hostName = "themis"; # Define your hostname.
     networking.hostId = "0e144610";
     powerManagement.powertop.enable = true;
-    nix.settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+
     systemd.targets.sleep.enable = false;
     systemd.targets.suspend.enable = false;
     systemd.targets.hibernate.enable = false;
