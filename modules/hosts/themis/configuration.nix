@@ -25,10 +25,8 @@
     sops.defaultSopsFile = ./secrets/config.yaml;
     sops.defaultSopsFormat = "yaml";
     sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];
-    sops.age.keyFile = "/home/jack/.config/sops/age/key.txt";
+    sops.age.keyFile = "/home/jack/.config/sops/age/keys.txt";
     sops.age.generateKey = true;
-    sops.secrets.example_key = {};
-    sops.secrets."myservice/my_subdir/my_secret" = {};
     boot.loader.efi.canTouchEfiVariables = true;
     boot.supportedFilesystems = {
       zfs = true;
