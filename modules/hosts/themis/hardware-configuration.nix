@@ -41,7 +41,6 @@
       keyFileSize = 4096;
       keyFileTimeout = 5;
       keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
-      fallbackToPassword = true;
     };
 
     # swap devices is also encrypted
@@ -53,7 +52,6 @@
       keyFileSize = 4096;
       keyFileTimeout = 5;
       keyFile = "/dev/disk/by-id/usb-PNY_USB_2.0_FD_AF822H06YD34000995-0:0";
-      fallbackToPassword = true;
     };
 
     fileSystems."/boot" = {
