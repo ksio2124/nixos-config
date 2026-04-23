@@ -47,25 +47,18 @@
       pkgs.lutris
       pkgs.bottles
       pkgs.calibre
-      pkgs.pdfarranger
       pkgs.unciv
-      pkgs.logseq
       pkgs.devenv
-      pkgs.cudaPackages.cuda_nvcc
       pkgs.endless-sky
       pkgs.freecad
       pkgs.tesseract
       pkgs.imagemagickBig
       pkgs.poppler-utils
-      pkgs.ccache
       pkgs.google-chrome
-      pkgs.youtube-tui
-      pkgs.chawan
       pkgs.xournalpp
       pkgs.nvtopPackages.full
       pkgs.lzip
       pkgs.retroarch-free
-      pkgs.cachix
       pkgs.sbctl
       pkgs.btop
       pkgs.ndisc6
@@ -83,13 +76,10 @@
       pkgs.gnomeExtensions.bluetooth-battery-meter
       pkgs.gnomeExtensions.gsconnect
       pkgs.wireshark
-      pkgs.remmina
       pkgs.qjackctl
       pkgs.carla
       pkgs.cisco-packet-tracer_9
       pkgs.unigine-superposition
-      pkgs.gns3-gui
-      pkgs.gns3-server
       pkgs.freetube
       pkgs.kiwix
       pkgs.opencode
