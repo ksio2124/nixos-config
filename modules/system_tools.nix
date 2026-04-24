@@ -28,6 +28,7 @@ _: {
       pkgs.nixfmt
       pkgs.statix
       pkgs.deadnix
+      pkgs.unzip
     ];
   };
 }
