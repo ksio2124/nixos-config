@@ -228,6 +228,7 @@
             "127.0.0.1"
             "::1"
             "192.168.1.1"
+            "10.88.0.1" #podman port
             # "fe80::/10"
           ];
 
@@ -258,6 +259,7 @@
           # Prevent unauthorized access
           access-control = [
             "127.0.0.0/8 allow"
+            "10.0.0.0/8 allow"
             "::1 allow"
             "192.168.1.0/24 allow" # Replace with your local subnet
             "fe80::/10 allow"

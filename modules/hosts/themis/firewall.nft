@@ -23,6 +23,7 @@
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
+          iifname "podman*" udp dport {53} accept comment "Allow podman to get dns information"
           iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
 
         }
@@ -33,7 +34,11 @@
           ct state invalid drop
           ct state established,related accept
           iifname "br0" oifname "wan" accept
+          iifname "podman*" oifname "wan" accept comment "Allow podman internet access"
           iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
+            # Allow the WAN to send Storj traffic to the Podman bridge
+          iifname "wan" oifname "podman*" tcp dport 28967 accept
+          iifname "wan" oifname "podman*" udp dport 28967 accept
         }
 
         chain forward_mangle {
@@ -48,7 +53,7 @@
             type nat hook prerouting priority dstnat; policy accept;
             
             # Example: Forward external port 8080 to internal IP 10.0.0.5 on port 80
-            iifname "wan" tcp dport 28967 redirect to :443
+            #iifname "wan" tcp dport 28967 redirect to :443
           }
         chain postrouting {
           type nat hook postrouting priority srcnat;
