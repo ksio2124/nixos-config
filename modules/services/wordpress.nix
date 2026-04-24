@@ -1,22 +1,11 @@
 {
-  flake.nixosModules.wordpress = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.wordpress = _: {
     containers.wordpress = {
       autoStart = true;
       privateNetwork = true;
       hostAddress = "10.0.0.1";
-      # hostBridge = "tap0"; # Specify the bridge name
       localAddress = "10.0.0.3";
-      config = {
-        config,
-        pkgs,
-        lib,
-        ...
-      }: {
+      config = {pkgs, ...}: {
         services.wordpress.sites."wordpress.cowgoesmoopiggoesoink.com" = {
           settings = {
             # Needed to run behind reverse proxy
@@ -41,5 +30,6 @@
         proxyPass = "http://10.0.0.3";
       };
     };
+    security.acme.certs."wordpress.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

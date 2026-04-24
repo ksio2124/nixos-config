@@ -27,5 +27,7 @@
         proxyPass = "http://10.0.0.8:27701/";
       };
     };
+
+    security.acme.certs."anki-sync-server.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

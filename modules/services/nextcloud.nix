@@ -77,10 +77,7 @@
         proxyPass = "http://10.0.0.6";
       };
     };
-    security.acme = {
-      certs = {
-        "nextcloud.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
-      };
-    };
+
+    security.acme.certs."nextcloud.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }
