@@ -51,6 +51,8 @@
         "nextcloud.cowgoesmoopiggoesoink.com"
         "wordpress.cowgoesmoopiggoesoink.com"
         "anki-sync-server.cowgoesmoopiggoesoink.com"
+
+        "firefox-syncserver.cowgoesmoopiggoesoink.com"
       ];
     };
     security.acme.acceptTerms = true;

@@ -20,6 +20,8 @@
       self.nixosModules.nextcloud
       self.nixosModules.anki-sync-server
       self.nixosModules.wordpress
+      #self.nixosModules.firefox-syncserver
+      # something not right might need a full restart of the computer
       self.nixosModules.nix
     ];
     sops.defaultSopsFile = ./secrets/config.yaml;
