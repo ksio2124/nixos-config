@@ -23,6 +23,7 @@
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
+          iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
 
         }
 
@@ -42,6 +43,13 @@
       }
 
       table ip nat {
+        # Add this prerouting chain
+          chain prerouting {
+            type nat hook prerouting priority dstnat; policy accept;
+            
+            # Example: Forward external port 8080 to internal IP 10.0.0.5 on port 80
+            iifname "wan" tcp dport 28967 redirect to :443
+          }
         chain postrouting {
           type nat hook postrouting priority srcnat;
           oifname "wan" masquerade
