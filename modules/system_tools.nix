@@ -29,6 +29,7 @@ _: {
       pkgs.statix
       pkgs.deadnix
       pkgs.unzip
+      pkgs.yaml-language-server
     ];
   };
 }

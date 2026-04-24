@@ -66,6 +66,7 @@
                 lsp.servers = ["nixd"];
               };
               lua.enable = true;
+              yaml.enable = true;
             };
           };
         };
