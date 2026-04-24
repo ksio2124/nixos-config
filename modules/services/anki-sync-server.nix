@@ -1,10 +1,15 @@
 {
-  flake.nixosModules.anki-sync-server = {...}: {
+  flake.nixosModules.anki-sync-server = {config, ...}: {
+    sops.secrets."anki-sync-server/password" = {};
     containers.anki-sync-server = {
       autoStart = true;
       privateNetwork = true;
       hostAddress = "10.0.0.7";
       localAddress = "10.0.0.8";
+      bindMounts."/run/secrets/anki-sync-server/password" = {
+        hostPath = config.sops.secrets."anki-sync-server/password".path;
+      };
+
       config = {...}: {
         services.anki-sync-server = {
           enable = true;
@@ -12,8 +17,8 @@
           openFirewall = true;
           users = [
             {
-              username = "bob";
-              password = "password";
+              username = "jack";
+              passwordFile = /run/secrets/anki-sync-server/password;
             }
           ];
         };
