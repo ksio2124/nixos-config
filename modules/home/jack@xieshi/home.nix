@@ -105,6 +105,7 @@
       };
       ripgrep.enable = true;
       fd.enable = true;
+      thunderbird.enable = true;
     };
 
     programs.texlive = {
