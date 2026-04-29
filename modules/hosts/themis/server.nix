@@ -53,6 +53,8 @@
         "anki-sync-server.cowgoesmoopiggoesoink.com"
         "firefox-syncserver.cowgoesmoopiggoesoink.com"
         "mail.cowgoesmoopiggoesoink.com"
+        "ksio2124.com"
+        "mail.ksio2124.com"
       ];
     };
     security.acme.acceptTerms = true;
