@@ -26,6 +26,37 @@
             fastcgi_request_buffering off;
           '';
         };
+        #     services.nginx.virtualHosts."localhost" = {
+        #       # This automatically sets up SSL via Let's Encrypt (replaces Caddy's auto-SSL)
+        #       forceSSL = true;
+        #       enableACME = true;
+        #
+        #       locations."/" = {
+        #         proxyPass = "http://127.0.0.1:8000";
+        #         proxyWebsockets = true; # Necessary for OnlyOffice document editing
+        #         extraConfig = ''
+        #           # This is the direct equivalent to your header_up line
+        #           proxy_set_header X-Forwarded-Proto https;
+        #
+        #           # Standard proxy headers usually needed
+        #           proxy_set_header Host $host;
+        #           proxy_set_header X-Real-IP $remote_addr;
+        #         '';
+        #       };
+        #     };
+        #
+        #     security.acme.acceptTerms = true;
+        #
+        # security.acme.certs."localhost".email = "ksio2124@protonmail.cih";
+        #
+        #     services.onlyoffice = {
+        #       enable = true;
+        #       hostname = "localhost";
+        #       securityNonceFile = "${pkgs.writeText "nixos-test-onlyoffice-nonce.conf" ''
+        #         set $secure_link_secret "nixostest";
+        #       ''}";
+        #     };
+
         services.nextcloud = {
           enable = true;
           maxUploadSize = "200G";
@@ -39,6 +70,7 @@
               mail
               notes
               onlyoffice
+              #richdocuments
               tasks
               cospend
               phonetrack
@@ -61,6 +93,11 @@
             log_type = "file";
           };
         };
+        # Prevent the host from overwriting resolv.conf with its own potentially invalid one
+        networking.useHostResolvConf = false;
+
+        # Manually set reliable public DNS servers
+        networking.nameservers = ["1.1.1.1" "8.8.8.8"];
         networking.firewall.allowedTCPPorts = [80];
         system.stateVersion = "26.05"; # Required for running NixOS containers
       };

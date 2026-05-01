@@ -15,7 +15,9 @@
 
           iifname "wan" udp dport dhcpv6-client udp sport dhcpv6-server counter accept comment "Allow DHCPv6 client"
           iifname "ve-*" ip daddr "10.0.0.5" accept
+          iifname "ve-*" ip saddr "10.0.0.6" accept
           iifname "ve-*" ip saddr "10.0.0.14" accept
+          iifname "ve-*" ip saddr "10.0.0.16" accept
           iifname "ve-*" drop
           icmp type echo-request accept
 
@@ -25,6 +27,7 @@
           iifname "wan" udp dport {51820} accept
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
           iifname "podman*" udp dport {53} accept comment "Allow podman to get dns information"
+          iifname "ve-*" udp dport {53} accept comment "Allow podman to get dns information"
           iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
 
         }
