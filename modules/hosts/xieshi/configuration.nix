@@ -44,15 +44,6 @@
     };
 
     networking.hostName = "xieshi"; # Define your hostname.
-    fonts.packages = with pkgs; [
-      nerd-fonts.fira-code
-      nerd-fonts.droid-sans-mono
-      inter
-      montserrat
-      lato
-    ];
-    # Enable networking
-    # networking.networkmanager.enable = true;
     hardware.sensor.iio.enable = true;
 
     # Set your time zone.
@@ -103,8 +94,6 @@
     };
     environment.sessionVariables = {
       LIBVA_DRIVER_NAME = "iHD";
-      EDITOR = "nvim";
-      VISUAL = "nvim";
     };
 
     # Load nvidia driver for Xorg and Wayland
@@ -144,41 +133,11 @@
         enable = true;
         package = wireplumber_0_5_12;
       };
-      # If you want to use JACK applications, uncomment this
       jack.enable = true;
-
-      # use the example session manager (no others are packaged yet so this is enabled by default,
-      # no need to redefine it in your config for now)
-      #media-session.enable = true;
     };
     services.lact.enable = true;
 
-    # Enable touchpad support (enabled default in most desktopManager).
-    # services.xserver.libinput.enable = true;
-
-    # Define a user account. Don't forget to set a password with ‘passwd’.
-    users.users.jack = {
-      isNormalUser = true;
-      description = "jack";
-      shell = pkgs.zsh;
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-      ];
-      packages = with pkgs; [
-        pkgs.home-manager
-      ];
-    };
-    programs.firefox.enable = true;
-
-    # List packages installed in system profile. To search, run:
-    # $ nix search wget
-    # environment.systemPackages = with pkgs; [
-    #   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #   #  wget
-    # ];
     environment.systemPackages = [
-      pkgs.neovim
       pkgs.impala
     ];
 
@@ -188,8 +147,6 @@
     programs.steam.enable = true;
     programs.gamemode.enable = true;
     programs.steam.gamescopeSession.enable = true;
-
-    programs.zsh.enable = true;
 
     virtualisation.waydroid.enable = true;
     networking.firewall = rec {
@@ -223,7 +180,6 @@
     sops.age.generateKey = true;
     # wireguard
     sops.secrets."wireguard/PrivateKey" = {
-      mode = "640";
       owner = "systemd-network";
       group = "systemd-network";
     };

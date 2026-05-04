@@ -117,31 +117,7 @@
       alsa.support32Bit = true;
       pulse.enable = true;
     };
-    users.users.jack = {
-      isNormalUser = true;
-      description = "jack";
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-      ];
-      shell = pkgs.zsh;
-      packages = with pkgs; [
-        #  thunderbird
-        git
-        home-manager
-      ];
-    };
 
-    # Install firefox.
-    programs.firefox.enable = true;
-    programs.zsh.enable = true;
-    programs.nix-ld.enable = true;
-
-    # Allow unfree packages
-    nixpkgs.config.allowUnfree = true;
-
-    # List packages installed in system profile. To search, run:
-    # $ nix search wget
     environment.systemPackages = with pkgs; [
     ];
 
