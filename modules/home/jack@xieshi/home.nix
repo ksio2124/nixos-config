@@ -17,6 +17,7 @@
       self.homeModules.homeShell
       self.homeModules.homeSystem_tools
       self.homeModules.homeDevelopment
+      self.homeModules.homeGnome
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
 
@@ -34,23 +35,12 @@
       pkgs.signal-desktop
       pkgs.godot_4
       pkgs.gpu-screen-recorder-gtk
-      pkgs.mangohud
-      pkgs.protonup-ng
-      pkgs.lutris
-      pkgs.bottles
       pkgs.calibre
-      pkgs.unciv
-      pkgs.endless-sky
       pkgs.freecad
       pkgs.tesseract
       pkgs.imagemagickBig
       pkgs.google-chrome
       pkgs.xournalpp
-      pkgs.retroarch-free
-      pkgs.gnomeExtensions.caffeine
-      pkgs.gnomeExtensions.astra-monitor
-      pkgs.gnomeExtensions.bluetooth-battery-meter
-      pkgs.gnomeExtensions.gsconnect
       pkgs.wireshark
       pkgs.cisco-packet-tracer_9
       pkgs.unigine-superposition
@@ -59,23 +49,8 @@
       pkgs.opencode
       pkgs.wl-clipboard
       pkgs.anki
-      pkgs.wesnoth
       pkgs.stremio-linux-shell
     ];
-    dconf = {
-      enable = true;
-      settings = {
-        "org/gnome/shell" = {
-          disable-user-extensions = false; # enables user extensions
-          enabled-extensions = [
-            pkgs.gnomeExtensions.astra-monitor.extensionUuid
-            pkgs.gnomeExtensions.caffeine.extensionUuid
-            pkgs.gnomeExtensions.bluetooth-battery-meter.extensionUuid
-            pkgs.gnomeExtensions.gsconnect.extensionUuid
-          ];
-        };
-      };
-    };
     programs = {
       chromium.enable = true;
       obs-studio.enable = true;
