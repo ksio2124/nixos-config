@@ -33,10 +33,10 @@ _: {
       (pkgs.ffmpeg-full.override
         {withUnfree = true;})
       pkgs.jq
+      pkgs.browsh
     ];
     programs = {
       yt-dlp.enable = true;
-
       ripgrep.enable = true;
       fd.enable = true;
     };

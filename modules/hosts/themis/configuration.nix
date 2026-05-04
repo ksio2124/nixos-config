@@ -126,6 +126,19 @@
       enable = true;
       passwordAuthentication = true;
     };
+    # 2. Declarative Sunshine Configuration
+    services.sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true; # Necessary for capture
+      openFirewall = true;
+      settings = {
+        # Force Sunshine to use Wayland/wlr capture
+        capture_method = "wlr";
+        # Define the encoder (nvenc for NVIDIA, vaapi for AMD/Intel)
+        encoder = "nvenc";
+      };
+    };
 
     system.stateVersion = "25.05"; # Did you read the comment?
   };

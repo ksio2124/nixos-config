@@ -116,7 +116,6 @@
     };
 
     sops.secrets."wireguard/PrivateKey" = {
-      mode = "640";
       owner = "systemd-network";
       group = "systemd-network";
     };
