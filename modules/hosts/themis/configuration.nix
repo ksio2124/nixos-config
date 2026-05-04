@@ -21,7 +21,7 @@
       self.nixosModules.anki-sync-server
       self.nixosModules.wordpress
       self.nixosModules.storjlabs_storagenode
-      # self.nixosModules.mailserver
+      self.nixosModules.mailserver2
       #self.nixosModules.onlyoffice
       #self.nixosModules.firefox-syncserver
       # something not right might need a full restart of the computer

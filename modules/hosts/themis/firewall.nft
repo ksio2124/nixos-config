@@ -14,6 +14,9 @@
           } accept
 
           iifname "wan" udp dport dhcpv6-client udp sport dhcpv6-server counter accept comment "Allow DHCPv6 client"
+          iifname "br0" ether type arp accept
+          iifname "br0" pkttype broadcast accept
+
           iifname "ve-*" ip daddr "10.0.0.5" accept
           iifname "ve-*" ip saddr "10.0.0.6" accept
           iifname "ve-*" ip saddr "10.0.0.14" accept

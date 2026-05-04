@@ -11,6 +11,7 @@ _: {
     };
 
     nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings.trusted-users = ["root" "@wheel"];
     programs.nix-ld.enable = true;
     nixpkgs.config.allowUnfree = true;
 

@@ -78,6 +78,7 @@
       pkgs.wesnoth
       (pkgs.ffmpeg-full.override
         {withUnfree = true;})
+      pkgs.stremio-linux-shell
     ];
     dconf = {
       enable = true;

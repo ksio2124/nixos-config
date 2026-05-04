@@ -78,12 +78,16 @@
         networkConfig = {
           IPv4Forwarding = true;
           IPv6Forwarding = true;
-        };
-        networkConfig = {
           ConfigureWithoutCarrier = true;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
           IPv6PrivacyExtensions = "yes";
+          DHCPServer = true;
+        };
+        dhcpServerConfig = {
+          EmitDNS = true;
+          PoolOffset = 50;
+          DNS = ["1.1.1.1" "8.8.8.8"];
         };
         ipv6SendRAConfig = {
           # Managed = false; # Set 'true' only if using Kea/DHCPv6
@@ -162,55 +166,55 @@
     };
 
     services.resolved.enable = false;
-
-    services.kea.dhcp4 = {
-      enable = true;
-      settings = {
-        interfaces-config = {
-          interfaces = ["br0"];
-          service-sockets-max-retries = 20;
-        };
-
-        lease-database = {
-          type = "memfile";
-          persist = true;
-          name = "/var/lib/kea/kea-leases4.csv";
-        };
-
-        # Replicating dnsmasq dhcp-range and options
-        subnet4 = [
-          {
-            id = 1;
-            subnet = "192.168.1.0/24";
-            pools = [
-              {pool = "192.168.1.10 - 192.168.1.254";}
-            ];
-
-            # Replicating "5m" lease time
-            valid-lifetime = 300;
-
-            option-data = [
-              {
-                # dhcp-option 3 (Router)
-                name = "routers";
-                data = "192.168.1.1";
-              }
-              {
-                # dhcp-option 6 (DNS) - Pointing to your local address 10.0.0.1
-                name = "domain-name-servers";
-                data = "192.168.1.1";
-              }
-              {
-                # Replicating 'domain = example.com'
-                name = "domain-name";
-                data = "example.com";
-              }
-            ];
-          }
-        ];
-      };
-    };
-
+    #
+    # services.kea.dhcp4 = {
+    #   enable = true;
+    #   settings = {
+    #     interfaces-config = {
+    #       interfaces = ["br0"];
+    #       service-sockets-max-retries = 20;
+    #     };
+    #
+    #     lease-database = {
+    #       type = "memfile";
+    #       persist = true;
+    #       name = "/var/lib/kea/kea-leases4.csv";
+    #     };
+    #
+    #     # Replicating dnsmasq dhcp-range and options
+    #     subnet4 = [
+    #       {
+    #         id = 1;
+    #         subnet = "192.168.1.0/24";
+    #         pools = [
+    #           {pool = "192.168.1.10 - 192.168.1.254";}
+    #         ];
+    #
+    #         # Replicating "5m" lease time
+    #         valid-lifetime = 300;
+    #
+    #         option-data = [
+    #           {
+    #             # dhcp-option 3 (Router)
+    #             name = "routers";
+    #             data = "192.168.1.1";
+    #           }
+    #           {
+    #             # dhcp-option 6 (DNS) - Pointing to your local address 10.0.0.1
+    #             name = "domain-name-servers";
+    #             data = "192.168.1.1";
+    #           }
+    #           {
+    #             # Replicating 'domain = example.com'
+    #             name = "domain-name";
+    #             data = "example.com";
+    #           }
+    #         ];
+    #       }
+    #     ];
+    #   };
+    # };
+    #
     boot.kernel.sysctl = {
       "net.core.rmem_max" = 4194304; # 4MB
       "net.core.wmem_max" = 4194304; # 4MB

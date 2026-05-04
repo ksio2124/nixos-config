@@ -30,6 +30,11 @@ _: {
       pkgs.deadnix
       pkgs.unzip
       pkgs.yaml-language-server
+      pkgs.android-tools
+      pkgs.signify
+      pkgs.libarchive
+      pkgs.universal-android-debloater
+      pkgs.nmap
     ];
   };
 }
