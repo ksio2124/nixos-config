@@ -23,19 +23,22 @@ _: {
       pkgs.carla #gui tool
       pkgs.lshw
       pkgs.lzip
-      pkgs.nixd
-      pkgs.alejandra
-      pkgs.nixfmt
-      pkgs.statix
-      pkgs.deadnix
       pkgs.unzip
-      pkgs.yaml-language-server
       pkgs.android-tools
       pkgs.signify
       pkgs.libarchive
       pkgs.universal-android-debloater
       pkgs.nmap
       pkgs.binutils
+      (pkgs.ffmpeg-full.override
+        {withUnfree = true;})
+      pkgs.jq
     ];
+    programs = {
+      yt-dlp.enable = true;
+
+      ripgrep.enable = true;
+      fd.enable = true;
+    };
   };
 }

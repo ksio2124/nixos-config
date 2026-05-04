@@ -16,6 +16,7 @@
       self.homeModules.homeEditor
       self.homeModules.homeShell
       self.homeModules.homeSystem_tools
+      self.homeModules.homeDevelopment
       # import homeModules here
     ];
 

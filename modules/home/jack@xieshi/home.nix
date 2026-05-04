@@ -16,16 +16,13 @@
       self.homeModules.homeEditor
       self.homeModules.homeShell
       self.homeModules.homeSystem_tools
+      self.homeModules.homeDevelopment
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
 
     home.username = "jack";
     home.homeDirectory = "/home/jack";
     home.packages = [
-      pkgs.nixd
-      pkgs.alejandra
-      # pkgs.lshw
-      pkgs.nixfmt
       pkgs.discord
       pkgs.zoom-us
       pkgs.vlc
@@ -35,9 +32,6 @@
       pkgs.gimp
       pkgs.figma-linux
       pkgs.signal-desktop
-      # pkgs.xdvotool
-      pkgs.jq
-      # pkgs.libva-utils
       pkgs.godot_4
       pkgs.gpu-screen-recorder-gtk
       pkgs.mangohud
@@ -46,38 +40,26 @@
       pkgs.bottles
       pkgs.calibre
       pkgs.unciv
-      pkgs.devenv
       pkgs.endless-sky
       pkgs.freecad
       pkgs.tesseract
       pkgs.imagemagickBig
-      # pkgs.poppler-utils
       pkgs.google-chrome
       pkgs.xournalpp
-      # pkgs.nvtopPackages.full
-      pkgs.lzip
       pkgs.retroarch-free
-      # pkgs.sbctl
-      # pkgs.btop
       pkgs.gnomeExtensions.caffeine
       pkgs.gnomeExtensions.astra-monitor
       pkgs.gnomeExtensions.bluetooth-battery-meter
       pkgs.gnomeExtensions.gsconnect
       pkgs.wireshark
-      # pkgs.qjackctl
-      # pkgs.carla
       pkgs.cisco-packet-tracer_9
       pkgs.unigine-superposition
       pkgs.freetube
       pkgs.kiwix
       pkgs.opencode
-      pkgs.statix
-      pkgs.deadnix
       pkgs.wl-clipboard
       pkgs.anki
       pkgs.wesnoth
-      (pkgs.ffmpeg-full.override
-        {withUnfree = true;})
       pkgs.stremio-linux-shell
     ];
     dconf = {
@@ -97,15 +79,9 @@
     programs = {
       chromium.enable = true;
       obs-studio.enable = true;
-      yt-dlp.enable = true;
       mpv = {
         enable = true;
-        # config = {
-        #   hwdec = "vaapi";
-        # };
       };
-      ripgrep.enable = true;
-      fd.enable = true;
       thunderbird.enable = true;
     };
 
