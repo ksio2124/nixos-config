@@ -35,6 +35,7 @@ _: {
       pkgs.libarchive
       pkgs.universal-android-debloater
       pkgs.nmap
+      pkgs.binutils
     ];
   };
 }
