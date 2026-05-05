@@ -17,11 +17,11 @@
       inputs.lanzaboote.nixosModules.lanzaboote
       inputs.nur.modules.nixos.default
       inputs.sops-nix.nixosModules.sops
-      self.nixosModules.nextcloud
-      self.nixosModules.anki-sync-server
-      self.nixosModules.wordpress
-      self.nixosModules.storjlabs_storagenode
-      self.nixosModules.mailserver2
+      #self.nixosModules.nextcloud
+      #self.nixosModules.anki-sync-server
+      #self.nixosModules.wordpress
+      #self.nixosModules.storjlabs_storagenode
+      #self.nixosModules.mailserver2
       #self.nixosModules.onlyoffice
       #self.nixosModules.firefox-syncserver
       # something not right might need a full restart of the computer
@@ -72,7 +72,7 @@
       open = false;
       nvidiaSettings = true;
 
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
     };
 
     hardware.graphics = {
@@ -89,7 +89,7 @@
 
     # Enable the X11 windowing system.
     services.xserver.enable = true;
-
+    boot.initrd.kernelModules = ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
     # Enable the GNOME Desktop Environment.
     services.xserver.displayManager.gdm.enable = true;
     services.xserver.desktopManager.gnome.enable = true;
@@ -134,11 +134,27 @@
       openFirewall = true;
       settings = {
         # Force Sunshine to use Wayland/wlr capture
-        capture_method = "wlr";
+        #capture_method = "wlr";
         # Define the encoder (nvenc for NVIDIA, vaapi for AMD/Intel)
         encoder = "nvenc";
       };
     };
+    hardware.uinput.enable = true;
+    programs.sway = {
+      enable = true;
+      extraSessionCommands = ''
+        export WLR_BACKENDS=headless
+        export WLR_LIBINPUT_NO_DEVICES=1
+        # Essential for NVIDIA + Wayland
+        export GBM_BACKEND=nvidia-drm
+        export __GLX_VENDOR_LIBRARY_NAME=nvidia
+        export WLR_NO_HARDWARE_CURSORS=1
+      '';
+    };
+    environment.etc."sway/config".text = ''
+      output HEADLESS-1 resolution 1920x1080
+      exec sunshine
+    '';
 
     system.stateVersion = "25.05"; # Did you read the comment?
   };

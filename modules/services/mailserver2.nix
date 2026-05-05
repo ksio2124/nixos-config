@@ -19,25 +19,25 @@
     };
     systemd.tmpfiles.rules = [
       # Type | Path            | Mode | User        | Group       | Age | Argument
-      "d      /mypool/mailserver2/vmail     0700   mailserver2   mailserver2   -     -"
-      "d      /mypool/mailserver2/lib/postfix     0700   mailserver2   mailserver2   -     -"
-      "d      /mypool/mailserver2/lib/dovecot     0700   mailserver2   mailserver2   -     -"
+      "d      /mypool/mailserver2/vmail     0700   0   70554   -     -"
+      "d      /mypool/mailserver2/lib/postfix     0700   0   70554   -     -"
+      "d      /mypool/mailserver2/lib/dovecot     0700   0   70554   -     -"
     ];
-    containers.mailserver3 = {
+    containers.mailserver = {
       autoStart = true;
       privateNetwork = true;
       hostAddress = "10.0.0.17";
       localAddress = "10.0.0.18";
       ephemeral = true;
-      privateUsers = 65536 + 18;
+      # privateUsers = 65536 + 18;
       bindMounts = {
         "/var/lib/acme/cowgoesmoopiggoesoink.com" = {
           hostPath = "/var/lib/acme/cowgoesmoopiggoesoink.com";
           isReadOnly = true;
         };
-        "/var/mailserver2/vmail".hostPath = "/mypool/mailserver2/vmail";
-        "/var/mailserver2/lib/postfix".hostPath = "/mypool/lib/postfix";
-        "/var/mailserver2/lib/dovecot".hostPath = "/mypool/lib/dovecot";
+        "/var/vmail".hostPath = "/mypool/mailserver2/vmail";
+        "/var/lib/postfix".hostPath = "/mypool/mailserver2/lib/postfix";
+        "/var/lib/dovecot".hostPath = "/mypool/mailserver2/lib/dovecot";
       };
 
       config = {...}: {
@@ -64,17 +64,6 @@
             };
           };
         };
-        services.postfix = {
-          enable = true;
-          settings.main = {
-            relayHost = ["[live.smtp.mailtrap.io]:587"];
-            smtp_sasl_auth_enable = "yes";
-            smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
-            smtp_sasl_security_options = "noanonymous";
-            smtp_use_tls = "yes";
-          };
-        };
-
         system.stateVersion = "26.05";
       };
     };

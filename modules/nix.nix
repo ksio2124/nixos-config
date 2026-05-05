@@ -42,6 +42,10 @@ _: {
       extraGroups = [
         "networkmanager"
         "wheel"
+        "video"
+        "render"
+        "input"
+        "uinput"
       ];
       packages = with pkgs; [
         home-manager
