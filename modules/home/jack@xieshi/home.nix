@@ -19,6 +19,7 @@
       self.homeModules.homeDevelopment
       self.homeModules.homeGnome
       self.homeModules.homeGames
+      self.homeModules.homeInternet_browsers
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
 
@@ -65,17 +66,6 @@
       enable = true;
       extraPackages = tpkgs: {
         inherit (tpkgs) scheme-full;
-      };
-    };
-
-    programs.firefox = {
-      enable = true;
-      profiles.default = {
-        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-          ublock-origin
-          bitwarden
-          react-devtools
-        ];
       };
     };
 

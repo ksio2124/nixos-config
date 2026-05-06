@@ -17,6 +17,7 @@
       self.homeModules.homeShell
       self.homeModules.homeSystem_tools
       self.homeModules.homeDevelopment
+      self.homeModules.homeInternet_browsers
       # import homeModules here
     ];
 

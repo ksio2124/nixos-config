@@ -169,7 +169,7 @@
     # ];
 
     hardware.uinput.enable = true;
-
+    hardware.intel-gpu-tools.enable = true;
     hardware.firmware = [
       (pkgs.runCommand "custom-edid" {} ''
         mkdir -p $out/lib/firmware/edid
