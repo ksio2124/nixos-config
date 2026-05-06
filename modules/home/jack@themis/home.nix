@@ -21,6 +21,7 @@
       # import homeModules here
     ];
 
+    nixpkgs.overlays = [inputs.nur.overlays.default];
     home = {
       username = "jack";
       homeDirectory = "/home/jack";
