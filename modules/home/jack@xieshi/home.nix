@@ -18,6 +18,7 @@
       self.homeModules.homeSystem_tools
       self.homeModules.homeDevelopment
       self.homeModules.homeGnome
+      self.homeModules.homeGames
     ];
     nixpkgs.overlays = [inputs.nur.overlays.default];
 

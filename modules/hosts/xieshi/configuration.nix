@@ -199,6 +199,7 @@
         netdevConfig = {
           Kind = "wireguard";
           Name = "wg0";
+          MTUBytes = 1280;
         };
 
         wireguardConfig = {
@@ -214,6 +215,7 @@
               "fd31:bf08:57cb::7/128"
               "192.168.2.1/32"
             ];
+            PersistentKeepalive = 25;
             Endpoint = "cowgoesmoopiggoesoink.com:51820";
           }
         ];

@@ -37,10 +37,14 @@
       zfs = true;
     };
     boot.zfs.extraPools = ["mypool"];
-    boot.kernelParams = ["i915.enable_guc=2"];
+    boot.kernelParams = [
+      "i915.enable_guc=2"
+      "drm.edid_firmware=DP-1:edid/virtual-display.bin"
+      "video=DP-1:e"
+    ];
     networking.hostName = "themis"; # Define your hostname.
     networking.hostId = "0e144610";
-    powerManagement.powertop.enable = true;
+    powerManagement.powertop.enable = false;
 
     systemd.targets.sleep.enable = false;
     systemd.targets.suspend.enable = false;
@@ -77,14 +81,17 @@
 
     hardware.graphics = {
       enable = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [
         vpl-gpu-rt
         intel-media-driver # For Broadwell (2014) or newer processors. LIBVA_DRIVER_NAME=iHD
-        # intel-vaapi-driver # For older processors. LIBVA_DRIVER_NAME=i965
+        # intel-vaapi-driver # For older processors. LIBVA_DRIVER_NAME=i966
       ];
     };
     environment.sessionVariables = {
       LIBVA_DRIVER_NAME = "iHD";
+      VC_DISPLAY_DEVICE = "/dev/dri/renderD129";
+      #LD_LIBRARY_PATH = "/run/opengl-driver/lib";
     }; # Optionally, set the environment variable
 
     # Enable the X11 windowing system.
@@ -92,7 +99,16 @@
     boot.initrd.kernelModules = ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
     # Enable the GNOME Desktop Environment.
     services.xserver.displayManager.gdm.enable = true;
+    services.displayManager.gdm.autoSuspend = false;
     services.xserver.desktopManager.gnome.enable = true;
+    services.displayManager.autoLogin = {
+      enable = true;
+      user = "jack"; # Change this to your actual username
+    };
+
+    # Workaround to prevent the GDM/Getty race condition on tty1
+    systemd.services."getty@tty1".enable = false;
+    systemd.services."autovt@tty1".enable = false;
 
     services.xserver.videoDrivers = [
       "modesetting" # example for Intel iGPU; use "amdgpu" here instead if your iGPU is AMD
@@ -131,30 +147,35 @@
       enable = true;
       autoStart = true;
       capSysAdmin = true; # Necessary for capture
-      openFirewall = true;
+      openFirewall = false;
       settings = {
         # Force Sunshine to use Wayland/wlr capture
         #capture_method = "wlr";
         # Define the encoder (nvenc for NVIDIA, vaapi for AMD/Intel)
         encoder = "nvenc";
+        # adapter_name = "/dev/dri/renderD129";
+      };
+      package = pkgs.sunshine.override {
+        cudaSupport = true;
+        cudaPackages = pkgs.cudaPackages_13;
       };
     };
+    # systemd.user.services.sunshine.serviceConfig.Environment = [
+    #   "LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib"
+    #   "VC_DISPLAY_DEVICE=/dev/dri/renderD129"
+    #
+    #   # You can add more variables here if needed:
+    #   # "MY_VAR=value"
+    # ];
+
     hardware.uinput.enable = true;
-    programs.sway = {
-      enable = true;
-      extraSessionCommands = ''
-        export WLR_BACKENDS=headless
-        export WLR_LIBINPUT_NO_DEVICES=1
-        # Essential for NVIDIA + Wayland
-        export GBM_BACKEND=nvidia-drm
-        export __GLX_VENDOR_LIBRARY_NAME=nvidia
-        export WLR_NO_HARDWARE_CURSORS=1
-      '';
-    };
-    environment.etc."sway/config".text = ''
-      output HEADLESS-1 resolution 1920x1080
-      exec sunshine
-    '';
+
+    hardware.firmware = [
+      (pkgs.runCommand "custom-edid" {} ''
+        mkdir -p $out/lib/firmware/edid
+        cp ${./virtual-display.bin} $out/lib/firmware/edid/virtual-display.bin
+      '')
+    ];
 
     system.stateVersion = "25.05"; # Did you read the comment?
   };
