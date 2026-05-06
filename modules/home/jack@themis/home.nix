@@ -18,6 +18,7 @@
       self.homeModules.homeSystem_tools
       self.homeModules.homeDevelopment
       self.homeModules.homeInternet_browsers
+      self.homeModules.homeGnome
       # import homeModules here
     ];
 

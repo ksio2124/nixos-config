@@ -9,6 +9,7 @@ _: {
       pkgs.gnomeExtensions.astra-monitor
       pkgs.gnomeExtensions.bluetooth-battery-meter
       pkgs.gnomeExtensions.gsconnect
+      pkgs.gnomeExtensions.unblank
     ];
     dconf = {
       enable = true;
@@ -20,6 +21,7 @@ _: {
             pkgs.gnomeExtensions.caffeine.extensionUuid
             pkgs.gnomeExtensions.bluetooth-battery-meter.extensionUuid
             pkgs.gnomeExtensions.gsconnect.extensionUuid
+            pkgs.gnomeExtensions.unblank.extensionUuid
           ];
         };
       };
