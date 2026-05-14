@@ -18,7 +18,7 @@
         pkgs,
         ...
       }: {
-        services.nginx.virtualHosts."nextcloud.cowgoesmoopiggoesoink.com" = {
+        services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
           extraConfig = ''
 
             # Disable buffering to avoid disk I/O bottlenecks during upload
@@ -26,41 +26,10 @@
             fastcgi_request_buffering off;
           '';
         };
-        #     services.nginx.virtualHosts."localhost" = {
-        #       # This automatically sets up SSL via Let's Encrypt (replaces Caddy's auto-SSL)
-        #       forceSSL = true;
-        #       enableACME = true;
-        #
-        #       locations."/" = {
-        #         proxyPass = "http://127.0.0.1:8000";
-        #         proxyWebsockets = true; # Necessary for OnlyOffice document editing
-        #         extraConfig = ''
-        #           # This is the direct equivalent to your header_up line
-        #           proxy_set_header X-Forwarded-Proto https;
-        #
-        #           # Standard proxy headers usually needed
-        #           proxy_set_header Host $host;
-        #           proxy_set_header X-Real-IP $remote_addr;
-        #         '';
-        #       };
-        #     };
-        #
-        #     security.acme.acceptTerms = true;
-        #
-        # security.acme.certs."localhost".email = "ksio2124@protonmail.cih";
-        #
-        #     services.onlyoffice = {
-        #       enable = true;
-        #       hostname = "localhost";
-        #       securityNonceFile = "${pkgs.writeText "nixos-test-onlyoffice-nonce.conf" ''
-        #         set $secure_link_secret "nixostest";
-        #       ''}";
-        #     };
-
         services.nextcloud = {
           enable = true;
           maxUploadSize = "200G";
-          hostName = "nextcloud.cowgoesmoopiggoesoink.com";
+          hostName = "nextcloud.ksio2124.com";
           package = pkgs.nextcloud33;
           extraApps = {
             inherit
@@ -102,7 +71,7 @@
         system.stateVersion = "26.05"; # Required for running NixOS containers
       };
     };
-    services.nginx.virtualHosts."nextcloud.cowgoesmoopiggoesoink.com" = {
+    services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
       extraConfig = ''
         client_max_body_size 200G;
         proxy_buffering off;
@@ -114,7 +83,5 @@
         proxyPass = "http://10.0.0.6";
       };
     };
-
-    security.acme.certs."nextcloud.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

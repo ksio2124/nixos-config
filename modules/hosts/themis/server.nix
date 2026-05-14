@@ -48,7 +48,7 @@
       credentialsFile = config.sops.secrets."cloudflare-ddns/credentials".path;
       domains = [
         "cowgoesmoopiggoesoink.com"
-        "nextcloud.cowgoesmoopiggoesoink.com"
+        "nextcloud.ksio2124.com"
         "wordpress.cowgoesmoopiggoesoink.com"
         "anki-sync-server.cowgoesmoopiggoesoink.com"
         "firefox-syncserver.cowgoesmoopiggoesoink.com"
@@ -59,5 +59,6 @@
       ];
     };
     security.acme.acceptTerms = true;
+    security.acme.defaults.email = "ksio2124@protonmail.ch";
   };
 }
