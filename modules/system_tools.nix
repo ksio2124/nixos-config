@@ -36,6 +36,7 @@ _: {
       pkgs.browsh
       pkgs.smartmontools
       pkgs.awscli2
+      pkgs.pv
     ];
     programs = {
       yt-dlp.enable = true;
