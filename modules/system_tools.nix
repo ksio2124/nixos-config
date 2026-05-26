@@ -34,6 +34,7 @@ _: {
         {withUnfree = true;})
       pkgs.jq
       pkgs.browsh
+      pkgs.smartmontools
     ];
     programs = {
       yt-dlp.enable = true;

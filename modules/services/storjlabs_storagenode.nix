@@ -30,7 +30,7 @@
       environment = {
         WALLET = "0x8ed60bdE294c119fEB7C03Bbb9b392C14696Ebde";
         EMAIL = "ksio2124@protonmail.ch";
-        ADDRESS = "cowgoesmoopiggoesoink.com:28967";
+        ADDRESS = "ksio2124.com:28967";
         STORAGE = "2TB";
       };
 

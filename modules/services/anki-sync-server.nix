@@ -4,13 +4,14 @@
     containers.anki-sync-server = {
       autoStart = true;
       privateNetwork = true;
+      privateUsers = 66536 + 7;
       hostAddress = "10.0.0.7";
       localAddress = "10.0.0.8";
       bindMounts."/run/secrets/anki-sync-server/password" = {
         hostPath = config.sops.secrets."anki-sync-server/password".path;
       };
 
-      config = {...}: {
+      config = _: {
         services.anki-sync-server = {
           enable = true;
           address = "10.0.0.8";
@@ -25,14 +26,12 @@
         system.stateVersion = "26.05";
       };
     };
-    services.nginx.virtualHosts."anki-sync-server.cowgoesmoopiggoesoink.com" = {
+    services.nginx.virtualHosts."anki-sync-server.ksio2124.com" = {
       forceSSL = true;
       enableACME = true;
       locations."/" = {
         proxyPass = "http://10.0.0.8:27701/";
       };
     };
-
-    security.acme.certs."anki-sync-server.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

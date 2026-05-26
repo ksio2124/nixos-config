@@ -6,7 +6,7 @@
       hostAddress = "10.0.0.1";
       localAddress = "10.0.0.3";
       config = {pkgs, ...}: {
-        services.wordpress.sites."wordpress.cowgoesmoopiggoesoink.com" = {
+        services.wordpress.sites."wordpress.ksio2124.com" = {
           settings = {
             # Needed to run behind reverse proxy
             FORCE_SSL_ADMIN = true;
@@ -23,13 +23,12 @@
         system.stateVersion = "26.05"; # Required for running NixOS containers
       };
     };
-    services.nginx.virtualHosts."wordpress.cowgoesmoopiggoesoink.com" = {
+    services.nginx.virtualHosts."wordpress.ksio2124.com" = {
       forceSSL = true;
       enableACME = true;
       locations."/" = {
         proxyPass = "http://10.0.0.3";
       };
     };
-    security.acme.certs."wordpress.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

@@ -1,9 +1,19 @@
 {
   flake.nixosModules.nextcloud = {config, ...}: {
-    sops.secrets."nextcloud/adminpass" = {};
+    sops.secrets."nextcloud/adminpass" = {
+      # owner = "nextcloud";
+    };
+    # users.users.nextcloud = {
+    #   uid = 66536 + 5;
+    #   isSystemUser = true;
+    #   group = "nextcloud";
+    # };
+    # users.groups.nextcloud.gid = 66536 + 5;
+
     containers.nextcloud = {
       autoStart = true;
       privateNetwork = true;
+      # privateUsers = 66536 + 5;
       hostAddress = "10.0.0.5";
       localAddress = "10.0.0.6";
       bindMounts."/run/secrets/nextcloud/adminpass" = {

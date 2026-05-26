@@ -18,10 +18,10 @@
       inputs.nur.modules.nixos.default
       inputs.sops-nix.nixosModules.sops
       self.nixosModules.nextcloud
-      #self.nixosModules.anki-sync-server
-      #self.nixosModules.wordpress
-      #self.nixosModules.storjlabs_storagenode
-      #self.nixosModules.mailserver2
+      self.nixosModules.anki-sync-server
+      self.nixosModules.wordpress
+      self.nixosModules.storjlabs_storagenode
+      self.nixosModules.mailserver
       #self.nixosModules.onlyoffice
       #self.nixosModules.firefox-syncserver
       # something not right might need a full restart of the computer
@@ -142,6 +142,7 @@
       enable = true;
       passwordAuthentication = true;
     };
+    programs.steam.enable = true;
     # 2. Declarative Sunshine Configuration
     services.sunshine = {
       enable = true;

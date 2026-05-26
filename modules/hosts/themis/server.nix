@@ -47,13 +47,9 @@
       enable = true;
       credentialsFile = config.sops.secrets."cloudflare-ddns/credentials".path;
       domains = [
-        "cowgoesmoopiggoesoink.com"
         "nextcloud.ksio2124.com"
-        "wordpress.cowgoesmoopiggoesoink.com"
-        "anki-sync-server.cowgoesmoopiggoesoink.com"
-        "firefox-syncserver.cowgoesmoopiggoesoink.com"
-        "mail.cowgoesmoopiggoesoink.com"
-        "onlyoffice.cowgoesmoopiggoesoink.com"
+        "wordpress.ksio2124.com"
+        "anki-sync-server.ksio2124.com"
         "ksio2124.com"
         "mail.ksio2124.com"
       ];

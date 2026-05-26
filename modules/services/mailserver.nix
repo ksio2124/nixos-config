@@ -14,8 +14,8 @@
       privateNetwork = true;
       hostAddress = "10.0.0.13";
       localAddress = "10.0.0.14";
-      bindMounts."/var/lib/acme/cowgoesmoopiggoesoink.com" = {
-        hostPath = "/var/lib/acme/cowgoesmoopiggoesoink.com";
+      bindMounts."/var/lib/acme/ksio2124.com" = {
+        hostPath = "/var/lib/acme/ksio2124.com";
         isReadOnly = true;
       };
 
@@ -35,45 +35,45 @@
         mailserver = {
           enable = true;
           stateVersion = 4;
-          fqdn = "mail.cowgoesmoopiggoesoink.com";
-          domains = ["cowgoesmoopiggoesoink.com"];
+          fqdn = "mail.ksio2124.com";
+          domains = ["ksio2124.com"];
           x509 = {
-            certificateFile = "/var/lib/acme/cowgoesmoopiggoesoink.com/fullchain.pem";
-            privateKeyFile = "/var/lib/acme/cowgoesmoopiggoesoink.com/key.pem";
+            certificateFile = "/var/lib/acme/ksio2124.com/fullchain.pem";
+            privateKeyFile = "/var/lib/acme/ksio2124.com/key.pem";
           };
           accounts = {
-            "user2@cowgoesmoopiggoesoink.com" = {
-              hashedPassword = "$y$j9T$Ufs8vt1E9pyUSdDVITDgx.$EFBw0NCHqvec9iPYIU9lUdW1LnHHE48oA3BPnh93dAB";
+            "k@ksio2124.com" = {
+              hashedPassword = "y$j9T$Ufs8vt1E9pyUSdDVITDgx.$EFBw0NCHqvec9iPYIU9lUdW1LnHHE48oA3BPnh93dAB";
             };
           };
         };
-        services.postfix = {
-          enable = true;
-          settings.main = {
-            relayHost = ["[live.smtp.mailtrap.io]:587"];
-            # relayHost = "live.smtp.mailtrap.io";
-            # relayPort = 587; # Commonly 587 for STARTTLS
-            smtp_sasl_auth_enable = "yes";
-            smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
-            smtp_sasl_security_options = "noanonymous";
-            smtp_use_tls = "yes";
-            # smtp_tls_security_level = "encrypt"; # Ensures connections are encrypted
-          };
-          # relayHost = "live.smtp.mailtrap.io";
-          # relayPort = 587; # Commonly 587 for STARTTLS
-          # config = {
-          #   smtp_sasl_auth_enable = "yes";
-          #   smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
-          #   smtp_sasl_security_options = "noanonymous";
-          #   smtp_use_tls = "yes";
-          #   smtp_tls_security_level = "encrypt"; # Ensures connections are encrypted
-          # };
-        };
-
+        # services.postfix = {
+        #   enable = true;
+        #   settings.main = {
+        #     relayHost = ["[live.smtp.mailtrap.io]:587"];
+        #     # relayHost = "live.smtp.mailtrap.io";
+        #     # relayPort = 587; # Commonly 587 for STARTTLS
+        #     smtp_sasl_auth_enable = "yes";
+        #     smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
+        #     smtp_sasl_security_options = "noanonymous";
+        #     smtp_use_tls = "yes";
+        #     # smtp_tls_security_level = "encrypt"; # Ensures connections are encrypted
+        #   };
+        #   # relayHost = "live.smtp.mailtrap.io";
+        #   # relayPort = 587; # Commonly 587 for STARTTLS
+        #   # config = {
+        #   #   smtp_sasl_auth_enable = "yes";
+        #   #   smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
+        #   #   smtp_sasl_security_options = "noanonymous";
+        #   #   smtp_use_tls = "yes";
+        #   #   smtp_tls_security_level = "encrypt"; # Ensures connections are encrypted
+        #   # };
+        # };
+        #
         system.stateVersion = "26.05";
       };
     };
-    services.nginx.virtualHosts."cowgoesmoopiggoesoink.com" = {
+    services.nginx.virtualHosts."ksio2124.com" = {
       forceSSL = true;
       enableACME = true;
 
@@ -81,6 +81,5 @@
         proxyPass = "http://10.0.0.14";
       };
     };
-    security.acme.certs."cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

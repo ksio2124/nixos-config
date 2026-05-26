@@ -26,10 +26,11 @@
 
           iifname "br0" tcp dport { 80, 443} accept
           iifname "br0" udp dport { 53, 67, 68 } accept
+          iifname "br0" tcp dport { 22 } accept comment "Allow ssh on br0"
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
-          iifname "wan" tcp dport {47984, 47989, 48010} accept comment "sunshine"
-          iifname "wan" udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
+          iifname "bro" tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
+          iifname "br0" udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
           iifname "podman*" udp dport {53} accept comment "Allow podman to get dns information"
           iifname "ve-*" udp dport {53} accept comment "Allow podman to get dns information"
