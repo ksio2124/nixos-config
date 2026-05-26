@@ -17,11 +17,11 @@
       inputs.lanzaboote.nixosModules.lanzaboote
       inputs.nur.modules.nixos.default
       inputs.sops-nix.nixosModules.sops
-      self.nixosModules.nextcloud
-      self.nixosModules.anki-sync-server
-      self.nixosModules.wordpress
-      self.nixosModules.storjlabs_storagenode
-      self.nixosModules.mailserver
+      #self.nixosModules.nextcloud
+      #self.nixosModules.anki-sync-server
+      #self.nixosModules.wordpress
+      #self.nixosModules.storjlabs_storagenode
+      #self.nixosModules.mailserver
       #self.nixosModules.onlyoffice
       #self.nixosModules.firefox-syncserver
       # something not right might need a full restart of the computer
