@@ -308,6 +308,16 @@
         ];
       };
     };
+    services.avahi = {
+      enable = true;
+      allowInterfaces = ["br0"];
+      nssmdns6 = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        workstation = true;
+      };
+    };
 
     networking.firewall.enable = false;
     networking.nftables = {

@@ -183,6 +183,24 @@
       owner = "systemd-network";
       group = "systemd-network";
     };
+    # 1. Enable the Avahi daemon
+    services.avahi = {
+      enable = true;
+
+      # Allow Avahi to find other devices (Client mode)
+      # nssmdns4 = true; # Resolves IPv4 addresses
+      nssmdns6 = true; # Resolves IPv6 addresses
+
+      # # Automatically advertise this computer's hostname to the network
+      # publish = {
+      #   enable = true;
+      #   addresses = true; # Broadcasts this machine's IP addresses
+      #   userServices = true; # Broadcasts local services if you configure them
+      # };
+    };
+
+    # 2. Open the Firewall for mDNS traffic
+    networking.firewall.allowedUDPPorts = [5353];
     systemd.network = {
       networks."50-wg0" = {
         matchConfig.Name = "wg0";

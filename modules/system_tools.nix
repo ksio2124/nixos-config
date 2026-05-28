@@ -40,6 +40,7 @@ _: {
       pkgs.dig
       pkgs.net-tools
       pkgs.tcpdump
+      pkgs.traceroute
     ];
     programs = {
       yt-dlp.enable = true;
