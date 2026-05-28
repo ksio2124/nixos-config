@@ -41,6 +41,7 @@ _: {
       pkgs.net-tools
       pkgs.tcpdump
       pkgs.traceroute
+      pkgs.quickemu
     ];
     programs = {
       yt-dlp.enable = true;
