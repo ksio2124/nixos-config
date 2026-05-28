@@ -84,6 +84,11 @@
           IPv6PrivacyExtensions = "yes";
           DHCPServer = true;
         };
+        dhcpPrefixDelegationConfig = {
+          UplinkInterface = "wan";
+          SubnetId = 1;
+          Assign = true;
+        };
         dhcpServerConfig = {
           EmitDNS = true;
           PoolOffset = 50;
@@ -108,10 +113,14 @@
           IPv6Forwarding = true;
           IPv6AcceptRA = true;
         };
-        dhcpV6Config.WithoutRA = "solicit";
+        dhcpV6Config = {
+          WithoutRA = "solicit";
+          PrefixDelegationHint = "::/56"; # Sonic defaults to a /56 allocation block
+          DUIDType = "vendor"; # Forces standard DUID generation for Sonic's platform compatibility
+          UseDNS = false;
+        };
         # Security: Don't let the WAN tell us to change our DNS
         dhcpV4Config.UseDNS = false;
-        dhcpV6Config.UseDNS = false;
       };
     };
 
