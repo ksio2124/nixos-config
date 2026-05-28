@@ -154,6 +154,7 @@
         #capture_method = "wlr";
         # Define the encoder (nvenc for NVIDIA, vaapi for AMD/Intel)
         encoder = "nvenc";
+        address_family = "both";
         # adapter_name = "/dev/dri/renderD129";
       };
       package = pkgs.sunshine.override {
