@@ -194,32 +194,32 @@
           "192.168.2.2/24"
         ];
       };
-
-      netdevs."50-wg0" = {
-        netdevConfig = {
-          Kind = "wireguard";
-          Name = "wg0";
-          MTUBytes = 1280;
-        };
-
-        wireguardConfig = {
-          ListenPort = 51820;
-          PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
-          RouteTable = "main";
-          FirewallMark = 42;
-        };
-        wireguardPeers = [
-          {
-            PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
-            AllowedIPs = [
-              "fd31:bf08:57cb::7/128"
-              "192.168.2.1/32"
-            ];
-            PersistentKeepalive = 25;
-            Endpoint = "cowgoesmoopiggoesoink.com:51820";
-          }
-        ];
-      };
+      #
+      # netdevs."50-wg0" = {
+      #   netdevConfig = {
+      #     Kind = "wireguard";
+      #     Name = "wg0";
+      #     MTUBytes = 1280;
+      #   };
+      #
+      #   wireguardConfig = {
+      #     ListenPort = 51820;
+      #     PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
+      #     RouteTable = "main";
+      #     FirewallMark = 42;
+      #   };
+      #   wireguardPeers = [
+      #     {
+      #       PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
+      #       AllowedIPs = [
+      #         "fd31:bf08:57cb::7/128"
+      #         "192.168.2.1/32"
+      #       ];
+      #       PersistentKeepalive = 25;
+      #       Endpoint = "cowgoesmoopiggoesoink.com:51820";
+      #     }
+      #   ];
+      # };
     };
     system.stateVersion = "25.05"; # Did you read the comment?
   };

@@ -37,6 +37,9 @@ _: {
       pkgs.smartmontools
       pkgs.awscli2
       pkgs.pv
+      pkgs.dig
+      pkgs.net-tools
+      pkgs.tcpdump
     ];
     programs = {
       yt-dlp.enable = true;

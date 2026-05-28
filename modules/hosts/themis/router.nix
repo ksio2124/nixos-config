@@ -87,7 +87,7 @@
         dhcpServerConfig = {
           EmitDNS = true;
           PoolOffset = 50;
-          DNS = ["1.1.1.1" "8.8.8.8"];
+          DNS = ["192.168.1.1"];
         };
         ipv6SendRAConfig = {
           # Managed = false; # Set 'true' only if using Kea/DHCPv6
@@ -308,6 +308,7 @@
         ];
       };
     };
+
     networking.firewall.enable = false;
     networking.nftables = {
       enable = true;
