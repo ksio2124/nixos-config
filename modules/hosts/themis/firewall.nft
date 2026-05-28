@@ -6,7 +6,7 @@
           ct state invalid drop
           ct state established,related accept
 
-          iifname "wan" icmpv6 type {
+          icmpv6 type {
             destination-unreachable, packet-too-big, time-exceeded,
             parameter-problem, echo-request,
             nd-neighbor-solicit, nd-neighbor-advert,
