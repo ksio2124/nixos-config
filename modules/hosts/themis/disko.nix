@@ -67,9 +67,9 @@
             atime = "off";
             recordsize = "1M";
 
-            encryption = "aes-256-gcm";
-            keyformat = "raw";
-            keylocation = "file:///etc/zfs/mypool.key";
+            # encryption = "aes-256-gcm";
+            # keyformat = "raw";
+            # keylocation = "file:///etc/zfs/mypool.key";
             mountpoint = "legacy";
           };
           mountpoint = "/mypool";
