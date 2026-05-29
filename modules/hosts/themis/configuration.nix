@@ -36,7 +36,7 @@
     boot.supportedFilesystems = {
       zfs = true;
     };
-    boot.zfs.extraPools = ["mypool"];
+    # boot.zfs.extraPools = ["mypool"];
     boot.kernelParams = [
       "i915.enable_guc=2"
       "drm.edid_firmware=DP-1:edid/virtual-display.bin"

@@ -164,6 +164,9 @@
     networking.wireless.iwd = {
       enable = true;
       settings = {
+        Rank = {
+          BandModifier2_4GHz = 0.1;
+        };
         Settings = {
           AutoConnect = true;
         };
