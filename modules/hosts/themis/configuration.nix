@@ -17,6 +17,8 @@
       inputs.lanzaboote.nixosModules.lanzaboote
       inputs.nur.modules.nixos.default
       inputs.sops-nix.nixosModules.sops
+      inputs.disko.nixosModules.disko
+      self.nixosModules.disko
       #self.nixosModules.nextcloud
       #self.nixosModules.anki-sync-server
       #self.nixosModules.wordpress
@@ -33,9 +35,9 @@
     sops.age.keyFile = "/home/jack/.config/sops/age/keys.txt";
     sops.age.generateKey = true;
     boot.loader.efi.canTouchEfiVariables = true;
-    boot.supportedFilesystems = {
-      zfs = true;
-    };
+    # boot.supportedFilesystems = {
+    #   zfs = true;
+    # };
     # boot.zfs.extraPools = ["mypool"];
     boot.kernelParams = [
       "i915.enable_guc=2"
