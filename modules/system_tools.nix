@@ -42,6 +42,8 @@ _: {
       pkgs.tcpdump
       pkgs.traceroute
       pkgs.quickemu
+      pkgs.s5cmd
+      pkgs.mbuffer
     ];
     programs = {
       yt-dlp.enable = true;

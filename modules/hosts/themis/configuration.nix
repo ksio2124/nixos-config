@@ -145,6 +145,7 @@
       passwordAuthentication = true;
     };
     programs.steam.enable = true;
+    programs.gamescope.enable = true;
     # 2. Declarative Sunshine Configuration
     services.sunshine = {
       enable = true;
