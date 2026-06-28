@@ -52,6 +52,8 @@
       pkgs.wl-clipboard
       pkgs.anki
       pkgs.stremio-linux-shell
+      pkgs.proton-vpn
+      pkgs.proton-vpn-cli
     ];
     programs = {
       chromium.enable = true;

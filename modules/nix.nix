@@ -13,6 +13,9 @@ _: {
       zsh.enable = true;
       firefox.enable = true;
       nix-ld.enable = true;
+      nix-ld.libraries = with pkgs; [
+        gtk3
+      ];
     };
     fonts.packages = with pkgs; [
       nerd-fonts.fira-code

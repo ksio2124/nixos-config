@@ -44,6 +44,10 @@ _: {
       pkgs.quickemu
       pkgs.s5cmd
       pkgs.mbuffer
+      pkgs.tree
+      pkgs.popsicle
+      pkgs.patchelf
+      pkgs.file
     ];
     programs = {
       yt-dlp.enable = true;

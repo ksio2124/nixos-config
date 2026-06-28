@@ -3,6 +3,14 @@
   self,
   ...
 }: {
+  flake.overlays.default = final: prev: {
+    tetrd = prev.tetrd.overrideAttrs (old: {
+      src = prev.fetchurl {
+        url = "https://download.tetrd.app/files/tetrd.linux_amd64.pkg.tar.xz";
+        hash = "sha256-hn3p+iUF7JYQ+TFGbJqvqwDvzgoCfc5SduBgtAExHS0=";
+      };
+    });
+  };
   flake.nixosConfigurations.themis = inputs.nixpkgs.lib.nixosSystem {
     modules = [
       self.nixosModules.hostThemis

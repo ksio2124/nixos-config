@@ -65,6 +65,13 @@
                 enable = true;
                 lsp.servers = ["nixd"];
               };
+              rust = {
+                enable = true;
+                extensions.crates-nvim.enable = true;
+              };
+              markdown = {
+                enable = true;
+              };
               lua.enable = true;
               yaml.enable = true;
             };

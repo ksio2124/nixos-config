@@ -3,6 +3,14 @@
   self,
   ...
 }: {
+  # flake.overlays.default = final: prev: {
+  #   tetrd = prev.tetrd.overrideAttrs (old: {
+  #     src = prev.fetchurl {
+  #       url = "https://download.tetrd.app/files/tetrd.linux_amd64.pkg.tar.xz";
+  #       hash = "sha256-hn3p+iUF7JYQ+TFGbJqvqwDvzgoCfc5SduBgtAExHS0=";
+  #     };
+  #   });
+  # };
   flake.nixosConfigurations.xieshi = inputs.nixpkgs.lib.nixosSystem {
     modules = [
       self.nixosModules.hostXieshi
@@ -41,6 +49,8 @@
     hardware.enableAllFirmware = true;
     boot.kernel.sysctl = {
       "net.ipv4.ip_default_ttl" = 65; # Change 65 to your desired value
+      "net.ipv6.conf.all.hop_limit" = 65;
+      "net.ipv6.conf.default.hop_limit" = 65;
     };
 
     networking.hostName = "xieshi"; # Define your hostname.
@@ -149,6 +159,7 @@
     programs.steam.gamescopeSession.enable = true;
 
     virtualisation.waydroid.enable = true;
+    virtualisation.spiceUSBRedirection.enable = true;
     networking.firewall = rec {
       allowedTCPPortRanges = [
         {
@@ -157,6 +168,10 @@
         }
       ];
       allowedUDPPortRanges = allowedTCPPortRanges;
+    };
+
+    networking = {
+      nameservers = ["1.1.1.1" "8.8.8.8"];
     };
 
     networking.useNetworkd = true;
@@ -201,47 +216,95 @@
       #   userServices = true; # Broadcasts local services if you configure them
       # };
     };
+    # services.tetrd.enable = true;
+    # environment.etc."resolv.conf" = {
+    #   source = lib.mkForce "/run/systemd/resolve/stub-resolv.conf";
+    # };
+    # services.resolved.enable = false;
 
     # 2. Open the Firewall for mDNS traffic
     networking.firewall.allowedUDPPorts = [5353];
-    systemd.network = {
-      networks."50-wg0" = {
-        matchConfig.Name = "wg0";
-
-        address = [
-          # /32 and /128 specifies a single address
-          # for use on this wg peer machine
-          "fd31:bf08:57cb::8/128"
-          "192.168.2.2/24"
-        ];
-      };
-      #
-      # netdevs."50-wg0" = {
-      #   netdevConfig = {
-      #     Kind = "wireguard";
-      #     Name = "wg0";
-      #     MTUBytes = 1280;
-      #   };
-      #
-      #   wireguardConfig = {
-      #     ListenPort = 51820;
-      #     PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
-      #     RouteTable = "main";
-      #     FirewallMark = 42;
-      #   };
-      #   wireguardPeers = [
-      #     {
-      #       PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
-      #       AllowedIPs = [
-      #         "fd31:bf08:57cb::7/128"
-      #         "192.168.2.1/32"
-      #       ];
-      #       PersistentKeepalive = 25;
-      #       Endpoint = "cowgoesmoopiggoesoink.com:51820";
-      #     }
-      #   ];
-      # };
-    };
+    networking.firewall.checkReversePath = false;
+    networking.firewall.extraCommands = ''
+      iptables -t mangle -A POSTROUTING -o usb0 -j TTL --ttl-set 65
+      ip6tables -t mangle -A POSTROUTING -o usb0 -j HL --hl-set 65
+    '';
+    # sops.secrets."protonvpn/PrivateKey" = {
+    #   owner = "systemd-network";
+    #   group = "systemd-network";
+    # };
+    # systemd.network.netdevs."50-xieshi" = {
+    #   netdevConfig = {
+    #     Kind = "wireguard";
+    #     Name = "xieshi";
+    #   };
+    #
+    #   wireguardConfig = {
+    #     PrivateKeyFile = config.sops.secrets."protonvpn/PrivateKey".path;
+    #     RouteTable = "main";
+    #     FirewallMark = 42;
+    #   };
+    #
+    #   wireguardPeers = [
+    #     {
+    #       PublicKey = "1Fe25chEMe3i5ODyDeHhC94UY63O4vAyMw1KDgxcAk8=";
+    #       AllowedIPs = ["0.0.0.0/0" "::/0"];
+    #       Endpoint = "149.40.62.26:51820";
+    #       PersistentKeepalive = 25;
+    #     }
+    #   ];
+    # };
+    #
+    # systemd.network.networks."50-xieshi" = {
+    #   matchConfig.Name = "xieshi";
+    #
+    #   address = [
+    #     "10.2.0.2/32"
+    #   ];
+    #
+    #   dns = ["10.2.0.1"];
+    #
+    #   networkConfig = {
+    #     DNSDefaultRoute = true;
+    #   };
+    # };
+    # systemd.network = {
+    #   networks."50-wg0" = {
+    #     matchConfig.Name = "wg0";
+    #
+    #     address = [
+    #       # /32 and /128 specifies a single address
+    #       # for use on this wg peer machine
+    #       "fd31:bf08:57cb::8/128"
+    #       "192.168.2.2/24"
+    #     ];
+    #   };
+    #
+    #   netdevs."50-wg0" = {
+    #     netdevConfig = {
+    #       Kind = "wireguard";
+    #       Name = "wg0";
+    #     };
+    #
+    #     wireguardConfig = {
+    #       ListenPort = 51820;
+    #       PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
+    #       RouteTable = "main";
+    #       FirewallMark = 42;
+    #     };
+    #     wireguardPeers = [
+    #       {
+    #         PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
+    #         AllowedIPs = [
+    #           "fd31:bf08:57cb::7/128"
+    #           "192.168.2.1/32"
+    #         ];
+    #         PersistentKeepalive = 25;
+    #         Endpoint = "ksio2124.com:51820";
+    #       }
+    #     ];
+    #   };
+    # };
     system.stateVersion = "25.05"; # Did you read the comment?
   };
 }
