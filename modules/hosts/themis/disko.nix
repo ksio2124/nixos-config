@@ -72,7 +72,7 @@
             # keylocation = "file:///etc/zfs/mypool.key";
             mountpoint = "legacy";
           };
-          mountpoint = "/mypool";
+          # mountpoint = "/mypool";
         };
       };
     };
