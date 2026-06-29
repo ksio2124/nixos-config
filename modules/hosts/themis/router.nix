@@ -53,16 +53,39 @@
       };
     };
 
-    systemd.network.netdevs."20-br0" = {
-      netdevConfig = {
-        Kind = "bridge";
-        Name = "br0";
-        MACAddress = "02:07:a0:53:88:4d";
+    systemd.network.netdevs = {
+      "20-br0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+          MACAddress = "02:07:a0:53:88:4d";
+        };
+      };
+      "20-br-isolated" = {
+        netdevConfig = {
+          Name = "br-isolated";
+          Kind = "bridge";
+        };
       };
     };
 
     # 4. Bind LAN interfaces to the Bridge
     systemd.network.networks = {
+      "20-br-isolated" = {
+        matchConfig.Name = "br-isolated";
+
+        networkConfig = {
+          # IMPORTANT: NO IPv4 here
+          IPv6SendRA = true;
+          IPv6PrivacyExtensions = "yes";
+          ConfigureWithoutCarrier = true;
+        };
+
+        ipv6SendRAConfig = {
+          EmitDNS = true;
+          DNS = "2606:4700:4700::1111";
+        };
+      };
       "30-lan-to-bridge" = {
         # Matches any interface named LAN0 through LAN5
         matchConfig.Name = "lan*";
