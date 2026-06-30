@@ -17,11 +17,6 @@
           iifname "br0" ether type arp accept
           iifname "br0" pkttype broadcast accept
 
-          iifname "ve-*" ip daddr "10.0.0.5" accept
-          iifname "ve-*" ip saddr "10.0.0.6" accept
-          iifname "ve-*" ip saddr "10.0.0.14" accept
-          iifname "ve-*" ip saddr "10.0.0.16" accept
-          iifname "ve-*" drop
           icmp type echo-request accept
 
           iifname "br0" tcp dport { 80, 443} accept
@@ -33,8 +28,6 @@
           iifname "br0" tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
           iifname "br0" udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
-          iifname "podman*" udp dport {53} accept comment "Allow podman to get dns information"
-          iifname "ve-*" udp dport {53} accept comment "Allow podman to get dns information"
           iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
 
         }
@@ -46,13 +39,8 @@
           ct state established,related accept
           iifname "br0" oifname "wan" accept
           iifname "br-isolated" oifname "wan" accept
-          iifname "podman*" oifname "wan" accept comment "Allow podman internet access"
+          oifname "br-isolated" tcp dport {80, 443} accept comment "Allow http https Let's encrypt"
           iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
-            # Allow the WAN to send Storj traffic to the Podman bridge
-          iifname "wan" oifname "podman*" tcp dport 28967 accept
-          iifname "wan" oifname "podman*" udp dport 28967 accept
-          iifname "wan" ip daddr "10.0.0.14" tcp dport { 25, 587, 993, 465, 4190 } accept
-          iifname "ve-*" oifname "wan" accept
         }
 
         chain forward_mangle {

@@ -27,7 +27,7 @@
       inputs.sops-nix.nixosModules.sops
       inputs.disko.nixosModules.disko
       #self.nixosModules.disko
-      #self.nixosModules.nextcloud
+      self.nixosModules.nextcloud
       self.nixosModules.anki-sync-server
       #self.nixosModules.wordpress
       #self.nixosModules.storjlabs_storagenode
