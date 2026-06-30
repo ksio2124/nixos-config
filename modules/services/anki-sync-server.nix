@@ -4,7 +4,7 @@
     containers.anki-sync-server = {
       autoStart = true;
       privateNetwork = true;
-      privateUsers = 66536 + 7;
+      privateUsers = "pick";
       hostBridge = "br-isolated";
       bindMounts."/run/secrets/anki-sync-server/password" = {
         hostPath = config.sops.secrets."anki-sync-server/password".path;

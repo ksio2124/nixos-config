@@ -45,6 +45,7 @@
           ct state invalid drop
           ct state established,related accept
           iifname "br0" oifname "wan" accept
+          iifname "br-isolated" oifname "wan" accept
           iifname "podman*" oifname "wan" accept comment "Allow podman internet access"
           iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
             # Allow the WAN to send Storj traffic to the Podman bridge

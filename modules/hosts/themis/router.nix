@@ -79,6 +79,12 @@
           IPv6SendRA = true;
           IPv6PrivacyExtensions = "yes";
           ConfigureWithoutCarrier = true;
+          DHCPPrefixDelegation = true;
+        };
+        dhcpPrefixDelegationConfig = {
+          UplinkInterface = "wan";
+          SubnetId = 2;
+          Assign = true;
         };
 
         ipv6SendRAConfig = {
