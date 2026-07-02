@@ -5,16 +5,22 @@
       autoStart = true;
       privateNetwork = true;
       hostBridge = "br-isolated";
-      bindMounts."/run/secrets/nextcloud/adminpass" = {
-        hostPath = config.sops.secrets."nextcloud/adminpass".path;
-      };
-      bindMounts."/mypool/nextcloud/" = {
-        hostPath = "/mypool/nextcloud/";
-        isReadOnly = false;
-      };
-      bindMounts."/run/secrets/cloudflare-ddns/credentials" = {
-        hostPath = config.sops.secrets."cloudflare-ddns/credentials".path;
-      };
+      privateUsers = "pick";
+      extraFlags = [
+        "--load-credential=nextcloud-adminpass:${config.sops.secrets."nextcloud/adminpass".path}"
+        "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
+        "--bind=/mypool/nextcloud:/mypool/nextcloud:idmap"
+      ];
+      # bindMounts."/run/secrets/nextcloud/adminpass" = {
+      #   hostPath = config.sops.secrets."nextcloud/adminpass".path;
+      # };
+      # bindMounts."/mypool/nextcloud/" = {
+      #   hostPath = "/mypool/nextcloud/";
+      #   isReadOnly = false;
+      # };
+      # bindMounts."/run/secrets/cloudflare-ddns/credentials" = {
+      #   hostPath = config.sops.secrets."cloudflare-ddns/credentials".path;
+      # };
       config = {
         config,
         pkgs,
@@ -59,13 +65,13 @@
           config = {
             adminuser = "ksio2124";
             dbtype = "mysql";
-            adminpassFile = "/run/secrets/nextcloud/adminpass";
+            adminpassFile = "/run/credentials/@system/nextcloud-adminpass";
           };
           appstoreEnable = false;
         };
         services.cloudflare-ddns = {
           enable = true;
-          credentialsFile = /run/secrets/cloudflare-ddns/credentials;
+          credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";
           ip6Domains = [
             "nextcloud.ksio2124.com"
           ];
