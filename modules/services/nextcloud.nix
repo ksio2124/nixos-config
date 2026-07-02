@@ -22,12 +22,6 @@
         ...
       }: {
         services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
-          extraConfig = ''
-
-            # Disable buffering to avoid disk I/O bottlenecks during upload
-            proxy_buffering off;
-            fastcgi_request_buffering off;
-          '';
           forceSSL = true;
           enableACME = true;
         };
@@ -44,7 +38,7 @@
           package = pkgs.nextcloud33;
           extraApps = {
             inherit
-              (pkgs.nextcloud33.packages.apps)
+              (config.services.nextcloud.package.packages.apps)
               calendar
               contacts
               mail
@@ -60,7 +54,7 @@
           };
           https = true;
           extraAppsEnable = true;
-          datadir = "/mypool/nextcloud/";
+          datadir = "/mypool/nextcloud";
           database.createLocally = true;
           caching.redis = true;
           config = {
@@ -68,11 +62,7 @@
             dbtype = "mysql";
             adminpassFile = "/run/secrets/nextcloud/adminpass";
           };
-          # settings = {
-          #   trusted_proxies = ["10.0.0.5"]; # The Host's container IP
-          #   overwriteprotocol = "https";
-          #   log_type = "file";
-          # };
+          appstoreEnable = false;
         };
         services.cloudflare-ddns = {
           enable = true;
