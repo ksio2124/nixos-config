@@ -1,7 +1,6 @@
 {
   flake.nixosModules.nextcloud = {config, ...}: {
     sops.secrets."nextcloud/adminpass" = {};
-    sops.secrets."cloudflare-ddns/credentials" = {};
     containers.nextcloud = {
       autoStart = true;
       privateNetwork = true;

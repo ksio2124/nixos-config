@@ -1,18 +1,16 @@
 {
   flake.nixosModules.anki-sync-server = {config, ...}: {
     sops.secrets."anki-sync-server/password" = {};
-    sops.secrets."cloudflare-ddns/credentials" = {};
     containers.anki-sync-server = {
       autoStart = true;
       privateNetwork = true;
+      privateUsers = "pick";
+      ephemeral = true;
       hostBridge = "br-isolated";
-      bindMounts."/run/secrets/anki-sync-server/password" = {
-        hostPath = config.sops.secrets."anki-sync-server/password".path;
-      };
-      bindMounts."/run/secrets/cloudflare-ddns/credentials" = {
-        hostPath = config.sops.secrets."cloudflare-ddns/credentials".path;
-      };
-
+      extraFlags = [
+        "--load-credential=anki-sync-server-password:${config.sops.secrets."anki-sync-server/password".path}"
+        "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
+      ];
       config = _: {
         networking.useHostResolvConf = false;
         networking.nameservers = [
@@ -21,7 +19,7 @@
         ];
         services.cloudflare-ddns = {
           enable = true;
-          credentialsFile = /run/secrets/cloudflare-ddns/credentials;
+          credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";
           ip6Domains = [
             "anki-sync-server.ksio2124.com"
           ];
@@ -33,7 +31,7 @@
           users = [
             {
               username = "jack";
-              passwordFile = /run/secrets/anki-sync-server/password;
+              passwordFile = "/run/credentials/@system/anki-sync-server-password";
             }
           ];
         };

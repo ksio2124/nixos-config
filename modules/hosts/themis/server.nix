@@ -5,6 +5,20 @@
     lib,
     ...
   }: {
+    users.users.root = {
+      subGidRanges = [
+        {
+          startGid = 1000000;
+          count = 200000;
+        }
+      ];
+      subUidRanges = [
+        {
+          startUid = 1000000;
+          count = 200000;
+        }
+      ];
+    };
     sops.secrets."cloudflare-ddns/credentials" = {};
     services.cloudflare-ddns = {
       enable = true;
