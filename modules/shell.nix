@@ -30,6 +30,7 @@ _: {
 
           zstyle 'completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         '';
+        loginExtra = "fastfetch";
         plugins = [
           {
             name = "fzf-tab";

@@ -38,6 +38,15 @@ _: {
     environment.systemPackages = with pkgs; [
       neovim
     ];
+    # sops.secrets."geoipupdate/LicenseKey" = {};
+    # services.geoipupdate = {
+    #   enable = true;
+    #   settings = {
+    #     AccountID = 1372580;
+    #     LicenseKey = {_secret = "/run/secrets/geoipupdate/LicenseKey";};
+    #     EditionIDs = ["GeoLite2-ASN" "GeoLite2-City" "GeoLite2-Country"];
+    #   };
+    # };
     users.users.jack = {
       isNormalUser = true;
       description = "jack";
