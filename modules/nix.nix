@@ -28,10 +28,23 @@ _: {
       EDITOR = "nvim";
       VISUAL = "nvim";
     };
-    nix.settings = {
-      experimental-features = ["nix-command" "flakes"];
-      trusted-users = ["root" "@wheel"];
-      download-buffer-size = 524288000;
+    # nix.settings = {
+    #   experimental-features = ["nix-command" "flakes"];
+    #   trusted-users = ["root" "@wheel"];
+    #   download-buffer-size = 524288000;
+    # };
+    nix = {
+      settings = {
+        experimental-features = ["nix-command" "flakes"];
+        trusted-users = ["root" "@wheel"];
+        download-buffer-size = 524288000;
+        auto-optimise-store = true;
+      };
+      gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+      };
     };
     nixpkgs.config.allowUnfree = true;
 
