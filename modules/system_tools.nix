@@ -53,6 +53,9 @@ _: {
       yt-dlp.enable = true;
       ripgrep.enable = true;
       fd.enable = true;
+      fastfetch = {
+        enable = true;
+      };
     };
   };
 }

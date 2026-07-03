@@ -11,16 +11,6 @@
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--bind=/mypool/nextcloud:/mypool/nextcloud:idmap"
       ];
-      # bindMounts."/run/secrets/nextcloud/adminpass" = {
-      #   hostPath = config.sops.secrets."nextcloud/adminpass".path;
-      # };
-      # bindMounts."/mypool/nextcloud/" = {
-      #   hostPath = "/mypool/nextcloud/";
-      #   isReadOnly = false;
-      # };
-      # bindMounts."/run/secrets/cloudflare-ddns/credentials" = {
-      #   hostPath = config.sops.secrets."cloudflare-ddns/credentials".path;
-      # };
       config = {
         config,
         pkgs,
