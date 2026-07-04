@@ -269,43 +269,43 @@
     #     DNSDefaultRoute = true;
     #   };
     # };
-    # systemd.network = {
-    #   networks."50-wg0" = {
-    #     matchConfig.Name = "wg0";
-    #
-    #     address = [
-    #       # /32 and /128 specifies a single address
-    #       # for use on this wg peer machine
-    #       "fd31:bf08:57cb::8/128"
-    #       "192.168.2.2/24"
-    #     ];
-    #   };
-    #
-    #   netdevs."50-wg0" = {
-    #     netdevConfig = {
-    #       Kind = "wireguard";
-    #       Name = "wg0";
-    #     };
-    #
-    #     wireguardConfig = {
-    #       ListenPort = 51820;
-    #       PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
-    #       RouteTable = "main";
-    #       FirewallMark = 42;
-    #     };
-    #     wireguardPeers = [
-    #       {
-    #         PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
-    #         AllowedIPs = [
-    #           "fd31:bf08:57cb::7/128"
-    #           "192.168.2.1/32"
-    #         ];
-    #         PersistentKeepalive = 25;
-    #         Endpoint = "ksio2124.com:51820";
-    #       }
-    #     ];
-    #   };
-    # };
+    systemd.network = {
+      networks."50-wg0" = {
+        matchConfig.Name = "wg0";
+
+        address = [
+          # /32 and /128 specifies a single address
+          # for use on this wg peer machine
+          "fd31:bf08:57cb::8/128"
+          "192.168.2.2/24"
+        ];
+      };
+
+      netdevs."50-wg0" = {
+        netdevConfig = {
+          Kind = "wireguard";
+          Name = "wg0";
+        };
+
+        wireguardConfig = {
+          ListenPort = 51820;
+          PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
+          RouteTable = "main";
+          FirewallMark = 42;
+        };
+        wireguardPeers = [
+          {
+            PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
+            AllowedIPs = [
+              "fd31:bf08:57cb::7/128"
+              "192.168.2.1/32"
+            ];
+            PersistentKeepalive = 25;
+            Endpoint = "ksio2124.com:51820";
+          }
+        ];
+      };
+    };
     system.stateVersion = "25.05"; # Did you read the comment?
   };
 }
