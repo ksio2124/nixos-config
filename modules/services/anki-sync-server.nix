@@ -12,41 +12,44 @@
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
       ];
       config = _: {
-        networking.useHostResolvConf = false;
-        networking.nameservers = [
-          "2606:4700:4700::1111"
-          "2606:4700:4700::1001"
-        ];
-        services.cloudflare-ddns = {
-          enable = true;
-          credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";
-          ip6Domains = [
-            "anki-sync-server.ksio2124.com"
+        networking = {
+          useHostResolvConf = false;
+          nameservers = [
+            "2606:4700:4700::1111"
+            "2606:4700:4700::1001"
+          ];
+          firewall.allowedTCPPorts = [
+            80
+            443
           ];
         };
-        services.anki-sync-server = {
-          enable = true;
-          address = "::1";
-          openFirewall = true;
-          users = [
-            {
-              username = "jack";
-              passwordFile = "/run/credentials/@system/anki-sync-server-password";
-            }
-          ];
-        };
-        services.caddy = {
-          enable = true;
+        services = {
+          cloudflare-ddns = {
+            enable = true;
+            credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";
+            ip6Domains = [
+              "anki-sync-server.ksio2124.com"
+            ];
+          };
 
-          virtualHosts."anki-sync-server.ksio2124.com".extraConfig = ''
-            reverse_proxy [::1]:27701
-          '';
+          # unable to set baseDirectory seem to be a bug in the nix flake
+          anki-sync-server = {
+            enable = true;
+            openFirewall = true;
+            users = [
+              {
+                username = "jack";
+                passwordFile = "/run/credentials/@system/anki-sync-server-password";
+              }
+            ];
+          };
+          caddy = {
+            enable = true;
+            virtualHosts."anki-sync-server.ksio2124.com".extraConfig = ''
+              reverse_proxy [::1]:27701
+            '';
+          };
         };
-        networking.firewall.allowedTCPPorts = [
-          80
-          443
-        ];
-
         system.stateVersion = "26.05";
       };
     };
