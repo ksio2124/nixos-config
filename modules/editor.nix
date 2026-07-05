@@ -32,7 +32,8 @@
               lightbulb.enable = true;
               enable = true;
               formatOnSave = true;
-              # trouble.enable = true;
+              trouble.enable = true;
+              lspSignature.enable = true;
             };
             diagnostics = {
               enable = true;
@@ -70,6 +71,9 @@
                 extensions.crates-nvim.enable = true;
               };
               markdown = {
+                enable = true;
+              };
+              toml = {
                 enable = true;
               };
               lua.enable = true;
