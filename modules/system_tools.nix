@@ -49,6 +49,7 @@ _: {
       pkgs.patchelf
       pkgs.file
       pkgs.usbutils
+      pkgs.socat
     ];
     programs = {
       yt-dlp.enable = true;
