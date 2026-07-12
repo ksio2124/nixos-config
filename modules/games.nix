@@ -10,6 +10,7 @@ _: {
       pkgs.mangohud
       pkgs.retroarch-free
       pkgs.wesnoth
+      pkgs.dualsensectl
     ];
   };
 }
