@@ -19,6 +19,7 @@
       self.homeModules.homeDevelopment
       self.homeModules.homeInternet_browsers
       self.homeModules.homeGnome
+      self.homeModules.homeGames
       # import homeModules here
     ];
 

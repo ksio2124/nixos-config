@@ -48,6 +48,7 @@ _: {
       pkgs.popsicle
       pkgs.patchelf
       pkgs.file
+      pkgs.usbutils
     ];
     programs = {
       yt-dlp.enable = true;
