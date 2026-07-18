@@ -166,6 +166,8 @@
         # Define the encoder (nvenc for NVIDIA, vaapi for AMD/Intel)
         encoder = "nvenc";
         address_family = "both";
+        lan_encryption_mode = 2;
+        wan_encryption_mode = 2;
         # adapter_name = "/dev/dri/renderD129";
       };
       package = pkgs.sunshine.override {
