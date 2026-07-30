@@ -161,6 +161,7 @@
 
     virtualisation.waydroid.enable = true;
     virtualisation.spiceUSBRedirection.enable = true;
+    virtualisation.vmware.host.enable = true;
     networking.firewall = rec {
       allowedTCPPortRanges = [
         {
