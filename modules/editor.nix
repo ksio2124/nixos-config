@@ -76,6 +76,7 @@
               toml = {
                 enable = true;
               };
+              python.enable = true;
               lua.enable = true;
               yaml.enable = true;
             };
