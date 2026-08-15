@@ -28,6 +28,7 @@
       inputs.disko.nixosModules.disko
       #self.nixosModules.disko
       self.nixosModules.nextcloud
+      self.nixosModules.postgresql
       self.nixosModules.anki-sync-server
       #self.nixosModules.wordpress
       #self.nixosModules.storjlabs_storagenode
