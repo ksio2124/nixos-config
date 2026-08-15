@@ -38,10 +38,10 @@ _: {
           }
         ];
       };
-      fzf = {
-        enable = true;
-        enableZshIntegration = true; # Since you're using ZSH
-      };
+      # fzf = {
+      #   enable = true;
+      #   enableZshIntegration = true; # Since you're using ZSH
+      # };
       mcfly = {
         enable = true;
         enableZshIntegration = true;

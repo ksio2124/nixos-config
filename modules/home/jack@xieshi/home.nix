@@ -44,7 +44,6 @@
       pkgs.google-chrome
       pkgs.xournalpp
       pkgs.wireshark
-      pkgs.cisco-packet-tracer_9
       pkgs.unigine-superposition
       pkgs.freetube
       pkgs.kiwix
