@@ -49,8 +49,8 @@
     boot.zfs.extraPools = ["mypool"];
     boot.kernelParams = [
       "i915.enable_guc=2"
-      "drm.edid_firmware=DP-1:edid/virtual-display.bin"
-      "video=DP-1:e"
+      # "drm.edid_firmware=DP-1:edid/virtual-display.bin"
+      # "video=DP-1:e"
     ];
     networking.hostName = "themis"; # Define your hostname.
     networking.hostId = "0e144610";
@@ -185,12 +185,12 @@
 
     hardware.uinput.enable = true;
     hardware.intel-gpu-tools.enable = true;
-    hardware.firmware = [
-      (pkgs.runCommand "custom-edid" {} ''
-        mkdir -p $out/lib/firmware/edid
-        cp ${./virtual-display.bin} $out/lib/firmware/edid/virtual-display.bin
-      '')
-    ];
+    # hardware.firmware = [
+    #   (pkgs.runCommand "custom-edid" {} ''
+    #     mkdir -p $out/lib/firmware/edid
+    #     cp ${./virtual-display.bin} $out/lib/firmware/edid/virtual-display.bin
+    #   '')
+    # ];
 
     system.stateVersion = "25.05"; # Did you read the comment?
   };
