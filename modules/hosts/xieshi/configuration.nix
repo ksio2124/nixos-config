@@ -172,9 +172,9 @@
       allowedUDPPortRanges = allowedTCPPortRanges;
     };
 
-    networking = {
-      nameservers = ["1.1.1.1" "8.8.8.8"];
-    };
+    # networking = {
+    #   nameservers = ["1.1.1.1" "8.8.8.8"];
+    # };
 
     networking.useNetworkd = true;
     networking.networkmanager.enable = false;

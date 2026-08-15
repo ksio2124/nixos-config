@@ -14,16 +14,13 @@
       config = _: {
         networking = {
           useHostResolvConf = false;
-          nameservers = [
-            "2606:4700:4700::1111"
-            "2606:4700:4700::1001"
-          ];
           firewall.allowedTCPPorts = [
             80
             443
           ];
         };
         services = {
+          resolved.enable = true;
           cloudflare-ddns = {
             enable = true;
             credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";

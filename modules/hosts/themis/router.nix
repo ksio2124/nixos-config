@@ -1,4 +1,8 @@
 {
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.hostThemis = {
     pkgs,
     lib,
@@ -222,7 +226,9 @@
             "192.168.1.1"
             "::"
           ];
-
+          include = [
+            "${inputs.hosts.packages.${pkgs.system}.unbound}/fakenews-gambling-porn"
+          ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
           # --- Performance & Threading ---
