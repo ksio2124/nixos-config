@@ -5,11 +5,7 @@
       privateNetwork = true;
       hostBridge = "br-isolated";
       privateUsers = "pick";
-      config = {
-        config,
-        pkgs,
-        ...
-      }: {
+      config = {pkgs, ...}: {
         # containers.postgres.config (or that container's own config)
         services.postgresql = {
           package = pkgs.postgresql_18;
@@ -26,7 +22,8 @@
 
           authentication = pkgs.lib.mkOverride 10 ''
             # type  database  user       address        auth-method
-            host    nextcloud  nextcloud  10.233.x.0/24  scram-sha-256
+            local   all       all                       peer
+            host    nextcloud  nextcloud  10.233.0.0/24  scram-sha-256
           '';
         };
 

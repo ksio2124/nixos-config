@@ -66,14 +66,10 @@
             "nextcloud.ksio2124.com"
           ];
         };
+        services.resolved.enable = true;
         # Prevent the host from overwriting resolv.conf with its own potentially invalid one
         networking.useHostResolvConf = false;
 
-        # Manually set reliable public DNS servers
-        networking.nameservers = [
-          "2606:4700:4700::1111"
-          "2606:4700:4700::1001"
-        ];
         networking.firewall.allowedTCPPorts = [80 443];
         system.stateVersion = "26.05"; # Required for running NixOS containers
       };

@@ -38,10 +38,11 @@ _: {
           }
         ];
       };
-      # fzf = {
-      #   enable = true;
-      #   enableZshIntegration = true; # Since you're using ZSH
-      # };
+      fzf = {
+        enable = true;
+        enableZshIntegration = true; # Since you're using ZSH
+        historyWidget.command = "";
+      };
       mcfly = {
         enable = true;
         enableZshIntegration = true;
