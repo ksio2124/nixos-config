@@ -1,16 +1,17 @@
 {
   flake.nixosModules.nextcloud = {config, ...}: {
     sops.secrets."nextcloud/adminpass" = {};
-    sops.secrets."nextcloud/postgresql" = {};
+    sops.secrets."nextcloud/postgresqlpass" = {};
     containers.nextcloud = {
       autoStart = true;
+      ephemeral = true;
       privateNetwork = true;
       hostBridge = "br-isolated";
       localAddress6 = "fdcf:4b47:cf30::11/64";
       privateUsers = "pick";
       extraFlags = [
         "--load-credential=nextcloud-adminpass:${config.sops.secrets."nextcloud/adminpass".path}"
-        "--load-credential=nextcloud-postgresqlpass:${config.sops.secrets."nextcloud/postgresql".path}"
+        "--load-credential=nextcloud-postgresqlpass:${config.sops.secrets."nextcloud/postgresqlpass".path}"
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--bind=/mypool/nextcloud:/mypool/nextcloud:idmap"
       ];
@@ -19,18 +20,8 @@
         pkgs,
         ...
       }: {
-        # systemd.network.networks."80-container-eth0" = {
-        #   matchConfig.Name = "eth0";
-        #   address = ["fdcf:4b47:cf30::11/64"];
-        #   networkConfig.IPv6AcceptRA = true;
-        # };
         networking.nameservers = ["fdcf:4b47:cf30::1"];
-        environment.systemPackages = [
-          pkgs.dig
-          pkgs.ndisc6
-          pkgs.traceroute
-          pkgs.postgresql
-        ];
+
         services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
           forceSSL = true;
           enableACME = true;
@@ -65,12 +56,11 @@
           https = true;
           extraAppsEnable = true;
           datadir = "/mypool/nextcloud";
-          # database.createLocally = true;
           caching.redis = true;
           config = {
             adminuser = "ksio2124";
             dbtype = "pgsql";
-            dbpassFile = "/run/credentials/@system/nextcloud-postgresql";
+            dbpassFile = "/run/credentials/@system/nextcloud-postgresqlpass";
             dbhost = "postgresql.home:5432";
             adminpassFile = "/run/credentials/@system/nextcloud-adminpass";
           };
@@ -83,7 +73,6 @@
             "nextcloud.ksio2124.com"
           ];
         };
-        # services.resolved.enable = true;
         # Prevent the host from overwriting resolv.conf with its own potentially invalid one
         networking.useHostResolvConf = false;
 
