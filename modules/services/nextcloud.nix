@@ -45,7 +45,7 @@
               mail
               notes
               onlyoffice
-              #richdocuments
+              richdocuments
               tasks
               cospend
               phonetrack

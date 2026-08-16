@@ -8,21 +8,16 @@
     pkgs,
     ...
   }: {
-    # sops.secrets."onlyoffice/adminpass" = {};
     containers.onlyoffice = {
-      ephemeral = true;
+      # ephemeral = true;
       autoStart = true;
       privateUsers = "pick";
       privateNetwork = true;
-      hostAddress = "10.0.0.15";
-      localAddress = "10.0.0.16";
-      # bindMounts."/run/secrets/onlyoffice/adminpass" = {
-      #   hostPath = config.sops.secrets."onlyoffice/adminpass".path;
-      # };
-      # bindMounts."/mypool/onlyoffice/" = {
-      #   hostPath = "/mypool/onlyoffice/";
-      #   isReadOnly = false;
-      # };
+      hostBridge = "br-isolated";
+      localAddress6 = "fdcf:4b47:cf30::12/64";
+      extraFlags = [
+        "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
+      ];
       config = {
         config,
         pkgs,
@@ -30,40 +25,40 @@
       }: {
         services.onlyoffice = {
           enable = true;
-          hostname = "onlyoffice.cowgoesmoopiggoesoink.com";
-          # jwtSecretFile = "${pkgs.writeText "onlyoffice.jwt"
-          #   ''
-          #     okok1234
-          #   ''}";
+          hostname = "onlyoffice.ksio2124.com";
+          rabbitmqUrl = "amqp://guest:guest@127.0.0.1:5672";
           securityNonceFile = "${pkgs.writeText "nixos-test-onlyoffice-nonce.conf" ''
-
             set $secure_link_secret "nixostest";
           ''}";
         };
         networking.useHostResolvConf = false;
 
         # Manually set reliable public DNS servers
-        networking.nameservers = ["10.0.0.15"];
-        networking.firewall.allowedTCPPorts = [8000];
+        networking.nameservers = ["fdcf:4b47:cf30::1"];
+        networking.firewall.allowedTCPPorts = [80 443];
         system.stateVersion = "26.05";
+        services.nginx.virtualHosts."onlyoffice.ksio2124.com" = {
+          forceSSL = true;
+          enableACME = true;
+          # locations."/" = {
+          #   proxyPass = "http://localhost";
+          #   # extraConfig = ''
+          #   #   proxy_set_header X-Forwarded-Proto https;
+          #   # '';
+          # };
+        };
+        security.acme = {
+          acceptTerms = true;
+          defaults.email = "ksio2124@protonmail.ch";
+        };
+        services.cloudflare-ddns = {
+          enable = true;
+          credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";
+          ip6Domains = [
+            "onlyoffice.ksio2124.com"
+          ];
+        };
       };
     };
-    services.nginx.virtualHosts."onlyoffice.cowgoesmoopiggoesoink.com" = {
-      # extraConfig = ''
-      #   client_max_body_size 200G;
-      #   proxy_buffering off;
-      #   fastcgi_request_buffering off; # Critical for speed
-      # '';
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://10.0.0.16:8000";
-        extraConfig = ''
-          proxy_set_header X-Forwarded-Proto https;
-        '';
-      };
-    };
-
-    security.acme.certs."onlyoffice.cowgoesmoopiggoesoink.com".email = "ksio2124@protonmail.ch";
   };
 }

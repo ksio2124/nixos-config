@@ -33,7 +33,7 @@
       #self.nixosModules.wordpress
       #self.nixosModules.storjlabs_storagenode
       #self.nixosModules.mailserver
-      #self.nixosModules.onlyoffice
+      self.nixosModules.onlyoffice
       #self.nixosModules.firefox-syncserver
       # something not right might need a full restart of the computer
       self.nixosModules.nix
