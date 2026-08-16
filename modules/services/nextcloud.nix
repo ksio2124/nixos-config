@@ -1,6 +1,7 @@
 {
   flake.nixosModules.nextcloud = {config, ...}: {
     sops.secrets."nextcloud/adminpass" = {};
+    sops.secrets."nextcloud/postgresql" = {};
     containers.nextcloud = {
       autoStart = true;
       privateNetwork = true;
@@ -9,6 +10,7 @@
       privateUsers = "pick";
       extraFlags = [
         "--load-credential=nextcloud-adminpass:${config.sops.secrets."nextcloud/adminpass".path}"
+        "--load-credential=nextcloud-postgresqlpass:${config.sops.secrets."nextcloud/postgresql".path}"
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--bind=/mypool/nextcloud:/mypool/nextcloud:idmap"
       ];
@@ -27,6 +29,7 @@
           pkgs.dig
           pkgs.ndisc6
           pkgs.traceroute
+          pkgs.postgresql
         ];
         services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
           forceSSL = true;
@@ -42,7 +45,7 @@
           enable = true;
           maxUploadSize = "200G";
           hostName = "nextcloud.ksio2124.com";
-          package = pkgs.nextcloud33;
+          package = pkgs.nextcloud34;
           extraApps = {
             inherit
               (config.services.nextcloud.package.packages.apps)
@@ -62,11 +65,13 @@
           https = true;
           extraAppsEnable = true;
           datadir = "/mypool/nextcloud";
-          database.createLocally = true;
+          # database.createLocally = true;
           caching.redis = true;
           config = {
             adminuser = "ksio2124";
-            dbtype = "mysql";
+            dbtype = "pgsql";
+            dbpassFile = "/run/credentials/@system/nextcloud-postgresql";
+            dbhost = "postgresql.home:5432";
             adminpassFile = "/run/credentials/@system/nextcloud-adminpass";
           };
           appstoreEnable = false;
