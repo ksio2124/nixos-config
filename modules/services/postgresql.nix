@@ -14,10 +14,14 @@
           enable = true;
           enableTCPIP = true; # required — otherwise it only listens on the socket
 
-          ensureDatabases = ["nextcloud"];
+          ensureDatabases = ["nextcloud" "onlyoffice"];
           ensureUsers = [
             {
               name = "nextcloud";
+              ensureDBOwnership = true;
+            }
+            {
+              name = "onlyoffice";
               ensureDBOwnership = true;
             }
           ];
@@ -26,6 +30,7 @@
             # type  database  user       address        auth-method
             local   all       all                       peer
             host    nextcloud  nextcloud   fdcf:4b47:cf30::11/128 scram-sha-256
+            host    onlyoffice onlyoffice  fdcf:4b47:cf30::12/128 scram-sha-256
           '';
         };
 
