@@ -7,12 +7,8 @@
       localAddress6 = "fdcf:4b47:cf30::10/64";
       privateUsers = "pick";
       config = {pkgs, ...}: {
-        # systemd.network.networks."80-container-eth0" = {
-        #   matchConfig.Name = "eth0";
-        #   address = ["fdcf:4b47:cf30::10/64"];
-        #   networkConfig.IPv6AcceptRA = true;
-        # };
-        # containers.postgres.config (or that container's own config)
+        networking.nameservers = ["fdcf:4b47:cf30::1"];
+        networking.useHostResolvConf = false;
         services.postgresql = {
           package = pkgs.postgresql_18;
           enable = true;
@@ -29,7 +25,7 @@
           authentication = pkgs.lib.mkOverride 10 ''
             # type  database  user       address        auth-method
             local   all       all                       peer
-            host    nextcloud  nextcloud  10.233.0.0/24  scram-sha-256
+            host    nextcloud  nextcloud   fdcf:4b47:cf30::11/128 scram-sha-256
           '';
         };
 

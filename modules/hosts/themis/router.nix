@@ -77,6 +77,9 @@
     systemd.network.networks = {
       "20-br-isolated" = {
         matchConfig.Name = "br-isolated";
+        address = [
+          "fdcf:4b47:cf30::1/64"
+        ];
 
         networkConfig = {
           # IMPORTANT: NO IPv4 here
@@ -216,7 +219,6 @@
     };
     services.unbound = {
       enable = true;
-      # blocklist.enable = true;
       settings = {
         server = {
           # Port for Unbound to listen for local clients (plain DNS)
@@ -228,6 +230,13 @@
           ];
           include = [
             "${inputs.hosts.packages.${pkgs.system}.unbound}/fakenews-gambling-porn"
+          ];
+          local-zone = [
+            ''"home." static''
+          ];
+          local-data = [
+            ''"postgresql.home. IN AAAA fdcf:4b47:cf30::10"''
+            ''"nextcloud.home. IN AAAA fdcf:4b47:cf30::11"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
@@ -259,6 +268,7 @@
             "::1 allow"
             "192.168.1.0/24 allow" # Replace with your local subnet
             "fe80::/10 allow"
+            "fdcf:4b47:cf30::/48 allow"
             "0.0.0.0/0 refuse" # Block everyone else
             "::/0 refuse"
           ];

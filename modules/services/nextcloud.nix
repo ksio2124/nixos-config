@@ -22,6 +22,12 @@
         #   address = ["fdcf:4b47:cf30::11/64"];
         #   networkConfig.IPv6AcceptRA = true;
         # };
+        networking.nameservers = ["fdcf:4b47:cf30::1"];
+        environment.systemPackages = [
+          pkgs.dig
+          pkgs.ndisc6
+          pkgs.traceroute
+        ];
         services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
           forceSSL = true;
           enableACME = true;
@@ -72,7 +78,7 @@
             "nextcloud.ksio2124.com"
           ];
         };
-        services.resolved.enable = true;
+        # services.resolved.enable = true;
         # Prevent the host from overwriting resolv.conf with its own potentially invalid one
         networking.useHostResolvConf = false;
 
