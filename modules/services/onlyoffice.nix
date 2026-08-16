@@ -40,12 +40,6 @@
         services.nginx.virtualHosts."onlyoffice.ksio2124.com" = {
           forceSSL = true;
           enableACME = true;
-          # locations."/" = {
-          #   proxyPass = "http://localhost";
-          #   # extraConfig = ''
-          #   #   proxy_set_header X-Forwarded-Proto https;
-          #   # '';
-          # };
         };
         security.acme = {
           acceptTerms = true;

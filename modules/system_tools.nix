@@ -50,6 +50,7 @@ _: {
       pkgs.file
       pkgs.usbutils
       pkgs.socat
+      pkgs.openssl
     ];
     programs = {
       yt-dlp.enable = true;
