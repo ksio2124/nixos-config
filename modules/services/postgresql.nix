@@ -4,8 +4,14 @@
       autoStart = true;
       privateNetwork = true;
       hostBridge = "br-isolated";
+      localAddress6 = "fdcf:4b47:cf30::10/64";
       privateUsers = "pick";
       config = {pkgs, ...}: {
+        # systemd.network.networks."80-container-eth0" = {
+        #   matchConfig.Name = "eth0";
+        #   address = ["fdcf:4b47:cf30::10/64"];
+        #   networkConfig.IPv6AcceptRA = true;
+        # };
         # containers.postgres.config (or that container's own config)
         services.postgresql = {
           package = pkgs.postgresql_18;

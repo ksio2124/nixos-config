@@ -5,6 +5,7 @@
       autoStart = true;
       privateNetwork = true;
       hostBridge = "br-isolated";
+      localAddress6 = "fdcf:4b47:cf30::11/64";
       privateUsers = "pick";
       extraFlags = [
         "--load-credential=nextcloud-adminpass:${config.sops.secrets."nextcloud/adminpass".path}"
@@ -16,6 +17,11 @@
         pkgs,
         ...
       }: {
+        # systemd.network.networks."80-container-eth0" = {
+        #   matchConfig.Name = "eth0";
+        #   address = ["fdcf:4b47:cf30::11/64"];
+        #   networkConfig.IPv6AcceptRA = true;
+        # };
         services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
           forceSSL = true;
           enableACME = true;
