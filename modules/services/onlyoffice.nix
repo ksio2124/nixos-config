@@ -12,7 +12,7 @@
     sops.secrets."onlyoffice/postgresqlpass" = {};
     sops.secrets."onlyoffice/jwtSecret" = {};
     containers.onlyoffice = {
-      ephemeral = true;
+      # ephemeral = true;
       autoStart = true;
       privateUsers = "pick";
       privateNetwork = true;
@@ -29,22 +29,22 @@
         pkgs,
         ...
       }: {
-        systemd.services.onlyoffice-docservice.serviceConfig.LoadCredential = [
-          "onlyoffice-securityNonce:/run/credentials/@system/onlyoffice-securityNonce"
-          "onlyoffice-jwtSecret:/run/credentials/@system/onlyoffice-jwtSecret"
-          "onlyoffice-postgresqlpass:/run/credentials/@system/onlyoffice-postgresqlpass"
+        users.groups.onlyoffice-secrets = {};
+        users.users.nginx.extraGroups = ["onlyoffice-secrets"];
+        users.users.onlyoffice.extraGroups = ["onlyoffice-secrets"];
+
+        systemd.tmpfiles.rules = [
+          "d /run/onlyoffice-secrets 0750 root onlyoffice-secrets -"
+          "C /run/onlyoffice-secrets/securityNonce 0640 root onlyoffice-secrets - /run/credentials/@system/onlyoffice-securityNonce"
+          "C /run/onlyoffice-secrets/jwtSecret 0640 root onlyoffice-secrets - /run/credentials/@system/onlyoffice-jwtSecret"
+          "C /run/onlyoffice-secrets/postgresqlpass 0640 root onlyoffice-secrets - /run/credentials/@system/onlyoffice-postgresqlpass"
         ];
         services.onlyoffice = {
           enable = true;
           hostname = "onlyoffice.ksio2124.com";
           rabbitmqUrl = "amqp://guest:guest@127.0.0.1:5672";
-          securityNonceFile = "/run/credentials/onlyoffice-docservice.service/onlyoffice-securityNonce";
-          jwtSecretFile = "/run/credentials/onlyoffice-docservice.service/onlyoffice-jwtSecret";
-          postgresPasswordFile = "/run/credentials/onlyoffice-docservice.service/onlyoffice-postgresqlpass";
-          # securityNonceFile = "/run/credentials/@system/onlyoffice-securityNonce";
-          # jwtSecretFile = "/run/credentials/@system/onlyoffice-jwtSecret";
-          postgresHost = "postgresql.home";
-          # postgresPasswordFile = "/run/credentials/@system/onlyoffice-postgresqlpass";
+          securityNonceFile = "/run/onlyoffice-secrets/securityNonce";
+          jwtSecretFile = "/run/onlyoffice-secrets/jwtSecret";
         };
         networking.useHostResolvConf = false;
 
