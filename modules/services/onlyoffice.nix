@@ -20,6 +20,9 @@
       localAddress6 = "fdcf:4b47:cf30::12/64";
       extraFlags = [
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
+        "--load-credential=onlyoffice-postgresqlpass:${config.sops.secrets."onlyoffice/postgresqlpass".path}"
+        "--load-credential=onlyoffice-jwtSecret:${config.sops.secrets."onlyoffice/jwtSecret".path}"
+        "--load-credential=onlyoffice-securityNonce:${config.sops.secrets."onlyoffice/securityNonce".path}"
       ];
       config = {
         config,
