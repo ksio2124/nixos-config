@@ -30,7 +30,9 @@
       pkgs.zoom-us
       pkgs.vlc
       pkgs.lmstudio
-      pkgs.moonlight-qt
+      # pkgs.moonlight-qt
+      # TODO: remove once moonlight-qt can be built against ffmpeg 9
+      (pkgs.moonlight-qt.override {ffmpeg = pkgs.ffmpeg_8;})
       pkgs.libreoffice
       pkgs.gimp
       pkgs.figma-linux

@@ -5,7 +5,7 @@
       autoStart = true;
       privateNetwork = true;
       privateUsers = "pick";
-      ephemeral = true;
+      # ephemeral = true;
       hostBridge = "br-isolated";
       extraFlags = [
         "--load-credential=anki-sync-server-password:${config.sops.secrets."anki-sync-server/password".path}"

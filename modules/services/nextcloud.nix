@@ -4,7 +4,7 @@
     sops.secrets."nextcloud/postgresqlpass" = {};
     containers.nextcloud = {
       autoStart = true;
-      ephemeral = true;
+      # ephemeral = true;
       privateNetwork = true;
       hostBridge = "br-isolated";
       localAddress6 = "fdcf:4b47:cf30::11/64";
