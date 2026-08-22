@@ -1,5 +1,8 @@
 _: {
   flake.homeModules.homeSystem_tools = {pkgs, ...}: {
+    nixpkgs.config.permittedInsecurePackages = [
+      "ventoy-1.1.12"
+    ];
     # pkgs
     imports = [
       # import homeModules here
@@ -51,6 +54,8 @@ _: {
       pkgs.usbutils
       pkgs.socat
       pkgs.openssl
+      pkgs.gparted-full
+      pkgs.ventoy-full
     ];
     programs = {
       yt-dlp.enable = true;
