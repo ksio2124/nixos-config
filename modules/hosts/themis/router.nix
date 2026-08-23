@@ -164,6 +164,7 @@
       owner = "systemd-network";
       group = "systemd-network";
     };
+    # TODO: get full vpn working
     systemd.network = {
       networks."50-wg0" = {
         matchConfig.Name = "wg0";
