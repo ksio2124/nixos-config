@@ -62,6 +62,7 @@
     systemd.targets.suspend.enable = false;
     systemd.targets.hibernate.enable = false;
     systemd.targets.hybrid-sleep.enable = false;
+    virtualisation.vmware.host.enable = true;
 
     # Set your time zone.
     time.timeZone = "America/Los_Angeles";

@@ -56,6 +56,7 @@ _: {
       pkgs.openssl
       pkgs.gparted-full
       pkgs.ventoy-full
+      pkgs.iw
     ];
     programs = {
       yt-dlp.enable = true;

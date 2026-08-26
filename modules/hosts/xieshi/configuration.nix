@@ -175,7 +175,7 @@
     # networking = {
     #   nameservers = ["1.1.1.1" "8.8.8.8"];
     # };
-
+    # TODO: miracast pretty difficult would need FluxCast
     networking.useNetworkd = true;
     networking.networkmanager.enable = false;
     networking.wireless.iwd = {
