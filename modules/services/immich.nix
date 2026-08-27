@@ -21,7 +21,7 @@
         ...
       }: {
         networking.nameservers = ["fdcf:4b47:cf30::1"];
-
+        services.nginx.enable = true;
         services.nginx.virtualHosts."immich.ksio2124.com" = {
           forceSSL = true;
           enableACME = true;
@@ -40,14 +40,13 @@
         services.immich = {
           enable = true;
           openFirewall = true;
-          host = "0.0.0.0";
+          host = "::";
+          database.enable = false;
+          database.host = "fdcf:4b47:cf30::10";
         };
         security.acme = {
           acceptTerms = true;
           defaults.email = "ksio2124@protonmail.ch";
-          # certs = {
-          #   "immich.ksio2124.com".email = "ksio2124@protonmail.ch";
-          # };
         };
         services.cloudflare-ddns = {
           enable = true;
