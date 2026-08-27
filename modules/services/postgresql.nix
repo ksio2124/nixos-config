@@ -13,7 +13,10 @@
           package = pkgs.postgresql_18;
           enable = true;
           enableTCPIP = true; # required — otherwise it only listens on the socket
-
+          extensions = ps: with ps; [ps.pgvector ps.vectorchord];
+          settings = {
+            shared_preload_libraries = ["vchord.so"];
+          };
           ensureDatabases = ["nextcloud" "onlyoffice" "immich"];
           ensureUsers = [
             {
