@@ -9,7 +9,6 @@
     ...
   }: {
     sops.secrets."onlyoffice/securityNonce" = {};
-    sops.secrets."onlyoffice/postgresqlpass" = {};
     sops.secrets."onlyoffice/jwtSecret" = {};
     containers.onlyoffice = {
       # ephemeral = true;
@@ -36,7 +35,6 @@
           "d /run/onlyoffice-secrets 0750 root onlyoffice-secrets -"
           "C /run/onlyoffice-secrets/securityNonce 0640 root onlyoffice-secrets - /run/credentials/@system/onlyoffice-securityNonce"
           "C /run/onlyoffice-secrets/jwtSecret 0640 root onlyoffice-secrets - /run/credentials/@system/onlyoffice-jwtSecret"
-          "C /run/onlyoffice-secrets/postgresqlpass 0640 root onlyoffice-secrets - /run/credentials/@system/onlyoffice-postgresqlpass"
         ];
         services.onlyoffice = {
           enable = true;

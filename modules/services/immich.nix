@@ -43,7 +43,7 @@
           openFirewall = true;
           host = "::";
           database.enable = false;
-          # database.host = "[fdcf:4b47:cf30::10]";
+          database.host = "postgresql.home";
           secretsFile = "/run/credentials/@system/immich-secretsFile";
         };
         security.acme = {
