@@ -1,6 +1,5 @@
 {
   flake.nixosModules.immich = {config, ...}: {
-    # sops.secrets."nextcloud/adminpass" = {};
     sops.secrets."immich/secretsFile" = {};
     containers.immich = {
       autoStart = true;
@@ -10,8 +9,6 @@
       localAddress6 = "fdcf:4b47:cf30::13/64";
       privateUsers = "pick";
       extraFlags = [
-        # "--load-credential=nextcloud-adminpass:${config.sops.secrets."nextcloud/adminpass".path}"
-        # "--load-credential=nextcloud-postgresqlpass:${config.sops.secrets."nextcloud/postgresqlpass".path}"
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--load-credential=immich-secretsFile:${config.sops.secrets."immich/secretsFile".path}"
         "--bind=/mypool/immich:/mypool/immich:idmap"
@@ -38,6 +35,7 @@
             '';
           };
         };
+
         services.immich = {
           enable = true;
           openFirewall = true;
