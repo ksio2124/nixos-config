@@ -12,6 +12,7 @@ _: {
       pkgs.deadnix
       pkgs.yaml-language-server
       pkgs.devenv
+      pkgs.hugo
     ];
   };
 }
