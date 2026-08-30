@@ -78,16 +78,30 @@
       "20-br-isolated" = {
         matchConfig.Name = "br-isolated";
         address = [
+          "192.168.2.1/24"
           "fdcf:4b47:cf30::1/64"
         ];
 
         networkConfig = {
           # IMPORTANT: NO IPv4 here
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
+          DHCPServer = true;
           IPv6SendRA = true;
           IPv6PrivacyExtensions = "yes";
           ConfigureWithoutCarrier = true;
           DHCPPrefixDelegation = true;
         };
+        dhcpServerConfig = {
+          EmitDNS = true;
+          PoolOffset = 50;
+          PoolSize = 150;
+
+          DNS = [
+            "192.168.2.1"
+          ];
+        };
+
         dhcpPrefixDelegationConfig = {
           UplinkInterface = "wan";
           SubnetId = 2;
@@ -227,6 +241,7 @@
             "127.0.0.1"
             "::1"
             "192.168.1.1"
+            "192.168.2.1"
             "::"
           ];
           include = [
@@ -268,6 +283,7 @@
           access-control = [
             "127.0.0.0/8 allow"
             "::1 allow"
+            "192.168.2.0/24 allow"
             "192.168.1.0/24 allow" # Replace with your local subnet
             "fe80::/10 allow"
             "fdcf:4b47:cf30::/48 allow"

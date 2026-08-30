@@ -19,6 +19,7 @@
           modifier = "rw";
         }
       ];
+
       # bi`ndMounts = {
       #   "/dev/dri/card0" = {
       #     hostPath = "/dev/dri/card0";
@@ -51,9 +52,20 @@
           enable = true;
           extraPackages = [
             pkgs.intel-media-driver
+            pkgs.intel-compute-runtime-legacy1
           ];
         };
-        hardware.intel-gpu-tools.enable = true;
+        networking.useNetworkd = true;
+
+        systemd.network.networks."10-eth0" = {
+          matchConfig.Name = "eth0";
+
+          networkConfig = {
+            DHCP = "ipv4";
+          };
+          address = ["fdcf:4b47:cf30::13/64"];
+        };
+        # hardware.intel-gpu-tools.enable = true;
         networking.nameservers = ["fdcf:4b47:cf30::1"];
         services.nginx.enable = true;
         services.nginx.virtualHosts."immich.ksio2124.com" = {
@@ -79,6 +91,15 @@
           database.enable = false;
           database.host = "postgresql.home";
           accelerationDevices = ["/dev/dri/renderD129"];
+          environment = {
+            IMMICH_LOG_LEVEL = "verbose";
+          };
+          machine-learning.environment = {
+            # HF_HUB_DISABLE_XET = "1";
+            HOME = "/run/immich";
+            DEVICE = "OpenVINO";
+            IMMICH_LOG_LEVEL = "verbose";
+          };
           mediaLocation = "/mypool/immich";
           secretsFile = "/run/credentials/@system/immich-secretsFile";
         };
