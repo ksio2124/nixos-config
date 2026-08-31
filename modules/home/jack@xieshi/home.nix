@@ -20,7 +20,14 @@
       self.homeModules.homeGnome
       self.homeModules.homeGames
       self.homeModules.homeInternet_browsers
+      self.homeModules.homeOpencode
+      inputs.sops-nix.homeManagerModules.sops
     ];
+    sops.defaultSopsFile = ../../hosts/xieshi/secrets/config.yaml;
+    sops.defaultSopsFormat = "yaml";
+    sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];
+    sops.age.keyFile = "/home/jack/.config/sops/age/keys.txt";
+    sops.age.generateKey = true;
     nixpkgs.overlays = [inputs.nur.overlays.default];
 
     home.username = "jack";
