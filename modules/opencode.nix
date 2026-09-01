@@ -49,20 +49,25 @@ _: {
               # API key loaded from auth.json (via /connect) or OPENROUTER_API_KEY env var
             };
             models = {
-              # Best free coding models (as of Aug 2026)
-              "qwen/qwen-2.5-coder-32b-instruct:free" = { };
-              "z-ai/glm-4.5v:free" = { };
-              "meta-llama/llama-3.1-8b-instruct:free" = { };
-              "google/gemma-2-9b-it:free" = { };
-              "microsoft/phi-3.5-mini-instruct:free" = { };
-              "deepseek/deepseek-chat-v3:free" = { };
-              "inclusionai/ling-3.0-flash-fin:free" = { };
-              # Keep existing as fallbacks
-              "z-ai/glm-5.2:free" = { };
+              # Current free models (as of Sep 2026)
+              "google/gemma-4-31b-it:free" = { };
+              "google/gemma-4-26b-a4b-it:free" = { };
+              "nvidia/nemotron-3-ultra-550b-a55b:free" = { };
               "nvidia/nemotron-3-super-120b-a12b:free" = { };
+              "nvidia/nemotron-3.5-lightning:free" = { };
+              "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" = { };
+              "nvidia/nemotron-3.5-content-safety:free" = { };
               "minimax/minimax-m3:free" = { };
+              "minimax/minimax-m2.7:free" = { };
+              "z-ai/glm-5.2:free" = { };
               "cohere/north-mini-code:free" = { };
               "poolside/laguna-s-2.1:free" = { };
+              "poolside/laguna-xs-2.1:free" = { };
+              "inclusionai/ling-3.0-flash-fin:free" = { };
+              "thinkingmachines/inkling:free" = { };
+              "thinkingmachines/inkling-small:free" = { };
+              "liquid/lfm-2.5-2.6b:free" = { };
+              "dots-studio/dots-3-note-preview:free" = { };
               # Generic fallback
               "openrouter/free" = { };
             };
