@@ -7,7 +7,6 @@ _: {
     }:
     {
       sops.secrets."openrouter/ApiKey" = { };
-      imports = [ ];
       programs.opencode = {
         enable = true;
 
@@ -16,15 +15,15 @@ _: {
 
           # Core settings
           lsp = true;
-          model = "openrouter/qwen/qwen-2.5-coder-32b-instruct:free";
-          small_model = "openrouter/google/gemma-2-9b-it:free";
+          model = "openrouter/free";
+          small_model = "openrouter/free";
 
           # Security
           autoupdate = false;
           share = "disabled";
           snapshot = false;
 
-          # Experimental policies - restrict to OpenRouter, NVIDIA, Groq only
+          # Experimental policies - restrict to OpenRouter only
           experimental = {
             policies = [
               {
@@ -36,16 +35,6 @@ _: {
                 effect = "allow";
                 action = "provider.use";
                 resource = "openrouter";
-              }
-              {
-                effect = "allow";
-                action = "provider.use";
-                resource = "nvidia";
-              }
-              {
-                effect = "allow";
-                action = "provider.use";
-                resource = "groq";
               }
             ];
           };
@@ -66,7 +55,6 @@ _: {
               "meta-llama/llama-3.1-8b-instruct:free" = { };
               "google/gemma-2-9b-it:free" = { };
               "microsoft/phi-3.5-mini-instruct:free" = { };
-              "nvidia/nemotron-3-ultra:free" = { };
               "deepseek/deepseek-chat-v3:free" = { };
               "inclusionai/ling-3.0-flash-fin:free" = { };
               # Keep existing as fallbacks
@@ -77,35 +65,6 @@ _: {
               "poolside/laguna-s-2.1:free" = { };
               # Generic fallback
               "openrouter/free" = { };
-            };
-          };
-
-          # NVIDIA - Free Nemotron models (excellent for coding)
-          provider.nvidia = {
-            npm = "@ai-sdk/openai-compatible";
-            name = "NVIDIA";
-            options = {
-              baseURL = "https://integrate.api.nvidia.com/v1";
-              # API key from build.nvidia.com
-            };
-            models = {
-              "nemotron-3-ultra" = { };
-              "nemotron-3-super" = { };
-            };
-          };
-
-          # Groq - Ultra-fast inference (free tier)
-          provider.groq = {
-            npm = "@ai-sdk/groq";
-            name = "Groq";
-            options = {
-              # API key from console.groq.com
-            };
-            models = {
-              "llama-3.1-70b-versatile" = { };
-              "llama-3.1-8b-instant" = { };
-              "mixtral-8x7b-32768" = { };
-              "gemma2-9b-it" = { };
             };
           };
 
@@ -136,11 +95,11 @@ _: {
               "sudo *" = "deny";
               "curl *" = "deny";
               "wget *" = "deny";
-              "chmod *" = "allow";
-              "chown *" = "allow";
-              "mkdir *" = "allow";
-              "cp *" = "allow";
-              "mv *" = "allow";
+              "chmod *" = "ask";
+              "chown *" = "ask";
+              "mkdir *" = "ask";
+              "cp *" = "ask";
+              "mv *" = "ask";
             };
           };
 
