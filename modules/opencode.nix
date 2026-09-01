@@ -77,6 +77,8 @@ _: {
               "*.env" = "deny";
               "*.env.*" = "deny";
               "*.env.example" = "allow";
+              "modules/hosts/themis/secrets/**" = "deny";
+              "modules/hosts/xieshi/secrets/**" = "deny";
             };
             edit = "allow";
             webfetch = "ask";
