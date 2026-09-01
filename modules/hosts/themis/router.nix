@@ -242,6 +242,7 @@
             "::1"
             "192.168.1.1"
             "192.168.2.1"
+            "10.0.0.13"
             "::"
           ];
           include = [
@@ -284,10 +285,11 @@
             "127.0.0.0/8 allow"
             "::1 allow"
             "192.168.2.0/24 allow"
-            "192.168.1.0/24 allow" # Replace with your local subnet
+            "192.168.1.0/24 allow"
+            "10.0.0.0/24 allow"
             "fe80::/10 allow"
             "fdcf:4b47:cf30::/48 allow"
-            "0.0.0.0/0 refuse" # Block everyone else
+            "0.0.0.0/0 refuse"
             "::/0 refuse"
           ];
 

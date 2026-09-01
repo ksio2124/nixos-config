@@ -31,6 +31,7 @@
           iifname {"br0", "wan"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
           iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
+          iifname "wan" tcp dport { 25, 465, 587, 993, 995 } accept comment "Mail server ports"
 
         }
 
@@ -43,6 +44,8 @@
           iifname "br-isolated" oifname "wan" accept
           oifname "br-isolated" tcp dport {80, 443} accept comment "Allow http https Let's encrypt"
           iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
+          iifname "wan" oifname "ve-mailserver" tcp dport { 25, 465, 587, 993, 995 } accept
+          oifname "wan" iifname "ve-mailserver" ct state established,related accept
         }
 
         chain forward_mangle {
@@ -57,6 +60,7 @@
             type nat hook prerouting priority dstnat; policy accept;
             # Example: Forward external port 8080 to internal IP 10.0.0.5 on port 80
             #iifname "wan" tcp dport 28967 redirect to :443
+            iifname "wan" tcp dport { 25, 465, 587, 993, 995 } dnat to 10.0.0.14
           }
         chain postrouting {
           type nat hook postrouting priority srcnat;
