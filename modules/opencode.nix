@@ -82,6 +82,7 @@ _: {
             };
             edit = "allow";
             webfetch = "ask";
+            websearch = "ask";
             # Prevent infinite loops of failed tool calls
             doom_loop = "ask";
             # Require approval for external directory access
