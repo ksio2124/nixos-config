@@ -9,7 +9,7 @@
     lib,
     ...
   }: {
-    # sops.secrets."mail/k-password" = {};
+    sops.secrets."mailserver/hashedPasswordFile/k" = {};
     containers.mailserver = {
       autoStart = true;
       privateNetwork = true;
@@ -17,11 +17,11 @@
       localAddress = "10.0.0.14";
       privateUsers = "pick";
       extraFlags = [
-        # "--load-credential=mail-k-password:${config.sops.secrets."mail/k-password".path}"
+        "--load-credential=mailserver-hashedPasswordFile-k:${config.sops.secrets."mailserver/hashedPasswordFile/k".path}"
         "--bind=/mypool/mailserver/vmail:/mypool/mailserver/vmail:idmap"
         "--bind=/mypool/mailserver/dkim:/mypool/mailserver/dkim:idmap"
         "--bind=/mypool/mailserver/dovecot:/mypool/mailserver/dovecot:idmap"
-        "--bind=/var/lib/acme/mail.ksio2124.com:/var/lib/acme/mail.ksio2124.com:ro"
+        "--bind-ro=/var/lib/acme/mail.ksio2124.com:/var/lib/acme/mail.ksio2124.com:idmap"
       ];
 
       config = {
@@ -46,8 +46,11 @@
             993
             995
           ];
-          allowedUDPPorts = [53];
         };
+        systemd.tmpfiles.rules = [
+          "d /run/mailserver-secrets 0750 root root -"
+          "C /run/mailserver-secrets/hashedPasswordFile-k 0444 root root - /run/credentials/@system/mailserver-hashedPasswordFile-k"
+        ];
 
         # System
         system.stateVersion = "25.05";
@@ -67,9 +70,14 @@
           };
 
           # DKIM signing
-          dkimSigning = true;
-          dkimSelector = "mail";
-          dkimKeyDirectory = "/mypool/mailserver/dkim";
+          dkim = {
+            enable = true;
+            keyDirectory = "/mypool/mailserver/dkim";
+            defaults.selector = "mail";
+          };
+          # dkimSigning = true;
+          # dkimSelector = "mail";
+          # dkimKeyDirectory = "/mypool/mailserver/dkim";
 
           # External storage paths
           storage = {
@@ -86,9 +94,14 @@
           # Accounts
           # loginAccounts = {
           #   "k@ksio2124.com" = {
-          #     hashedPasswordFile = "/run/credentials/@system/mail-k-password";
+          #     hashedPasswordFile = "/run/credentials/@system/mailserver-hashedPasswordFile-k";
           #   };
           # };
+          accounts = {
+            "k@ksio2124.com" = {
+              hashedPasswordFile = "/run/mailserver-secrets/hashedPasswordFile-k";
+            };
+          };
 
           # Enable recommended protocols
           enableSubmissionSsl = true; # Port 465
@@ -97,13 +110,13 @@
           # System contact
           systemContact = "postmaster@ksio2124.com";
         };
-        systemd.services.containers-mailserver = {
-          requires = ["acme-mail.ksio2124.com.service"];
-          after = [
-            "nginx.service"
-            "acme-mail.ksio2124.com.service"
-          ];
-        };
+        # systemd.services.containers-mailserver = {
+        #   requires = ["acme-mail.ksio2124.com.service"];
+        #   after = [
+        #     "nginx.service"
+        #     "acme-mail.ksio2124.com.service"
+        #   ];
+        # };
       };
     };
   };
