@@ -3,14 +3,6 @@
   self,
   ...
 }: {
-  flake.overlays.default = final: prev: {
-    tetrd = prev.tetrd.overrideAttrs (old: {
-      src = prev.fetchurl {
-        url = "https://download.tetrd.app/files/tetrd.linux_amd64.pkg.tar.xz";
-        hash = "sha256-hn3p+iUF7JYQ+TFGbJqvqwDvzgoCfc5SduBgtAExHS0=";
-      };
-    });
-  };
   flake.nixosConfigurations.themis = inputs.nixpkgs.lib.nixosSystem {
     modules = [
       self.nixosModules.hostThemis
@@ -29,6 +21,7 @@
       #self.nixosModules.disko
       self.nixosModules.nextcloud
       self.nixosModules.immich
+      self.nixosModules.jellyfin
       self.nixosModules.postgresql
       self.nixosModules.anki-sync-server
       #self.nixosModules.wordpress
@@ -96,9 +89,9 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        vpl-gpu-rt
-        intel-media-driver # For Broadwell (2014) or newer processors. LIBVA_DRIVER_NAME=iHD
-        # intel-vaapi-driver # For older processors. LIBVA_DRIVER_NAME=i966
+        intel-ocl
+        intel-media-driver
+        intel-compute-runtime-legacy1
       ];
     };
     environment.sessionVariables = {
