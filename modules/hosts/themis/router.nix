@@ -255,6 +255,7 @@
             ''"postgresql.home. IN AAAA fdcf:4b47:cf30::10"''
             ''"nextcloud.home. IN AAAA fdcf:4b47:cf30::11"''
             ''"immich.home. IN AAAA fdcf:4b47:cf30::13"''
+            ''"mail.ksio2124.com. IN A 10.0.0.14"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
