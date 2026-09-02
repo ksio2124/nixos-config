@@ -28,9 +28,14 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     import-tree.url = "github:vic/import-tree";
+    nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.home-manager.flakeModules.home-manager
         (inputs.import-tree ./modules)

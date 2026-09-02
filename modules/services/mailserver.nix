@@ -6,79 +6,117 @@
   flake.nixosModules.mailserver = {
     config,
     pkgs,
+    lib,
     ...
   }: {
-    #
+    sops.secrets."mailserver/hashedPasswordFile/k" = {};
     containers.mailserver = {
       autoStart = true;
       privateNetwork = true;
       hostAddress = "10.0.0.13";
       localAddress = "10.0.0.14";
-      bindMounts."/var/lib/acme/ksio2124.com" = {
-        hostPath = "/var/lib/acme/ksio2124.com";
-        isReadOnly = true;
-      };
+      privateUsers = "pick";
+      extraFlags = [
+        "--load-credential=mailserver-hashedPasswordFile-k:${config.sops.secrets."mailserver/hashedPasswordFile/k".path}"
+        "--bind=/mypool/mailserver/vmail:/mypool/mailserver/vmail:idmap"
+        "--bind=/mypool/mailserver/dkim:/mypool/mailserver/dkim:idmap"
+        "--bind=/mypool/mailserver/dovecot:/mypool/mailserver/dovecot:idmap"
+        "--bind-ro=/var/lib/acme/mail.ksio2124.com:/var/lib/acme/mail.ksio2124.com:idmap"
+      ];
 
       config = {
         config,
         pkgs,
+        lib,
         ...
       }: {
         imports = [
-          (builtins.fetchTarball {
-            url = "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/-/archive/main/nixos-mailserver-main.tar.gz";
-
-            sha256 = "0x73hf947cky34104cfqdaqpxykvcqhykvvg1jz6wrpfakvx4ghn";
-          })
+          inputs.nixos-mailserver.nixosModules.mailserver
         ];
 
+        # Container networking
+        networking.useHostResolvConf = false;
+        networking.nameservers = ["10.0.0.13"];
+        networking.firewall = {
+          enable = true;
+          allowedTCPPorts = [
+            25
+            465
+            587
+            993
+            995
+          ];
+        };
+        systemd.tmpfiles.rules = [
+          "d /run/mailserver-secrets 0750 root root -"
+          "C /run/mailserver-secrets/hashedPasswordFile-k 0444 root root - /run/credentials/@system/mailserver-hashedPasswordFile-k"
+        ];
+
+        # System
+        system.stateVersion = "25.05";
+        time.timeZone = "America/Los_Angeles";
+
+        # Mailserver configuration
         mailserver = {
           enable = true;
-          stateVersion = 4;
+          stateVersion = 5;
           fqdn = "mail.ksio2124.com";
           domains = ["ksio2124.com"];
+
+          # Use ACME certs from host (bind-mounted)
           x509 = {
-            certificateFile = "/var/lib/acme/ksio2124.com/fullchain.pem";
-            privateKeyFile = "/var/lib/acme/ksio2124.com/key.pem";
+            certificateFile = "/var/lib/acme/mail.ksio2124.com/fullchain.pem";
+            privateKeyFile = "/var/lib/acme/mail.ksio2124.com/key.pem";
           };
+
+          # DKIM signing
+          dkim = {
+            enable = true;
+            keyDirectory = "/mypool/mailserver/dkim";
+            defaults.selector = "mail";
+          };
+          # dkimSigning = true;
+          # dkimSelector = "mail";
+          # dkimKeyDirectory = "/mypool/mailserver/dkim";
+
+          # External storage paths
+          storage = {
+            path = "/mypool/mailserver/vmail";
+            uid = 5000;
+            gid = 5000;
+            owner = "virtualMail";
+            group = "virtualMail";
+          };
+
+          # Dovecot index directory
+          indexDir = "/mypool/mailserver/dovecot";
+
+          # Accounts
+          # loginAccounts = {
+          #   "k@ksio2124.com" = {
+          #     hashedPasswordFile = "/run/credentials/@system/mailserver-hashedPasswordFile-k";
+          #   };
+          # };
           accounts = {
             "k@ksio2124.com" = {
-              hashedPassword = "y$j9T$Ufs8vt1E9pyUSdDVITDgx.$EFBw0NCHqvec9iPYIU9lUdW1LnHHE48oA3BPnh93dAB";
+              hashedPasswordFile = "/run/mailserver-secrets/hashedPasswordFile-k";
             };
           };
-        };
-        # services.postfix = {
-        #   enable = true;
-        #   settings.main = {
-        #     relayHost = ["[live.smtp.mailtrap.io]:587"];
-        #     # relayHost = "live.smtp.mailtrap.io";
-        #     # relayPort = 587; # Commonly 587 for STARTTLS
-        #     smtp_sasl_auth_enable = "yes";
-        #     smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
-        #     smtp_sasl_security_options = "noanonymous";
-        #     smtp_use_tls = "yes";
-        #     # smtp_tls_security_level = "encrypt"; # Ensures connections are encrypted
-        #   };
-        #   # relayHost = "live.smtp.mailtrap.io";
-        #   # relayPort = 587; # Commonly 587 for STARTTLS
-        #   # config = {
-        #   #   smtp_sasl_auth_enable = "yes";
-        #   #   smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
-        #   #   smtp_sasl_security_options = "noanonymous";
-        #   #   smtp_use_tls = "yes";
-        #   #   smtp_tls_security_level = "encrypt"; # Ensures connections are encrypted
-        #   # };
-        # };
-        #
-        system.stateVersion = "26.05";
-      };
-    };
-    services.nginx.virtualHosts."ksio2124.com" = {
-      forceSSL = true;
-      enableACME = true;
 
-      locations."/" = {
-        proxyPass = "http://10.0.0.14";
+          # Enable recommended protocols
+          enableSubmissionSsl = true; # Port 465
+          enableImapSsl = true; # Port 993
+
+          # System contact
+          systemContact = "postmaster@ksio2124.com";
+        };
+        # systemd.services.containers-mailserver = {
+        #   requires = ["acme-mail.ksio2124.com.service"];
+        #   after = [
+        #     "nginx.service"
+        #     "acme-mail.ksio2124.com.service"
+        #   ];
+        # };
       };
     };
   };

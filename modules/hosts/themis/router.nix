@@ -242,6 +242,7 @@
             "::1"
             "192.168.1.1"
             "192.168.2.1"
+            "10.0.0.13"
             "::"
           ];
           include = [
@@ -254,6 +255,7 @@
             ''"postgresql.home. IN AAAA fdcf:4b47:cf30::10"''
             ''"nextcloud.home. IN AAAA fdcf:4b47:cf30::11"''
             ''"immich.home. IN AAAA fdcf:4b47:cf30::13"''
+            ''"mail.ksio2124.com. IN A 10.0.0.14"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
@@ -284,10 +286,11 @@
             "127.0.0.0/8 allow"
             "::1 allow"
             "192.168.2.0/24 allow"
-            "192.168.1.0/24 allow" # Replace with your local subnet
+            "192.168.1.0/24 allow"
+            "10.0.0.0/24 allow"
             "fe80::/10 allow"
             "fdcf:4b47:cf30::/48 allow"
-            "0.0.0.0/0 refuse" # Block everyone else
+            "0.0.0.0/0 refuse"
             "::/0 refuse"
           ];
 
