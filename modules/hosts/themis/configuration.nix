@@ -21,7 +21,8 @@
       #self.nixosModules.disko
       self.nixosModules.nextcloud
       self.nixosModules.immich
-      self.nixosModules.jellyfin
+      #self.nixosModules.jellyfin
+      self.nixosModules.rsync
       self.nixosModules.postgresql
       self.nixosModules.anki-sync-server
       #self.nixosModules.wordpress

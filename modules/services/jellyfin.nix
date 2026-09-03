@@ -2,7 +2,7 @@
   flake.nixosModules.jellyfin = {config, ...}: {
     containers.jellyfin = {
       autoStart = true;
-      #ephemeral = true;
+      ephemeral = true;
       privateNetwork = true;
       hostBridge = "br-isolated";
       privateUsers = "pick";
