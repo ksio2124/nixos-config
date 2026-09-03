@@ -22,7 +22,9 @@
       self.nixosModules.nextcloud
       self.nixosModules.immich
       #self.nixosModules.jellyfin
-      self.nixosModules.rsync
+      # self.nixosModules.rsync
+      self.nixosModules.rsync2
+      # self.nixosModules.rsync3
       self.nixosModules.postgresql
       self.nixosModules.anki-sync-server
       #self.nixosModules.wordpress
