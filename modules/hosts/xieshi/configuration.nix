@@ -232,85 +232,85 @@
       ip6tables -t mangle -A POSTROUTING -o usb0 -j HL --hl-set 65
     '';
 
-    # systemd.network = {
-    #   networks."50-wg0" = {
-    #     matchConfig.Name = "wg0";
-    #     address = [
-    #       "fd31:bf08:57cb::8/128"
-    #       "192.168.2.2/24"
-    #     ];
-    #
-    #     # Route everything through wg0
-    #     routes = [
-    #       {
-    #         routeConfig = {
-    #           Destination = "0.0.0.0/0";
-    #           Table = 51820;
-    #         };
-    #       }
-    #       {
-    #         routeConfig = {
-    #           Destination = "::/0";
-    #           Table = 51820;
-    #         };
-    #       }
-    #     ];
-    #
-    #     # Policy routing: use table 51820 for everything EXCEPT
-    #     # packets already marked 42 (the WG daemon's own encrypted traffic)
-    #     routingPolicyRules = [
-    #       {
-    #         routingPolicyRuleConfig = {
-    #           FirewallMark = 42;
-    #           InvertRule = true;
-    #           Table = 51820;
-    #           Priority = 100;
-    #         };
-    #       }
-    #       # Let anything matching a more specific route in "main"
-    #       # (e.g. LAN, DHCP-learned routes) win over the wg0 default route
-    #       {
-    #         routingPolicyRuleConfig = {
-    #           Table = "main";
-    #           Priority = 99;
-    #           SuppressPrefixLength = 0;
-    #         };
-    #       }
-    #     ];
-    #
-    #     networkConfig = {
-    #       DNS = ["1.1.1.1" "1.0.0.1"];
-    #       Domains = ["~."]; # use this VPN's DNS for all lookups
-    #     };
-    #   };
-    #
-    #   netdevs."50-wg0" = {
-    #     netdevConfig = {
-    #       Kind = "wireguard";
-    #       Name = "wg0";
-    #     };
-    #     wireguardConfig = {
-    #       ListenPort = 51820;
-    #       PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
-    #       FirewallMark = 42; # marks the daemon's own outbound packets
-    #     };
-    #     wireguardPeers = [
-    #       {
-    #         PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
-    #         # AllowedIPs = [
-    #         #   "0.0.0.0/0"
-    #         #   "::/0"
-    #         # ];
-    #         AllowedIPs = [
-    #           "fd31:bf08:57cb::7/128"
-    #           "192.168.2.1/32"
-    #         ];
-    #         PersistentKeepalive = 25;
-    #         Endpoint = "ksio2124.com:51820";
-    #       }
-    #     ];
-    #   };
-    # };
+    systemd.network = {
+      networks."50-wg0" = {
+        matchConfig.Name = "wg0";
+        address = [
+          "fd31:bf08:57cb::8/128"
+          "192.168.2.2/24"
+        ];
+
+        # Route everything through wg0
+        routes = [
+          {
+            routeConfig = {
+              Destination = "0.0.0.0/0";
+              Table = 51820;
+            };
+          }
+          {
+            routeConfig = {
+              Destination = "::/0";
+              Table = 51820;
+            };
+          }
+        ];
+
+        # Policy routing: use table 51820 for everything EXCEPT
+        # packets already marked 42 (the WG daemon's own encrypted traffic)
+        routingPolicyRules = [
+          {
+            routingPolicyRuleConfig = {
+              FirewallMark = 42;
+              InvertRule = true;
+              Table = 51820;
+              Priority = 100;
+            };
+          }
+          # Let anything matching a more specific route in "main"
+          # (e.g. LAN, DHCP-learned routes) win over the wg0 default route
+          {
+            routingPolicyRuleConfig = {
+              Table = "main";
+              Priority = 99;
+              SuppressPrefixLength = 0;
+            };
+          }
+        ];
+
+        networkConfig = {
+          DNS = ["1.1.1.1" "1.0.0.1"];
+          Domains = ["~."]; # use this VPN's DNS for all lookups
+        };
+      };
+
+      netdevs."50-wg0" = {
+        netdevConfig = {
+          Kind = "wireguard";
+          Name = "wg0";
+        };
+        wireguardConfig = {
+          ListenPort = 51820;
+          PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
+          FirewallMark = 42; # marks the daemon's own outbound packets
+        };
+        wireguardPeers = [
+          {
+            PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
+            AllowedIPs = [
+              "0.0.0.0/0"
+              "::/0"
+            ];
+            # AllowedIPs = [
+            #   "fd31:bf08:57cb::7/128"
+            #   "192.168.2.1/32"
+            # ];
+            PersistentKeepalive = 25;
+            Endpoint = "ksio2124.com:51820";
+          }
+        ];
+      };
+    };
 
     system.stateVersion = "25.05"; # Did you read the comment?
   };

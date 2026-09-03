@@ -27,8 +27,8 @@
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
           # TODO: add wan to sunshine server
-          iifname {"br0", "wan"} tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
-          iifname {"br0", "wan"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
+          iifname {"br0", "wan", "wg0"} tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
+          iifname {"br0", "wan", "wg0"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
           iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
 
