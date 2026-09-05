@@ -57,6 +57,8 @@ _: {
       pkgs.gparted-full
       pkgs.ventoy-full
       pkgs.iw
+      pkgs.rclone
+      # pkgs.rclone-ui
     ];
     programs = {
       yt-dlp.enable = true;
