@@ -237,7 +237,7 @@
     #     matchConfig.Name = "wg0";
     #     address = [
     #       "fd31:bf08:57cb::8/128"
-    #       "192.168.2.2/24"
+    #       "192.168.3.2/24"
     #     ];
     #
     #     # Route everything through wg0
@@ -297,21 +297,21 @@
     #     wireguardPeers = [
     #       {
     #         PublicKey = "fefPETytdUo2rwH0Ji2GYgtpx0ZUO3i4AtPIiyZYgUE=";
-    #         # AllowedIPs = [
-    #         #   "0.0.0.0/0"
-    #         #   "::/0"
-    #         # ];
     #         AllowedIPs = [
-    #           "fd31:bf08:57cb::7/128"
-    #           "192.168.2.1/32"
+    #           "0.0.0.0/0"
+    #           "::/0"
     #         ];
+    #         # AllowedIPs = [
+    #         #   "fd31:bf08:57cb::7/128"
+    #         #   "192.168.3.1/32"
+    #         # ];
     #         PersistentKeepalive = 25;
     #         Endpoint = "ksio2124.com:51820";
     #       }
     #     ];
     #   };
     # };
-
+    #
     system.stateVersion = "25.05"; # Did you read the comment?
   };
 }

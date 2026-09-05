@@ -187,7 +187,10 @@
           # /32 and /128 specifies a single address
           # for use on this wg peer machine
           "fd31:bf08:57cb::7/128"
-          "192.168.2.1/32"
+          # Dedicated tunnel subnet, distinct from br-isolated's
+          # 192.168.2.0/24, so the two interfaces don't claim the same
+          # address on this host.
+          "192.168.3.1/32"
         ];
       };
 
@@ -217,7 +220,7 @@
             PublicKey = "/mmnnC+MQiUcIBbSCmsqbDWqFIaOa6AnVj2c9PWgjBg=";
             AllowedIPs = [
               "fd31:bf08:57cb::8/128"
-              "192.168.2.2/32"
+              "192.168.3.2/32"
             ];
           }
         ];
