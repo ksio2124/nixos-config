@@ -57,6 +57,13 @@
           extraAppsEnable = true;
           datadir = "/mypool/nextcloud";
           caching.redis = true;
+          settings = {
+            default_phone_region = "US";
+            maintenance_window_start = 3;
+          };
+          phpOptions = {
+            "opcache.interned_strings_buffer" = 32;
+          };
           config = {
             adminuser = "ksio2124";
             dbtype = "pgsql";
