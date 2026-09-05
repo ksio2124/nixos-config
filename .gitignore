@@ -1,0 +1,29 @@
+# Nix build outputs
+result
+result-*
+*.drv
+
+# direnv
+.direnv/
+.envrc.local
+
+# sops - never commit decrypted secrets
+*.dec
+*.dec.yaml
+*.dec.json
+secrets.yaml.dec
+*.env
+*.env.*
+!*.env.example
+
+# age/gpg private keys, should local system only
+*.agekey
+secring.gpg
+
+# editor/OS cruft
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
