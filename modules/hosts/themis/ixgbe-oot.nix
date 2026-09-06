@@ -10,6 +10,12 @@
     # ("cannot be updated due to inaccessible device memory"); Intel's own
     # out-of-tree build exposes what the tool needs. Remove this module once
     # the firmware flash is done — it's not needed for normal operation.
+    # TODO: pull this derivation out into its own package file instead of
+    # inlining it here — it's grown past what's reasonable for a host module.
+    # Can't just drop it under modules/ though: every .nix file there is
+    # auto-imported as a flake-parts module (see flake.nix's import-tree), so
+    # a plain package file breaks eval. Put it outside modules/ (e.g.
+    # pkgs/ixgbe/default.nix) and callPackage it from here instead.
     boot.extraModulePackages = let
       kernel = config.boot.kernelPackages.kernel;
     in [
