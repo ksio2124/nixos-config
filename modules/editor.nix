@@ -53,6 +53,17 @@
               # Ensure folds open on common actions
               foldopen = "block,hor,mark,percent,quickfix,search,tag,undo";
             };
+            # Yank over SSH has no local clipboard to shell out to - OSC52
+            # makes nvim emit the copied text as an escape sequence instead,
+            # which the local terminal (e.g. WezTerm) picks up and writes to
+            # its own system clipboard.
+            clipboard = {
+              enable = true;
+              registers = "unnamedplus";
+            };
+            luaConfigPost = ''
+              vim.g.clipboard = require("vim.ui.clipboard.osc52")
+            '';
             autocomplete.nvim-cmp.enable = true;
             filetree.nvimTree.enable = true;
             tabline.nvimBufferline.enable = true;

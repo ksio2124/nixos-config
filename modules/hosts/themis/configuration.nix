@@ -22,6 +22,7 @@
       self.nixosModules.nextcloud
       self.nixosModules.immich
       self.nixosModules.garage
+      self.nixosModules.mosquitto
       #self.nixosModules.jellyfin
       self.nixosModules.postgresql
       self.nixosModules.anki-sync-server
