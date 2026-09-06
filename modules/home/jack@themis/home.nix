@@ -2,8 +2,7 @@
   inputs,
   self,
   ...
-}:
-{
+}: {
   flake.homeConfigurations."jack@themis" = inputs.home-manager.lib.homeManagerConfiguration {
     pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
     modules = [
@@ -11,7 +10,7 @@
     ];
   };
 
-  flake.homeModules."homeJack@themis" = { pkgs, ... }: {
+  flake.homeModules."homeJack@themis" = {pkgs, ...}: {
     # pkgs
     imports = [
       self.homeModules.homeEditor
@@ -26,11 +25,11 @@
       # import homeModules here
     ];
 
-    nixpkgs.overlays = [ inputs.nur.overlays.default ];
+    nixpkgs.overlays = [inputs.nur.overlays.default];
 
     sops.defaultSopsFile = ../../hosts/themis/secrets/config.yaml;
     sops.defaultSopsFormat = "yaml";
-    sops.age.sshKeyPaths = [ "/home/jack/.ssh/themis" ];
+    sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];
     sops.age.keyFile = "/home/jack/.config/sops/age/keys.txt";
     sops.age.generateKey = true;
 
@@ -38,6 +37,7 @@
       username = "jack";
       homeDirectory = "/home/jack";
     };
+    programs.zellij.enable = true;
     home.stateVersion = "25.05";
   };
 }
