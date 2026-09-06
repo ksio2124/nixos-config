@@ -49,9 +49,12 @@
             {
               port = 8883;
               address = "::";
-              settings.certfile = "/var/lib/acme/mqtt.ksio2124.com/cert.pem";
+              # fullchain.pem (leaf + intermediate), not cert.pem (leaf
+              # only) - clients need the intermediate to build a trust
+              # path back to a root they already have. cafile is not
+              # needed since we don't verify client certs.
+              settings.certfile = "/var/lib/acme/mqtt.ksio2124.com/fullchain.pem";
               settings.keyfile = "/var/lib/acme/mqtt.ksio2124.com/key.pem";
-              settings.cafile = "/var/lib/acme/mqtt.ksio2124.com/fullchain.pem";
               users = {
                 ks.passwordFile = "/run/credentials/@system/mosquitto-ks-password";
                 "in".passwordFile = "/run/credentials/@system/mosquitto-in-password";
