@@ -34,26 +34,66 @@
       "10-lan0" = {
         matchConfig.MACAddress = "00:e0:ed:93:e5:59";
         linkConfig.Name = "lan0";
+        # X550 (ixgbe), same chip as wan: hardware max is 4096/4096,
+        # but only defaults to 512/512 unless set explicitly.
+        linkConfig = {
+          RxBufferSize = 4096;
+          TxBufferSize = 4096;
+        };
       };
       "10-lan1" = {
         matchConfig.MACAddress = "10:e7:c6:32:a1:72";
         linkConfig.Name = "lan1";
+        # Onboard I219-LM (e1000e): hardware max is 4096/4096,
+        # defaults to 256/256.
+        linkConfig = {
+          RxBufferSize = 4096;
+          TxBufferSize = 4096;
+        };
       };
       "10-lan2" = {
         matchConfig.MACAddress = "00:10:18:e5:16:93";
         linkConfig.Name = "lan2";
+        # BCM5719 (tg3): hardware max is RX 2047 / TX 511,
+        # RX defaults to 200 leaving most of the ring unused.
+        # Also bump RX/TX queue count from the tg3 default (3/1) to
+        # its max (4/4) so TX processing isn't pinned to one core.
+        linkConfig = {
+          RxBufferSize = 2047;
+          TxBufferSize = 511;
+          RxChannels = 4;
+          TxChannels = 4;
+        };
       };
       "10-lan3" = {
         matchConfig.MACAddress = "00:10:18:e5:16:92";
         linkConfig.Name = "lan3";
+        linkConfig = {
+          RxBufferSize = 2047;
+          TxBufferSize = 511;
+          RxChannels = 4;
+          TxChannels = 4;
+        };
       };
       "10-lan4" = {
         matchConfig.MACAddress = "00:10:18:e5:16:91";
         linkConfig.Name = "lan4";
+        linkConfig = {
+          RxBufferSize = 2047;
+          TxBufferSize = 511;
+          RxChannels = 4;
+          TxChannels = 4;
+        };
       };
       "10-lan5" = {
         matchConfig.MACAddress = "00:10:18:e5:16:90";
         linkConfig.Name = "lan5";
+        linkConfig = {
+          RxBufferSize = 2047;
+          TxBufferSize = 511;
+          RxChannels = 4;
+          TxChannels = 4;
+        };
       };
     };
 
@@ -234,6 +274,15 @@
       "net.core.netdev_max_backlog" = 25000;
       "net.ipv4.tcp_fastopen" = 3;
       "net.core.busy_poll" = 1;
+      # Default NAPI poll budget (300 packets / 8000us) is tuned for a
+      # single-NIC host; this box services 6 physical interfaces
+      # (wan, lan0-5) concurrently doing bridged/routed forwarding.
+      "net.core.netdev_budget" = 600;
+      "net.core.netdev_budget_usecs" = 8000;
+      # Safety net for the 9000-byte jumbo MTU on wan: falls back
+      # cleanly if any hop on the path doesn't actually pass jumbo
+      # frames, instead of black-holing.
+      "net.ipv4.tcp_mtu_probing" = 1;
     };
     services.unbound = {
       enable = true;
