@@ -28,7 +28,7 @@
       owner = "nixos";
       repo = "nixpkgs";
       rev = "871b9fd269ff6246794583ce4ee1031e1da71895";
-    }) {inherit (pkgs) system;};
+    }) {system = pkgs.stdenv.hostPlatform.system;};
     wireplumber_0_5_12 = wireplumber_0_5_12_pkgs.wireplumber;
   in {
     imports = [

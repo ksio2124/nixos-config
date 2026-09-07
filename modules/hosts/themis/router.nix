@@ -298,7 +298,7 @@
             "::"
           ];
           include = [
-            "${inputs.hosts.packages.${pkgs.system}.unbound}/fakenews-gambling-porn"
+            "${inputs.hosts.packages.${pkgs.stdenv.hostPlatform.system}.unbound}/fakenews-gambling-porn"
           ];
           local-zone = [
             ''"home." static''

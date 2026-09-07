@@ -7,6 +7,7 @@
       localAddress6 = "fdcf:4b47:cf30::10/64";
       privateUsers = "pick";
       config = {pkgs, ...}: {
+        system.stateVersion = "26.05"; # Required for running NixOS containers
         networking.nameservers = ["fdcf:4b47:cf30::1"];
         networking.useHostResolvConf = false;
         services.postgresql = {

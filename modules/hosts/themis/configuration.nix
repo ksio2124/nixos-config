@@ -44,6 +44,7 @@
       zfs = true;
     };
     boot.zfs.extraPools = ["mypool"];
+    boot.zfs.forceImportRoot = false;
     boot.kernelParams = [
       "i915.enable_guc=2"
       # "drm.edid_firmware=DP-1:edid/virtual-display.bin"
@@ -106,9 +107,9 @@
     services.xserver.enable = true;
     boot.initrd.kernelModules = ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
     # Enable the GNOME Desktop Environment.
-    services.xserver.displayManager.gdm.enable = true;
+    services.displayManager.gdm.enable = true;
     services.displayManager.gdm.autoSuspend = false;
-    services.xserver.desktopManager.gnome.enable = true;
+    services.desktopManager.gnome.enable = true;
     services.displayManager.autoLogin = {
       enable = true;
       user = "jack"; # Change this to your actual username
@@ -142,13 +143,12 @@
       pulse.enable = true;
     };
 
-    environment.systemPackages = with pkgs; [
-    ];
+    environment.systemPackages = [];
 
     # Enable the OpenSSH daemon.
     services.openssh = {
       enable = true;
-      passwordAuthentication = true;
+      settings.PasswordAuthentication = true;
     };
     programs.steam.enable = true;
     programs.gamescope.enable = true;
