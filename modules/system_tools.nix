@@ -64,6 +64,7 @@ _: {
       yt-dlp.enable = true;
       ripgrep.enable = true;
       fd.enable = true;
+      gh.enable = true;
       fastfetch = {
         enable = true;
       };
