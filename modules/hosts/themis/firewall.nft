@@ -27,8 +27,14 @@
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
           # TODO: add wan to sunshine server
-          iifname {"br0", "wan", "wg0"} tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
-          iifname {"br0", "wan", "wg0"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
+          # Port sets are base +/- fixed offsets per nixpkgs' own sunshine
+          # module (nixos/modules/services/networking/sunshine.nix):
+          # tcp = base + {-5, 0, 1, 21}, udp = base + {9, 10, 11, 13, 21}.
+          # seat0 base = 47989 (module default); seat1 base = 48099 (+100).
+          iifname {"br0", "wan", "wg0"} tcp dport {47984, 47989, 47990, 48010} accept comment "sunshine"
+          iifname {"br0", "wan", "wg0"} udp dport {47998, 47999, 48000, 48002, 48010} accept comment "sunshine"
+          iifname {"br0", "wan", "wg0"} tcp dport {48094, 48099, 48100, 48120} accept comment "sunshine seat1"
+          iifname {"br0", "wan", "wg0"} udp dport {48108, 48109, 48110, 48112, 48120} accept comment "sunshine seat1"
           iifname "wg0" tcp dport {22} accept comment "Allow ssh via wireguard"
           iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
 
