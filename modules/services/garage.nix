@@ -12,16 +12,10 @@
       privateUsers = "pick";
 
       extraFlags = [
-        "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--load-credential=garage-rpcSecret:${config.sops.secrets."garage/rpcSecret".path}"
         "--load-credential=garage-adminToken:${config.sops.secrets."garage/adminToken".path}"
-        "--load-credential=garage-cloudflareDnsToken:${config.sops.secrets."garage/cloudflareDnsToken".path}"
         "--bind=/mypool/garage/data:/mypool/garage/data:idmap"
         "--bind=/var/lib/garage/meta:/var/lib/garage/meta:idmap"
-        # security.acme's cert state isn't otherwise persisted - without
-        # this, ephemeral would force a fresh Let's Encrypt issuance
-        # (and risk its rate limits) on every container restart.
-        "--bind=/var/lib/acme/garage:/var/lib/acme:idmap"
       ];
 
       config = {
@@ -118,53 +112,9 @@
           };
         };
 
-        services.nginx.enable = true;
-        services.nginx.virtualHosts."s3-api.ksio2124.com" = {
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            proxyPass = "http://[::1]:3900";
-            recommendedProxySettings = true;
-            extraConfig = ''
-              client_max_body_size 5000M;
-              proxy_read_timeout   600s;
-              proxy_send_timeout   600s;
-              send_timeout         600s;
-            '';
-          };
-        };
-        services.nginx.virtualHosts."s3-web.ksio2124.com" = {
-          serverAliases = ["*.s3-web.ksio2124.com"];
-          forceSSL = true;
-          useACMEHost = "s3-web.ksio2124.com";
-          locations."/" = {
-            proxyPass = "http://[::1]:3902";
-            recommendedProxySettings = true;
-          };
-        };
-        security.acme = {
-          acceptTerms = true;
-          defaults.email = "ksio2124@protonmail.ch";
-          certs."s3-web.ksio2124.com" = {
-            group = "nginx";
-            domain = "*.s3-web.ksio2124.com";
-            extraDomainNames = ["s3-web.ksio2124.com"];
-            dnsProvider = "cloudflare";
-            credentialFiles."CLOUDFLARE_DNS_API_TOKEN_FILE" = "/run/credentials/@system/garage-cloudflareDnsToken";
-          };
-        };
-
-        services.cloudflare-ddns = {
-          enable = true;
-          credentialsFile = "/run/credentials/@system/cloudflare-ddns-credentials";
-          ip6Domains = [
-            "s3-api.ksio2124.com"
-            "s3-web.ksio2124.com"
-            "*.s3-web.ksio2124.com"
-          ];
-        };
-
-        networking.firewall.allowedTCPPorts = [80 443];
+        # Only reachable from the isolated br-isolated network (host nginx
+        # proxies in from there) - same trust model as postgres's port 5432.
+        networking.firewall.allowedTCPPorts = [3900 3902];
         system.stateVersion = "26.05"; # Required for running NixOS containers
       };
     };
