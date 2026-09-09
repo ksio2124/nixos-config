@@ -151,6 +151,22 @@
       enable = true;
       settings.PasswordAuthentication = true;
     };
+
+    # Tailscale client, pointed at our own headscale instance, set up as an
+    # exit node. authKeyFile auto-starts+authenticates it on boot; the
+    # preauth key itself is generated via `headscale preauthkeys create`
+    # (see modules/services/headscale.nix) and stored in sops.
+    sops.secrets."tailscale/authKey" = {};
+    services.tailscale = {
+      enable = true;
+      useRoutingFeatures = "server";
+      port = 41641;
+      authKeyFile = config.sops.secrets."tailscale/authKey".path;
+      extraUpFlags = [
+        "--login-server=https://headscale.ksio2124.com"
+        "--advertise-exit-node"
+      ];
+    };
     programs.steam.enable = true;
     programs.gamescope.enable = true;
     # 2. Declarative Sunshine Configuration

@@ -26,6 +26,7 @@
           iifname "br0" udp dport {5353} accept comment "Allow Avahi mDNS"
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" udp dport {51820} accept
+          iifname "wan" udp dport {41641} accept comment "tailscale"
           # TODO: add wan to sunshine server
           iifname {"br0", "wan", "wg0"} tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
           iifname {"br0", "wan", "wg0"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
@@ -39,7 +40,7 @@
 
           ct state invalid drop
           ct state established,related accept
-          iifname {"br0", "br-isolated", "ve-mailserver"} oifname "wan" accept
+          iifname {"br0", "br-isolated", "ve-mailserver", "tailscale0"} oifname "wan" accept
           #iifname "br-isolated" oifname "wan" accept
           oifname "br-isolated" tcp dport {80, 443} accept comment "Allow http https Let's encrypt, rsync need ssh"
           oifname "br-isolated" tcp dport {8883} accept comment "mosquitto mqtts"

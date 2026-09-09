@@ -203,6 +203,20 @@
       owner = "systemd-network";
       group = "systemd-network";
     };
+
+    # Tailscale client, pointed at our own headscale instance. Not an exit
+    # node - themis is. To route this machine's traffic through themis when
+    # wanted: `sudo tailscale set --exit-node=themis`.
+    sops.secrets."tailscale/authKey" = {};
+    services.tailscale = {
+      enable = true;
+      useRoutingFeatures = "client";
+      openFirewall = true;
+      authKeyFile = config.sops.secrets."tailscale/authKey".path;
+      extraUpFlags = [
+        "--login-server=https://headscale.ksio2124.com"
+      ];
+    };
     # 1. Enable the Avahi daemon
     services.avahi = {
       enable = true;
@@ -226,7 +240,11 @@
 
     # 2. Open the Firewall for mDNS traffic
     networking.firewall.allowedUDPPorts = [5353];
-    networking.firewall.checkReversePath = false;
+    # mkForce: tailscale's module also sets this (to "loose") via mkDefault,
+    # which conflicts in type with our plain `false` at equal priority -
+    # force ours to win. `false` (fully disabled) is a superset of what
+    # "loose" needs anyway.
+    networking.firewall.checkReversePath = lib.mkForce false;
     networking.firewall.extraCommands = ''
       iptables -t mangle -A POSTROUTING -o usb0 -j TTL --ttl-set 65
       ip6tables -t mangle -A POSTROUTING -o usb0 -j HL --hl-set 65
