@@ -23,6 +23,7 @@
       self.nixosModules.immich
       self.nixosModules.garage
       self.nixosModules.mosquitto
+      self.nixosModules.headscale
       #self.nixosModules.jellyfin
       self.nixosModules.postgresql
       self.nixosModules.anki-sync-server
