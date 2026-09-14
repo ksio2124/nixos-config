@@ -35,6 +35,7 @@ _: {
               "Bash(nixos-rebuild dry-build:*)"
               "Bash(nixos-rebuild dry-activate:*)"
               "Bash(nix flake check:*)"
+              "mcp__nixos__*"
             ];
             ask = [
               "Bash(git push:*)"
