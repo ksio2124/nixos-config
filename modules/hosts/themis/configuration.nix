@@ -53,6 +53,7 @@
     ];
     networking.hostName = "themis"; # Define your hostname.
     networking.hostId = "0e144610";
+    boot.binfmt.emulatedSystems = ["aarch64-linux"];
     powerManagement.powertop.enable = true;
 
     systemd.targets.sleep.enable = false;

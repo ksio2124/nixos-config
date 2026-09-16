@@ -1,5 +1,9 @@
 _: {
-  flake.homeModules.homeSystem_tools = {pkgs, ...}: {
+  flake.homeModules.homeSystem_tools = {
+    pkgs,
+    lib,
+    ...
+  }: {
     nixpkgs.config.permittedInsecurePackages = [
       "ventoy-1.1.12"
     ];
@@ -34,7 +38,7 @@ _: {
       pkgs.nmap
       pkgs.binutils
       (pkgs.ffmpeg-full.override
-        {withUnfree = true;})
+        (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system != "aarch64-linux") {withUnfree = true;}))
       pkgs.jq
       pkgs.browsh
       pkgs.smartmontools
