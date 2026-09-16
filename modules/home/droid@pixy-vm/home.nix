@@ -31,7 +31,12 @@
       defaultSopsFile = ./secrets/config.yaml;
       age.keyFile = "/home/droid/.config/sops/age/keys.txt";
     };
-    home.packages = [pkgs.tailscale];
+    home.packages = [
+      pkgs.tailscale
+      pkgs.nerd-fonts.fira-code
+      pkgs.nerd-fonts.droid-sans-mono
+    ];
+    fonts.fontconfig.enable = true;
 
     home.username = "droid";
     home.homeDirectory = "/home/droid";
