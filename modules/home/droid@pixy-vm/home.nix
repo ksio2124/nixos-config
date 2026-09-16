@@ -26,6 +26,8 @@
       experimental-features = ["nix-command" "flakes"];
       extra-substituters = ["https://nix-community.cachix.org"];
       extra-trusted-public-keys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
+      auto-optimise-store = true;
+      download-buffer-size = 524288000;
     };
     sops = {
       defaultSopsFile = ./secrets/config.yaml;
