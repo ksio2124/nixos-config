@@ -21,6 +21,14 @@ _: {
           saveNoDups = true;
         };
         initContent = ''
+          # Fall back to a writable runtime dir if the system didn't set one up
+          # (e.g. no systemd logind session, as in some containers/VMs).
+          if [ -z "$XDG_RUNTIME_DIR" ] || [ ! -w "$XDG_RUNTIME_DIR" ]; then
+            export XDG_RUNTIME_DIR="/tmp/runtime-$(id -u)"
+            mkdir -p "$XDG_RUNTIME_DIR"
+            chmod 700 "$XDG_RUNTIME_DIR"
+          fi
+
           # Enable the menu select widget
           zstyle ':completion:*' menu no
           zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'

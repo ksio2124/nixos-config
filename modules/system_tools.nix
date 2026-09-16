@@ -69,6 +69,7 @@ _: {
       ripgrep.enable = true;
       fd.enable = true;
       gh.enable = true;
+      zellij.enable = true;
       fastfetch = {
         enable = true;
       };
