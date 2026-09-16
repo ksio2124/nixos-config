@@ -17,6 +17,8 @@
       self.homeModules.homeShell
       self.homeModules.homeSystem_tools
       self.homeModules.homeDevelopment
+      self.homeModules.homeOpencode
+      inputs.sops-nix.homeManagerModules.sops
     ];
 
     nix.package = pkgs.nix;
@@ -25,7 +27,10 @@
       extra-substituters = ["https://nix-community.cachix.org"];
       extra-trusted-public-keys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
     };
-
+    sops = {
+      defaultSopsFile = ./secrets/config.yaml;
+      age.keyFile = "/home/droid/.config/sops/age/keys.txt";
+    };
     home.packages = [pkgs.tailscale];
 
     home.username = "droid";
