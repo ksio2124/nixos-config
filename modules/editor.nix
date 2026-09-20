@@ -100,6 +100,7 @@
               python.enable = true;
               lua.enable = true;
               yaml.enable = true;
+              terraform.enable = true;
             };
           };
         };

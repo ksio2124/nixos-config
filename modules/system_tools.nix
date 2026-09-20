@@ -62,6 +62,7 @@ _: {
       pkgs.ventoy-full
       pkgs.iw
       pkgs.rclone
+      pkgs.opentofu
       # pkgs.rclone-ui
     ];
     programs = {
