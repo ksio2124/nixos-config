@@ -195,6 +195,16 @@
     # preauth key itself is generated via `headscale preauthkeys create`
     # (see modules/services/headscale.nix) and stored in sops.
     sops.secrets."tailscale/authKey" = {};
+    # headscale runs in a container on this same host; don't try to log in
+    # before it's up.
+    systemd.services.tailscaled = {
+      after = ["container@headscale.service"];
+      wants = ["container@headscale.service"];
+    };
+    systemd.services.tailscaled-autoconnect = {
+      after = ["container@headscale.service"];
+      wants = ["container@headscale.service"];
+    };
     services.tailscale = {
       enable = true;
       useRoutingFeatures = "server";

@@ -216,9 +216,18 @@
           PrefixDelegationHint = "::/56"; # Sonic defaults to a /56 allocation block
           DUIDType = "vendor"; # Forces standard DUID generation for Sonic's platform compatibility
           UseDNS = false;
+          # Keep the lease on shutdown so the ISP hands back the same
+          # address and delegated prefix after a reboot (see dhcpV4Config).
+          SendRelease = false;
         };
-        # Security: Don't let the WAN tell us to change our DNS
-        dhcpV4Config.UseDNS = false;
+        dhcpV4Config = {
+          # Security: Don't let the WAN tell us to change our DNS
+          UseDNS = false;
+          # networkd releases the lease on shutdown by default, and the ISP
+          # then gives out a new IP, which leaves public DNS stale until
+          # cloudflare-ddns catches up.
+          SendRelease = false;
+        };
       };
     };
 
@@ -268,6 +277,7 @@
             # Same reasoning as nextcloud above, applied up front this
             # time since we know both A and AAAA local-data are needed.
             ''"mqtt.ksio2124.com." transparent''
+            ''"headscale.ksio2124.com." transparent''
           ];
           local-data = [
             ''"postgresql.home. IN AAAA fdcf:4b47:cf30::10"''
@@ -293,6 +303,12 @@
             # streamConfig (see server.nix).
             ''"mqtt.ksio2124.com. IN AAAA fdcf:4b47:cf30::18"''
             ''"mqtt.ksio2124.com. IN A 192.168.1.1"''
+            # themis's own tailscaled logs in to headscale here. Serve the
+            # host's internal addresses (host nginx proxies to the container)
+            # so that doesn't depend on the public A/AAAA, which go stale when
+            # the ISP hands out new WAN addresses after a reboot.
+            ''"headscale.ksio2124.com. IN A 192.168.1.1"''
+            ''"headscale.ksio2124.com. IN AAAA fdcf:4b47:cf30::1"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
