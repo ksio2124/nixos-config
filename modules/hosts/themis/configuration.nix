@@ -37,16 +37,15 @@
       self.nixosModules.nix
       self.nixosModules.cuda
     ];
-    # Passwordless sudo for jack so these can be run non-interactively (e.g.
-    # by Claude Code): read-only diagnostics (host/container service logs
-    # and status, including `-M <machine>`), plus the few mutating commands
-    # needed to iterate on the OpenClaw VM (see the end of the list).
-    # Deliberately excludes `machinectl shell`/`login`, which grant an
-    # arbitrary root shell inside a container.
+    # Passwordless sudo for jack, scoped to read-only diagnostics
+    # (host/container service logs and status, including `-M <machine>`)
+    # so these can be run non-interactively (e.g. by Claude Code) without
+    # exposing anything that mutates system or container state. Deliberately
+    # excludes `machinectl shell`/`login`, which grant an arbitrary root
+    # shell inside a container.
     # sudo matches the path the command resolves to via PATH
     # (/run/current-system/sw/bin/...), not the /nix/store target, so
     # ${pkgs.systemd}/bin/... rules never matched a plain `sudo journalctl`.
-    # `#` starts a comment in sudoers, hence `.\\#themis`.
     security.sudo.extraRules = [
       {
         users = ["jack"];
@@ -65,35 +64,6 @@
           }
           {
             command = "/run/current-system/sw/bin/machinectl list";
-            options = ["NOPASSWD"];
-          }
-          # OpenClaw microVM iteration (modules/services/openclaw.nix):
-          # restart just that VM, and read the firewall when its
-          # networking misbehaves.
-          {
-            command = "/run/current-system/sw/bin/systemctl start microvm@openclaw";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/systemctl stop microvm@openclaw";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/systemctl restart microvm@openclaw";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/nft list ruleset";
-            options = ["NOPASSWD"];
-          }
-          # Unlike the rules above, this is effectively root: whatever the
-          # flake says becomes the running system.
-          {
-            command = "/run/current-system/sw/bin/nixos-rebuild switch --flake .\\#themis";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/nixos-rebuild test --flake .\\#themis";
             options = ["NOPASSWD"];
           }
         ];

@@ -43,28 +43,15 @@ _: {
               "Bash(sudo systemctl status:*)"
               "Bash(sudo machinectl status:*)"
               "Bash(sudo machinectl list)"
-              "Bash(sudo systemctl start microvm@openclaw)"
-              "Bash(sudo systemctl stop microvm@openclaw)"
-              "Bash(sudo systemctl restart microvm@openclaw)"
-              "Bash(sudo nft list ruleset)"
-              "Bash(sudo nixos-rebuild switch --flake .#themis)"
-              "Bash(sudo nixos-rebuild test --flake .#themis)"
-              "Bash(home-manager switch --flake .#jack@themis)"
-              # Root shell inside the OpenClaw VM (key only accepted from
-              # the themis side of its link) for debugging
-              "Bash(ssh -i ~/.ssh/openclaw-vm root@192.168.4.2:*)"
             ];
             ask = [
               "Bash(git push:*)"
               "Bash(sops *)"
-              # System-mutating - confirm before applying
-              # No "home-manager switch" here either (it would override the
-              # allow above); other home-manager switch forms still prompt.
-              # No "nixos-rebuild switch" here: ask/deny rules also match
-              # the command with its sudo prefix stripped, and ask beats
-              # allow, so it would override the NOPASSWD
-              # "sudo nixos-rebuild switch --flake .#themis" allow above.
-              # A switch without sudo can't do anything anyway.
+              # System-mutating - confirm before applying (ask/deny rules also
+              # match with a sudo prefix stripped)
+              "Bash(home-manager switch:*)"
+              "Bash(nixos-rebuild switch:*)"
+              "Bash(nixos-rebuild test:*)"
               "Bash(nixos-rebuild boot:*)"
               # No blanket "Bash(sudo *)" here: ask beats allow, so it would
               # override the sudo allow-list above. Unlisted sudo commands
