@@ -1,6 +1,15 @@
 {
   flake.nixosModules.immich = {config, ...}: {
     sops.secrets."immich/secretsFile" = {};
+
+    # immich and postgresql both autostart in parallel at boot; immich
+    # connects to postgresql.home (database.host below) and can start
+    # before Postgres is accepting connections. Same fix as nextcloud.
+    systemd.services."container@immich" = {
+      after = ["container@postgresql.service"];
+      requires = ["container@postgresql.service"];
+    };
+
     containers.immich = {
       autoStart = true;
       #ephemeral = true;
