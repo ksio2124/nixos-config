@@ -6,7 +6,6 @@
   flake.nixosModules.hostThemis = {
     pkgs,
     lib,
-    config,
     ...
   }: {
     # tested somehow i needed this?
@@ -211,59 +210,6 @@
         };
         # Security: Don't let the WAN tell us to change our DNS
         dhcpV4Config.UseDNS = false;
-      };
-    };
-
-    sops.secrets."wireguard/PrivateKey" = {
-      owner = "systemd-network";
-      group = "systemd-network";
-    };
-    # TODO: get full vpn working
-    systemd.network = {
-      networks."50-wg0" = {
-        matchConfig.Name = "wg0";
-
-        address = [
-          # /32 and /128 specifies a single address
-          # for use on this wg peer machine
-          "fd31:bf08:57cb::7/128"
-          # Dedicated tunnel subnet, distinct from br-isolated's
-          # 192.168.2.0/24, so the two interfaces don't claim the same
-          # address on this host.
-          "192.168.3.1/32"
-        ];
-      };
-
-      netdevs."50-wg0" = {
-        netdevConfig = {
-          Kind = "wireguard";
-          Name = "wg0";
-        };
-
-        wireguardConfig = {
-          ListenPort = 51820;
-
-          # ensure file is readable by `systemd-network` user
-          PrivateKeyFile = config.sops.secrets."wireguard/PrivateKey".path;
-
-          # To automatically create routes for everything in AllowedIPs,
-          # add RouteTable=main
-          RouteTable = "main";
-
-          # FirewallMark marks all packets send and received by wg0
-          # with the number 42, which can be used to define policy rules on these packets.
-          FirewallMark = 42;
-        };
-        wireguardPeers = [
-          {
-            # xieshi
-            PublicKey = "/mmnnC+MQiUcIBbSCmsqbDWqFIaOa6AnVj2c9PWgjBg=";
-            AllowedIPs = [
-              "fd31:bf08:57cb::8/128"
-              "192.168.3.2/32"
-            ];
-          }
-        ];
       };
     };
 

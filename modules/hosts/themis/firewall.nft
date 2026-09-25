@@ -26,12 +26,26 @@
           iifname "br0" udp dport {5353} accept comment "Allow Avahi mDNS"
           iifname "wan" tcp dport {80, 443} accept
           iifname "wan" tcp dport {8883} accept comment "mosquitto mqtts IPv4 host relay (stream proxy to container)"
-          iifname "wan" udp dport {51820} accept
           iifname "wan" udp dport {41641} accept comment "tailscale"
-          iifname {"br0", "wg0"} tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
-          iifname {"br0", "wg0"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
-          iifname "wan" meta l4proto { tcp, udp } th dport { 28967 } accept
+          iifname {"br0", "tailscale0"} tcp dport {47984, 47989, 48010, 48011} accept comment "sunshine"
+          iifname {"br0", "tailscale0"} udp dport {47998, 47999, 48000, 48010, 48002} accept comment "sunshine"
+        }
 
+        # Reverse-path filter (replaces rp_filter sysctl, which is IPv4-only).
+        # Drops packets whose source address wouldn't route back out the
+        # interface they arrived on, e.g. spoofed LAN addresses from wan.
+        # Modeled on NixOS's own firewall-nftables.nix rpfilter chain.
+        chain rpfilter {
+          type filter hook prerouting priority mangle + 10; policy accept;
+
+          iifname "lo" accept
+          meta nfproto ipv4 udp sport . udp dport { 67 . 68, 68 . 67 } accept comment "DHCPv4 before a route exists"
+
+          # Loose on tailscale0: its policy routing (table 52, fwmarks) can
+          # trip strict checks for exit-node traffic.
+          iifname "tailscale0" fib saddr . mark oif missing counter drop comment "rpf loose"
+          fib saddr . mark . iif oif missing limit rate 5/minute log prefix "rpfilter drop: "
+          fib saddr . mark . iif oif missing counter drop comment "rpf strict"
         }
 
         chain forward {
@@ -43,7 +57,6 @@
           #iifname "br-isolated" oifname "wan" accept
           oifname "br-isolated" tcp dport {80, 443} accept comment "Allow http https Let's encrypt, rsync need ssh"
           oifname "br-isolated" tcp dport {8883} accept comment "mosquitto mqtts"
-          iifname "wg0" oifname "wan" accept comment "Allow traffic from Wireguard to Internet"
           ip daddr 10.0.0.14 tcp dport { 25, 465, 587, 993, 995 } accept
           oifname "wan" iifname "ve-mailserver" ct state established,related accept
         }
@@ -59,7 +72,6 @@
           chain prerouting {
             type nat hook prerouting priority dstnat; policy accept;
             # Example: Forward external port 8080 to internal IP 10.0.0.5 on port 80
-            #iifname "wan" tcp dport 28967 redirect to :443
             iifname "wan" tcp dport { 25, 465, 587, 993, 995 } dnat to 10.0.0.14
           }
         chain postrouting {
