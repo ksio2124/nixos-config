@@ -1,7 +1,6 @@
 _: {
   flake.homeModules.homeSystem_tools = {
     pkgs,
-    lib,
     ...
   }: {
     nixpkgs.config.permittedInsecurePackages = [
@@ -37,8 +36,7 @@ _: {
       pkgs.universal-android-debloater
       pkgs.nmap
       pkgs.binutils
-      (pkgs.ffmpeg-full.override
-        (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system != "aarch64-linux") {withUnfree = true;}))
+      pkgs.ffmpeg
       pkgs.jq
       pkgs.browsh
       pkgs.smartmontools

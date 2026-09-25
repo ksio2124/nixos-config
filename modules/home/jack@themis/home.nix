@@ -21,6 +21,7 @@
       self.homeModules.homeGnome
       self.homeModules.homeGames
       self.homeModules.homeOpencode
+      self.homeModules.homeCuda
       inputs.sops-nix.homeManagerModules.sops
       # import homeModules here
     ];

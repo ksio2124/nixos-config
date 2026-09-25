@@ -34,6 +34,7 @@
       #self.nixosModules.firefox-syncserver
       # something not right might need a full restart of the computer
       self.nixosModules.nix
+      self.nixosModules.cuda
     ];
     # Passwordless sudo for jack, scoped to read-only diagnostics
     # (host/container service logs and status, including `-M <machine>`)
@@ -215,10 +216,6 @@
         lan_encryption_mode = 2;
         wan_encryption_mode = 2;
         # adapter_name = "/dev/dri/renderD129";
-      };
-      package = pkgs.sunshine.override {
-        cudaSupport = true;
-        cudaPackages = pkgs.cudaPackages_13;
       };
     };
     # systemd.user.services.sunshine.serviceConfig.Environment = [
