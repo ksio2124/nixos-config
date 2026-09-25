@@ -24,6 +24,8 @@
         # ULA IPv6 address (see virtualHosts."nextcloud.ksio2124.com"
         # below). IPv6 clients keep going straight to the container.
         "nextcloud.ksio2124.com"
+        # Same for mosquitto (mqtt.ksio2124.com) - see streamConfig below.
+        "mqtt.ksio2124.com"
       ];
       ip6Domains = [
         "headscale.ksio2124.com"
@@ -124,6 +126,17 @@
           '';
         };
       };
+      # IPv4 entry point for mosquitto (its container is IPv6-only, same
+      # as nextcloud above). MQTTS is a raw TLS stream, not HTTP, so this
+      # is a plain TCP relay rather than an http reverse proxy - no host
+      # cert needed, mosquitto's own cert/TLS session passes through
+      # untouched all the way to the container.
+      streamConfig = ''
+        server {
+          listen 8883;
+          proxy_pass [fdcf:4b47:cf30::18]:8883;
+        }
+      '';
     };
   };
 }

@@ -25,6 +25,7 @@
           iifname {"br0", "tailscale0"} tcp dport { 22 } accept comment "Allow ssh on br0"
           iifname "br0" udp dport {5353} accept comment "Allow Avahi mDNS"
           iifname "wan" tcp dport {80, 443} accept
+          iifname "wan" tcp dport {8883} accept comment "mosquitto mqtts IPv4 host relay (stream proxy to container)"
           iifname "wan" udp dport {51820} accept
           iifname "wan" udp dport {41641} accept comment "tailscale"
           # TODO: add wan to sunshine server

@@ -310,6 +310,9 @@
             # to verify propagation). "transparent" keeps the local A/AAAA
             # overrides but forwards everything else normally.
             ''"nextcloud.ksio2124.com." transparent''
+            # Same reasoning as nextcloud above, applied up front this
+            # time since we know both A and AAAA local-data are needed.
+            ''"mqtt.ksio2124.com." transparent''
           ];
           local-data = [
             ''"postgresql.home. IN AAAA fdcf:4b47:cf30::10"''
@@ -330,6 +333,11 @@
             # to the container over its ULA address) instead of leaving
             # it to resolve publicly and hairpin the same way AAAA did.
             ''"nextcloud.ksio2124.com. IN A 192.168.1.1"''
+            # Same split-horizon pattern for mosquitto: AAAA -> container
+            # directly, A -> host, which relays IPv4 to the container via
+            # streamConfig (see server.nix).
+            ''"mqtt.ksio2124.com. IN AAAA fdcf:4b47:cf30::18"''
+            ''"mqtt.ksio2124.com. IN A 192.168.1.1"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
