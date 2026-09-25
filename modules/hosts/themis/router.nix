@@ -378,11 +378,6 @@
         workstation = true;
       };
     };
-
-    networking.firewall.enable = false;
-    networking.nftables = {
-      enable = true;
-      rulesetFile = ./firewall.nft;
-    };
+    # Firewall, NAT and reverse-path filtering: see firewall.nix.
   };
 }
