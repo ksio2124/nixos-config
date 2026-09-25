@@ -17,3 +17,9 @@ bridge. Allocated addresses:
 When adding a new container service, pick the next unused address and add a row here.
 
 (`::14`-`::16` are not currently allocated to any container.)
+
+The OpenClaw microVM (`modules/services/openclaw.nix`) is deliberately *not*
+on br-isolated: it has its own routed tap `vm-openclaw` (themis
+`192.168.4.1` / `fdcf:4b47:cf30:4::1`, VM `192.168.4.2` /
+`fdcf:4b47:cf30:4::2`, public IPv6 from delegated SubnetId 4) and may only
+forward to wan.

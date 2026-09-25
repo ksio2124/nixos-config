@@ -36,18 +36,39 @@ _: {
               "Bash(nixos-rebuild dry-activate:*)"
               "Bash(nix flake check:*)"
               "mcp__nixos__*"
+              # sudo commands that have a matching NOPASSWD rule in
+              # modules/hosts/themis/configuration.nix; any other sudo
+              # command still falls through to the default prompt.
+              "Bash(sudo journalctl:*)"
+              "Bash(sudo systemctl status:*)"
+              "Bash(sudo machinectl status:*)"
+              "Bash(sudo machinectl list)"
+              "Bash(sudo systemctl start microvm@openclaw)"
+              "Bash(sudo systemctl stop microvm@openclaw)"
+              "Bash(sudo systemctl restart microvm@openclaw)"
+              "Bash(sudo nft list ruleset)"
+              "Bash(sudo nixos-rebuild switch --flake .#themis)"
+              "Bash(sudo nixos-rebuild test --flake .#themis)"
+              "Bash(home-manager switch --flake .#jack@themis)"
+              # Root shell inside the OpenClaw VM (key only accepted from
+              # the themis side of its link) for debugging
+              "Bash(ssh -i ~/.ssh/openclaw-vm root@192.168.4.2:*)"
             ];
             ask = [
               "Bash(git push:*)"
               "Bash(sops *)"
               # System-mutating - confirm before applying
-              "Bash(home-manager switch:*)"
-              "Bash(nixos-rebuild switch:*)"
+              # No "home-manager switch" here either (it would override the
+              # allow above); other home-manager switch forms still prompt.
+              # No "nixos-rebuild switch" here: ask/deny rules also match
+              # the command with its sudo prefix stripped, and ask beats
+              # allow, so it would override the NOPASSWD
+              # "sudo nixos-rebuild switch --flake .#themis" allow above.
+              # A switch without sudo can't do anything anyway.
               "Bash(nixos-rebuild boot:*)"
-              # sudo is ask-by-default (was a blanket deny) so read-only
-              # diagnostics (journalctl -M, machinectl shell, systemctl
-              # status) can be approved per-call without a config change
-              "Bash(sudo *)"
+              # No blanket "Bash(sudo *)" here: ask beats allow, so it would
+              # override the sudo allow-list above. Unlisted sudo commands
+              # still prompt, since nothing allows them.
               "Bash(curl:*)"
             ];
             deny = [
