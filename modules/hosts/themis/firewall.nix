@@ -90,21 +90,5 @@
         }
       '';
     };
-
-    # Migration from the old hand-written ruleset (firewall.nft): its tables
-    # aren't tracked by networking.nftables.tables, so remove them explicitly
-    # or they'd keep filtering alongside nixos-fw. Only our own chains in
-    # "ip nat" are deleted: tailscaled (iptables-nft mode) keeps its chains in
-    # that same table. Each object is created first so the delete is a no-op
-    # once it's gone. Safe to remove after the first switch.
-    networking.nftables.extraDeletions = ''
-      table inet filter;
-      delete table inet filter;
-      table ip nat;
-      chain ip nat prerouting;
-      delete chain ip nat prerouting;
-      chain ip nat postrouting;
-      delete chain ip nat postrouting;
-    '';
   };
 }
