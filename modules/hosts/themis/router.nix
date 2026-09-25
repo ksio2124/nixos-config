@@ -302,6 +302,14 @@
           ];
           local-zone = [
             ''"home." static''
+            # Without this, unbound treats nextcloud.ksio2124.com as
+            # authoritative for the whole name once any local-data exists
+            # for it: NODATA for other record types (broke the A record
+            # above) and NXDOMAIN for subdomains (broke the ACME DNS-01
+            # _acme-challenge.nextcloud.ksio2124.com TXT lookup lego uses
+            # to verify propagation). "transparent" keeps the local A/AAAA
+            # overrides but forwards everything else normally.
+            ''"nextcloud.ksio2124.com." transparent''
           ];
           local-data = [
             ''"postgresql.home. IN AAAA fdcf:4b47:cf30::10"''
@@ -314,6 +322,14 @@
             # to host" (no hairpin NAT/routing back in over wan). Serve
             # the internal address directly instead, same as mail above.
             ''"nextcloud.ksio2124.com. IN AAAA fdcf:4b47:cf30::11"''
+            # A-only local-data above (mail) works because that name has
+            # no AAAA at all, but adding *only* an AAAA override here made
+            # unbound answer authoritatively (NODATA) for A queries too,
+            # hiding the real public A record cloudflare-ddns publishes.
+            # Point A at the host itself (which now reverse-proxies IPv4
+            # to the container over its ULA address) instead of leaving
+            # it to resolve publicly and hairpin the same way AAAA did.
+            ''"nextcloud.ksio2124.com. IN A 192.168.1.1"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";

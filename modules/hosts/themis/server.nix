@@ -19,6 +19,11 @@
         "s3-api.ksio2124.com"
         "s3-web.ksio2124.com"
         "*.s3-web.ksio2124.com"
+        # nextcloud's own container has no IPv4 - the host publishes the
+        # A record and reverse-proxies IPv4 traffic to the container's
+        # ULA IPv6 address (see virtualHosts."nextcloud.ksio2124.com"
+        # below). IPv6 clients keep going straight to the container.
+        "nextcloud.ksio2124.com"
       ];
       ip6Domains = [
         "headscale.ksio2124.com"
@@ -37,6 +42,21 @@
       domain = "*.s3-web.ksio2124.com";
       extraDomainNames = ["s3-web.ksio2124.com"];
       dnsProvider = "cloudflare";
+      credentialFiles."CLOUDFLARE_DNS_API_TOKEN_FILE" = config.sops.secrets."garage/cloudflareDnsToken".path;
+    };
+    # DNS-01 instead of the default HTTP-01: nextcloud.ksio2124.com
+    # already has an AAAA record pointing straight at the container
+    # (its own separate cert/ACME client), so HTTP-01 validation for
+    # this host-level cert would race against IPv6 being tried first
+    # and land on the container's nginx instead of this host.
+    security.acme.certs."nextcloud.ksio2124.com" = {
+      group = "nginx";
+      dnsProvider = "cloudflare";
+      # Use a real external resolver for the propagation check instead of
+      # the host's own unbound: unbound's local-data split-horizon
+      # overrides for this same name can leave stale negative-cache
+      # entries for _acme-challenge lookups, blocking renewal.
+      dnsResolver = "1.1.1.1:53";
       credentialFiles."CLOUDFLARE_DNS_API_TOKEN_FILE" = config.sops.secrets."garage/cloudflareDnsToken".path;
     };
     # Host nginx for ACME HTTP-01 challenge for mail subdomain
@@ -82,6 +102,26 @@
         locations."/" = {
           proxyPass = "http://[fdcf:4b47:cf30::17]:3902";
           recommendedProxySettings = true;
+        };
+      };
+      # IPv4 entry point for nextcloud (its container is IPv6-only).
+      # The container already terminates its own TLS/ACME for this same
+      # hostname over IPv6 - this vhost is a separate cert/entry point
+      # that just relays IPv4 traffic in over the ULA address.
+      virtualHosts."nextcloud.ksio2124.com" = {
+        forceSSL = true;
+        useACMEHost = "nextcloud.ksio2124.com";
+        locations."/" = {
+          proxyPass = "https://[fdcf:4b47:cf30::11]";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_ssl_server_name on;
+            client_max_body_size 200G;
+            proxy_read_timeout   600s;
+            proxy_send_timeout   600s;
+            send_timeout         600s;
+          '';
         };
       };
     };

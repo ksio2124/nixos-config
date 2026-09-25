@@ -63,6 +63,8 @@ _: {
       pkgs.iw
       pkgs.rclone
       pkgs.opentofu
+      pkgs.neomutt
+      pkgs.msmtp
       # pkgs.rclone-ui
     ];
     programs = {
