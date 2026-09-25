@@ -59,7 +59,7 @@
           enable = true;
           maxUploadSize = "200G";
           hostName = "nextcloud.ksio2124.com";
-          package = pkgs.nextcloud34;
+          package = pkgs.nextcloud35;
           extraApps = {
             inherit
               (config.services.nextcloud.package.packages.apps)
@@ -72,8 +72,9 @@
               tasks
               cospend
               phonetrack
-              news
-              memories
+              # news and memories are not yet packaged for nextcloud35 in
+              # nixpkgs (both throw "does not support nextcloud version 35");
+              # re-add once nixpkgs catches up.
               ;
           };
           https = true;
