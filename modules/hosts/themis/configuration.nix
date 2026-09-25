@@ -79,6 +79,12 @@
     boot.zfs.forceImportRoot = false;
     boot.kernelParams = [
       "i915.enable_guc=2"
+      # VT-d, for future GPU passthrough (P400 -> desktop microVM).
+      "intel_iommu=on"
+      # Host-owned devices bypass DMA translation, so the 10G NICs doing
+      # routing don't pay IOMMU overhead; only devices given to VMs are
+      # translated.
+      "iommu=pt"
       # "drm.edid_firmware=DP-1:edid/virtual-display.bin"
       # "video=DP-1:e"
     ];
