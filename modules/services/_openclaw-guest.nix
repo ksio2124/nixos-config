@@ -78,8 +78,9 @@ in {
   };
   networking.nameservers = [hostV6];
 
-  # Only themis may reach the VM: root SSH for debugging, and the gateway
-  # port for `ssh -L 18789:192.168.4.2:18789 jack@themis` tunnels.
+  # Inbound: themis may reach root SSH (debugging) and the gateway
+  # (`ssh -L 18789:192.168.4.2:18789 jack@themis` tunnels); tailnet devices
+  # may reach the gateway only. Headscale's ACL decides which devices.
   networking.nftables.enable = true;
   networking.firewall = {
     enable = true;
@@ -87,7 +88,40 @@ in {
       ip saddr ${hostV4} tcp dport { 22, 18789 } accept
       ip6 saddr ${hostV6} tcp dport { 22, 18789 } accept
     '';
+    interfaces.tailscale0.allowedTCPPorts = [18789];
+    # Tailscale's policy routing trips strict reverse-path checks.
+    checkReversePath = "loose";
   };
+  # https://openclaw.ts.ksio2124.com (443) -> gateway, so the phone URL
+  # needs no port.
+  networking.nftables.tables.openclaw-https = {
+    family = "inet";
+    content = ''
+      chain prerouting {
+        type nat hook prerouting priority dstnat; policy accept;
+        iifname "tailscale0" tcp dport 443 redirect to :18789
+      }
+    '';
+  };
+
+  # Joins the self-hosted headscale on themis (reached through themis's
+  # nginx; see the 443 rule in ./openclaw.nix). State lives on /var, so the
+  # pre-auth key is only needed for the first login.
+  services.tailscale = {
+    enable = true;
+    authKeyFile = "/run/credentials/tailscaled-autoconnect.service/TAILSCALE_AUTH_KEY";
+    extraUpFlags = [
+      "--login-server=https://headscale.ksio2124.com"
+      "--hostname=openclaw"
+      # No --advertise-tags: tag:openclaw comes from the pre-auth key, and
+      # headscale 0.29 rejects a tagged-key node also requesting the tag.
+      # Keep resolving through unbound on themis.
+      "--accept-dns=false"
+    ];
+  };
+  # System credentials aren't visible under /run/credentials/@system inside
+  # units; import it into the unit that runs `tailscale up`.
+  systemd.services.tailscaled-autoconnect.serviceConfig.ImportCredential = ["TAILSCALE_AUTH_KEY"];
 
   services.openssh = {
     enable = true;
@@ -122,8 +156,18 @@ in {
     config = {
       gateway = {
         mode = "local";
-        bind = "custom";
-        customBindHost = vmV4;
+        # All IPv4 addresses (link to themis + tailscale0); the firewall
+        # above decides who gets in. The gateway can't bind IPv6 ("custom"
+        # requires an IPv4 host), so connections to the VM's tailnet IPv6
+        # address are refused and browsers fall back to 100.64.0.3.
+        bind = "lan";
+        # Cert for openclaw.ts.ksio2124.com, obtained by themis (see
+        # ./openclaw.nix) and imported as credentials below.
+        tls = {
+          enabled = true;
+          certPath = "/run/credentials/openclaw-gateway.service/TLS_CERT";
+          keyPath = "/run/credentials/openclaw-gateway.service/TLS_KEY";
+        };
         auth = {
           mode = "token";
           token = "\${OPENCLAW_GATEWAY_TOKEN}";
@@ -133,11 +177,14 @@ in {
             lockoutMs = 300000;
           };
         };
-        # The browser sits at the local end of
-        # `ssh -L 18789:192.168.4.2:18789 jack@themis`.
         controlUi.allowedOrigins = [
-          "http://localhost:18789"
-          "http://127.0.0.1:18789"
+          # Phone/laptop on the tailnet (443 is redirected to the gateway).
+          "https://openclaw.ts.ksio2124.com"
+          "https://openclaw.ts.ksio2124.com:18789"
+          # Local end of `ssh -L 18789:192.168.4.2:18789 jack@themis`
+          # (the cert won't match localhost, so expect a warning).
+          "https://localhost:18789"
+          "https://127.0.0.1:18789"
         ];
       };
       # `openclaw security audit`: models <=300B shouldn't get tools that
@@ -197,7 +244,7 @@ in {
   # Belt and braces inside the VM: the agent runs as the unprivileged
   # openclaw user and may only write its own state dir.
   systemd.services.openclaw-gateway.serviceConfig = {
-    ImportCredential = ["OPENROUTER_API_KEY" "GATEWAY_AUTH_TOKEN"];
+    ImportCredential = ["OPENROUTER_API_KEY" "GATEWAY_AUTH_TOKEN" "TLS_CERT" "TLS_KEY"];
     NoNewPrivileges = true;
     ProtectSystem = "strict";
     ReadWritePaths = ["/var/lib/openclaw"];

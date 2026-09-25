@@ -12,7 +12,7 @@
         "--bind=/var/lib/headscale:/var/lib/headscale:idmap"
       ];
 
-      config = {...}: {
+      config = {pkgs, ...}: {
         networking.nameservers = ["fdcf:4b47:cf30::1"];
         networking.useHostResolvConf = false;
 
@@ -35,6 +35,27 @@
 
             # Use Tailscale's public DERP relays instead of self-hosting one.
             derp.server.enabled = false;
+
+            # Deny-by-default ACL. All of jack's users (phone, themis,
+            # xieshi) keep full access to each other and the exit node; the
+            # OpenClaw VM (tag:openclaw) only receives connections to its
+            # gateway (443 redirects to 18789) and can't initiate any.
+            policy.path = pkgs.writeText "headscale-acl.json" (builtins.toJSON {
+              groups."group:jack" = ["pixy@" "themis@" "xieshi@"];
+              tagOwners."tag:openclaw" = ["group:jack"];
+              acls = [
+                {
+                  action = "accept";
+                  src = ["group:jack"];
+                  dst = ["group:jack:*" "autogroup:internet:*"];
+                }
+                {
+                  action = "accept";
+                  src = ["group:jack"];
+                  dst = ["tag:openclaw:443,18789"];
+                }
+              ];
+            });
           };
         };
 
