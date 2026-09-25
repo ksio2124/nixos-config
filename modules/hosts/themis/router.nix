@@ -152,6 +152,15 @@
           DNS = ["_link_local"];
         };
       };
+      # The mailserver container uses a point-to-point veth (hostAddress/
+      # localAddress) that nixos-container configures itself. Without this,
+      # systemd's stock 80-container-ve.network claims ve-mailserver and, on
+      # any networkd reload, flushes the 10.0.0.13 address and the route to
+      # 10.0.0.14, leaving the container unreachable.
+      "10-ve-mailserver" = {
+        matchConfig.Name = "ve-mailserver";
+        linkConfig.Unmanaged = true;
+      };
       "30-lan-to-bridge" = {
         # Matches any interface named LAN0 through LAN5
         matchConfig.Name = "lan*";
