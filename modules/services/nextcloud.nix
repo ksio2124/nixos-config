@@ -2,6 +2,18 @@
   flake.nixosModules.nextcloud = {config, ...}: {
     sops.secrets."nextcloud/adminpass" = {};
     sops.secrets."nextcloud/postgresqlpass" = {};
+
+    # Both nextcloud and postgresql containers autostart in parallel at
+    # boot, and nextcloud-setup.service (the occ install/upgrade step)
+    # runs once with no retry. It consistently loses the race and fails
+    # because Postgres hasn't opened its listening socket yet, leaving
+    # Nextcloud non-functional until someone manually restarts the unit.
+    # Ordering the container units fixes it at the source.
+    systemd.services."container@nextcloud" = {
+      after = ["container@postgresql.service"];
+      requires = ["container@postgresql.service"];
+    };
+
     containers.nextcloud = {
       autoStart = true;
       # ephemeral = true;
@@ -21,6 +33,17 @@
         ...
       }: {
         networking.nameservers = ["fdcf:4b47:cf30::1"];
+
+        # nextcloud-setup.service (occ install/upgrade) runs once at boot
+        # with no retry, and has been observed failing transiently right
+        # after container start - either the DB isn't accepting
+        # connections yet or DNS resolution for postgresql.home isn't
+        # ready yet. Retry instead of leaving Nextcloud broken until a
+        # manual restart.
+        systemd.services.nextcloud-setup.serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
 
         services.nginx.virtualHosts."nextcloud.ksio2124.com" = {
           forceSSL = true;

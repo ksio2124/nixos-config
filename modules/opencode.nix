@@ -44,6 +44,11 @@ _: {
               "Bash(home-manager switch:*)"
               "Bash(nixos-rebuild switch:*)"
               "Bash(nixos-rebuild boot:*)"
+              # sudo is ask-by-default (was a blanket deny) so read-only
+              # diagnostics (journalctl -M, machinectl shell, systemctl
+              # status) can be approved per-call without a config change
+              "Bash(sudo *)"
+              "Bash(curl:*)"
             ];
             deny = [
               "Read(**/.env)"
@@ -51,8 +56,6 @@ _: {
               "Read(modules/hosts/themis/secrets/**)"
               "Read(modules/hosts/xieshi/secrets/**)"
               "Bash(rm -rf *)"
-              "Bash(sudo *)"
-              "Bash(curl:*)"
               "Bash(wget:*)"
             ];
           };

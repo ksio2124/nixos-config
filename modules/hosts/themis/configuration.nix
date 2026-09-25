@@ -35,6 +35,36 @@
       # something not right might need a full restart of the computer
       self.nixosModules.nix
     ];
+    # Passwordless sudo for jack, scoped to read-only diagnostics
+    # (host/container service logs and status, including `-M <machine>`)
+    # so these can be run non-interactively (e.g. by Claude Code) without
+    # exposing anything that mutates system or container state. Deliberately
+    # excludes `machinectl shell`/`login`, which grant an arbitrary root
+    # shell inside a container.
+    security.sudo.extraRules = [
+      {
+        users = ["jack"];
+        commands = [
+          {
+            command = "${pkgs.systemd}/bin/journalctl *";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "${pkgs.systemd}/bin/systemctl status *";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "${pkgs.systemd}/bin/machinectl status *";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "${pkgs.systemd}/bin/machinectl list";
+            options = ["NOPASSWD"];
+          }
+        ];
+      }
+    ];
+
     sops.defaultSopsFile = ./secrets/config.yaml;
     sops.defaultSopsFormat = "yaml";
     sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];

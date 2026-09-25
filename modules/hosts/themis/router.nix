@@ -308,6 +308,12 @@
             ''"nextcloud.home. IN AAAA fdcf:4b47:cf30::11"''
             ''"immich.home. IN AAAA fdcf:4b47:cf30::13"''
             ''"mail.ksio2124.com. IN A 10.0.0.14"''
+            # Split-horizon: without this, LAN clients resolve the public
+            # AAAA (kept current by cloudflare-ddns) and try to reach
+            # themis via its own WAN address, which fails with "No route
+            # to host" (no hairpin NAT/routing back in over wan). Serve
+            # the internal address directly instead, same as mail above.
+            ''"nextcloud.ksio2124.com. IN AAAA fdcf:4b47:cf30::11"''
           ];
           # Required for DoT upstreams
           tls-cert-bundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
