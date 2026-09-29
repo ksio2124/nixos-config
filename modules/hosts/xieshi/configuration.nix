@@ -56,6 +56,21 @@
     networking.hostName = "xieshi"; # Define your hostname.
     hardware.sensor.iio.enable = true;
 
+    # Grant non-root USB access to XREAL AR glasses (vendor id 3318) so the
+    # official OTA updater (ota.xreal.com, WebUSB via Chrome) and other
+    # userspace tools can talk to the device without sudo. GROUP="input" is
+    # used directly (rather than relying solely on the uaccess/logind ACL
+    # mechanism, which was observed not to reliably apply on this host) -
+    # jack is already a member of the input group.
+    services.udev.extraRules = ''
+      SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="3318", MODE="0660", GROUP="input", TAG+="uaccess"
+      SUBSYSTEM=="input", KERNEL=="event[0-9]*", ATTRS{idVendor}=="3318", MODE="0660", GROUP="input", TAG+="uaccess"
+      SUBSYSTEM=="sound", KERNEL=="pcmC[0-9]D[0-9]p", ATTRS{idVendor}=="3318", MODE="0660", GROUP="input", TAG+="uaccess"
+      SUBSYSTEM=="sound", KERNEL=="controlC[0-9]", ATTRS{idVendor}=="3318", MODE="0660", GROUP="input", TAG+="uaccess"
+      SUBSYSTEM=="hidraw", KERNEL=="hidraw[0-9]*", ATTRS{idVendor}=="3318", MODE="0660", GROUP="input", TAG+="uaccess"
+      SUBSYSTEM=="usb", KERNEL=="hiddev[0-9]*", ATTRS{idVendor}=="3318", MODE="0660", GROUP="input", TAG+="uaccess"
+    '';
+
     # Set your time zone.
 
     time.timeZone = "America/Los_Angeles";
