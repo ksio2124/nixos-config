@@ -222,16 +222,16 @@
     # Tailscale client, pointed at our own headscale instance. Not an exit
     # node - themis is. To route this machine's traffic through themis when
     # wanted: `sudo tailscale set --exit-node=themis`.
-    sops.secrets."tailscale/authKey" = {};
-    services.tailscale = {
-      enable = true;
-      useRoutingFeatures = "client";
-      openFirewall = true;
-      authKeyFile = config.sops.secrets."tailscale/authKey".path;
-      extraUpFlags = [
-        "--login-server=https://headscale.ksio2124.com"
-      ];
-    };
+    # sops.secrets."tailscale/authKey" = {};
+    # services.tailscale = {
+    #   enable = true;
+    #   useRoutingFeatures = "client";
+    #   openFirewall = true;
+    #   authKeyFile = config.sops.secrets."tailscale/authKey".path;
+    #   extraUpFlags = [
+    #     "--login-server=https://headscale.ksio2124.com"
+    #   ];
+    # };
     # 1. Enable the Avahi daemon
     services.avahi = {
       enable = true;
