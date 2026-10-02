@@ -75,7 +75,22 @@
               }
             '';
             autocomplete.nvim-cmp.enable = true;
-            filetree.nvimTree.enable = true;
+            filetree.nvimTree = {
+              enable = true;
+              setupOpts = {
+                git = {
+                  enable = true;
+                  # Propagate a file's git status up to every parent folder,
+                  # whether the folder is collapsed or expanded.
+                  show_on_dirs = true;
+                  show_on_open_dirs = true;
+                };
+                renderer = {
+                  highlight_git = true;
+                  icons.show.git = true;
+                };
+              };
+            };
             tabline.nvimBufferline.enable = true;
             autopairs.nvim-autopairs.enable = true;
             statusline.lualine.enable = true;
@@ -93,6 +108,7 @@
               };
               markdown = {
                 enable = true;
+                extensions.render-markdown-nvim.enable = true;
               };
               toml = {
                 enable = true;
