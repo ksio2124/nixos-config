@@ -18,8 +18,11 @@
       self.homeModules.homeSystem_tools
       self.homeModules.homeDevelopment
       self.homeModules.homeOpencode
+      self.homeModules.homeInternet_browsers
       inputs.sops-nix.homeManagerModules.sops
     ];
+
+    nixpkgs.overlays = [inputs.nur.overlays.default];
 
     nix.package = pkgs.nix;
     nix.settings = {
@@ -39,6 +42,21 @@
       pkgs.nerd-fonts.droid-sans-mono
     ];
     fonts.fontconfig.enable = true;
+    programs.wezterm = {
+      enable = true;
+      enableZshIntegration = true;
+      extraConfig = builtins.readFile ./wezterm.lua;
+    };
+    programs.foot = {
+      enable = true;
+      settings = {
+        main = {
+          shell = "/home/droid/.nix-profile/bin/zsh";
+          #   dpi-aware = "yes";
+          font = "DejaVu Sans Mono:size=14";
+        };
+      };
+    };
 
     home.username = "droid";
     home.homeDirectory = "/home/droid";
