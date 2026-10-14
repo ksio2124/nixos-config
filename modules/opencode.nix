@@ -9,10 +9,42 @@ _: {
     # Make `uvx` (used by the mcp-nixos MCP server below) reuse the
     # Nix-provided interpreter instead of downloading its own from
     # python-build-standalone on first run.
-    home.packages = [ pkgs.python3 ];
+    home.packages = [pkgs.python3];
     home.sessionVariables.UV_PYTHON_PREFERENCE = "only-system";
 
     programs = {
+      antigravity-cli.enable = true;
+      codex = {
+        enable = true;
+
+        # Keep Codex useful for NixOS work without granting unrestricted
+        # access to the host. Writes stay in the workspace and commands that
+        # need broader access are approval-gated.
+        settings = {
+          approval_policy = "on-request";
+          sandbox_mode = "workspace-write";
+          web_search = "cached";
+
+          mcp_servers.nixos = {
+            command = "${pkgs.uv}/bin/uvx";
+            args = ["mcp-nixos"];
+          };
+        };
+
+        context = ''
+          # nixos-config
+
+          This is a flake-parts NixOS and Home Manager repository. Files under
+          `modules/` are imported automatically. Follow the existing module
+          structure and formatting.
+
+          Before changing NixOS or Home Manager configuration, inspect the
+          relevant host and shared module. Never read or expose files under
+          `modules/hosts/*/secrets/` or `.env` files. Prefer build and dry-build
+          checks before applying configuration; switching generations changes
+          the system and requires explicit user approval.
+        '';
+      };
       claude-code = {
         enable = true;
 
@@ -86,7 +118,7 @@ _: {
         lspServers = {
           nix = {
             command = "${pkgs.nixd}/bin/nixd";
-            args = [ ];
+            args = [];
             extensionToLanguage = {
               ".nix" = "nix";
             };
@@ -97,7 +129,7 @@ _: {
           nixos = {
             type = "stdio";
             command = "${pkgs.uv}/bin/uvx";
-            args = [ "mcp-nixos" ];
+            args = ["mcp-nixos"];
           };
         };
 
