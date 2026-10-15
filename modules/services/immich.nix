@@ -18,16 +18,16 @@
       localAddress6 = "fdcf:4b47:cf30::13/64";
       privateUsers = "pick";
 
-      allowedDevices = [
-        {
-          node = "/dev/dri/card0";
-          modifier = "rw";
-        }
-        {
-          node = "/dev/dri/renderD129";
-          modifier = "rw";
-        }
-      ];
+      # allowedDevices = [
+      #   {
+      #     node = "/dev/dri/card0";
+      #     modifier = "rw";
+      #   }
+      #   {
+      #     node = "/dev/dri/renderD129";
+      #     modifier = "rw";
+      #   }
+      # ];
 
       # bi`ndMounts = {
       #   "/dev/dri/card0" = {
@@ -43,8 +43,8 @@
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--load-credential=immich-secretsFile:${config.sops.secrets."immich/secretsFile".path}"
         "--bind=/mypool/immich:/mypool/immich:idmap"
-        "--bind=/dev/dri/card0:/dev/dri/card0"
-        "--bind=/dev/dri/renderD129:/dev/dri/renderD129"
+        # "--bind=/dev/dri/card0:/dev/dri/card0"
+        # "--bind=/dev/dri/renderD129:/dev/dri/renderD129"
       ];
       config = {
         config,
@@ -99,7 +99,7 @@
           host = "::";
           database.enable = false;
           database.host = "postgresql.home";
-          accelerationDevices = ["/dev/dri/renderD129"];
+          # accelerationDevices = ["/dev/dri/renderD129"];
           environment = {
             IMMICH_LOG_LEVEL = "verbose";
           };

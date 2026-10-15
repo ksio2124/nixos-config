@@ -25,6 +25,10 @@ _: {
           sandbox_mode = "workspace-write";
           web_search = "cached";
 
+          # Home Manager generates a read-only config, so declare repository
+          # trust here instead of relying on Codex to save it interactively.
+          projects."${config.home.homeDirectory}/nixos-config".trust_level = "trusted";
+
           mcp_servers.nixos = {
             command = "${pkgs.uv}/bin/uvx";
             args = ["mcp-nixos"];
@@ -182,7 +186,8 @@ _: {
         share = "disabled";
         snapshot = false;
 
-        # Experimental policies - restrict to OpenRouter only
+        # Keep OpenRouter as the default, while allowing OpenAI so Codex models
+        # are available after connecting an OpenAI account with `/connect`.
         experimental = {
           policies = [
             {
@@ -194,6 +199,11 @@ _: {
               effect = "allow";
               action = "provider.use";
               resource = "openrouter";
+            }
+            {
+              effect = "allow";
+              action = "provider.use";
+              resource = "openai";
             }
           ];
         };
@@ -254,6 +264,12 @@ _: {
           bash = {
             "*" = "allow";
             "git *" = "allow";
+            # NixOS and Home Manager evaluation/build checks are safe to run
+            # while editing this repository.
+            "nix *" = "allow";
+            "home-manager build *" = "allow";
+            "nixos-rebuild build *" = "allow";
+            "nixos-rebuild dry-build *" = "allow";
             "npm *" = "allow";
             "ls *" = "allow";
             "cat *" = "allow";
