@@ -37,12 +37,8 @@
       self.nixosModules.nix
       self.nixosModules.cuda
     ];
-    # Passwordless sudo for jack, scoped to read-only diagnostics
-    # (host/container service logs and status, including `-M <machine>`)
-    # so these can be run non-interactively (e.g. by Claude Code) without
-    # exposing anything that mutates system or container state. Deliberately
-    # excludes `machinectl shell`/`login`, which grant an arbitrary root
-    # shell inside a container.
+    # Passwordless sudo for jack: host/container diagnostics and command
+    # execution as root inside the headscale container.
     # sudo matches the path the command resolves to via PATH
     # (/run/current-system/sw/bin/...), not the /nix/store target, so
     # ${pkgs.systemd}/bin/... rules never matched a plain `sudo journalctl`.
@@ -64,6 +60,10 @@
           }
           {
             command = "/run/current-system/sw/bin/machinectl list";
+            options = ["NOPASSWD"];
+          }
+          {
+            command = "/run/current-system/sw/bin/nixos-container run headscale -- *";
             options = ["NOPASSWD"];
           }
         ];

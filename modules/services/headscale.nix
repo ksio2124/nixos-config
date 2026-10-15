@@ -37,11 +37,11 @@
             derp.server.enabled = false;
 
             # Deny-by-default ACL. All of jack's users (phone, themis,
-            # xieshi) keep full access to each other and the exit node; the
+            # pixy-vm, xieshi) keep full access to each other and the exit node; the
             # OpenClaw VM (tag:openclaw) only receives connections to its
             # gateway (443 redirects to 18789) and can't initiate any.
             policy.path = pkgs.writeText "headscale-acl.json" (builtins.toJSON {
-              groups."group:jack" = ["pixy@" "themis@" "xieshi@"];
+              groups."group:jack" = ["pixy@" "pixy-vm@" "themis@" "xieshi@"];
               tagOwners."tag:openclaw" = ["group:jack"];
               acls = [
                 {
