@@ -1,0 +1,16 @@
+# Passwords are entered interactively, never stored in the Nix store.
+set from = "k@ksio2124.com"
+set use_from = yes
+set imap_user = "k@ksio2124.com"
+set folder = "imaps://k%40ksio2124.com@mail.ksio2124.com:993/"
+set spoolfile = "+INBOX"
+set record = "+Sent"
+set postponed = "+Drafts"
+set trash = "+Trash"
+set smtp_url = "smtps://k%40ksio2124.com@mail.ksio2124.com:465/"
+set ssl_force_tls = yes
+set ssl_verify_host = yes
+set ssl_verify_dates = yes
+set mail_check = 60
+set timeout = 30
+mailboxes "+INBOX" "+Sent" "+Drafts" "+Trash"

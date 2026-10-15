@@ -25,8 +25,9 @@ _: {
           sandbox_mode = "workspace-write";
           web_search = "cached";
 
-          # Home Manager generates a read-only config, so declare repository
+          # Home Manager generates a read-only config, so declare project
           # trust here instead of relying on Codex to save it interactively.
+          projects."${config.home.homeDirectory}".trust_level = "trusted";
           projects."${config.home.homeDirectory}/nixos-config".trust_level = "trusted";
 
           mcp_servers.nixos = {

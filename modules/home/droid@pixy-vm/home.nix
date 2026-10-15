@@ -37,11 +37,14 @@
       age.keyFile = "/home/droid/.config/sops/age/keys.txt";
     };
     home.packages = [
+      pkgs.evince
+      pkgs.nautilus
       pkgs.tailscale
       pkgs.nerd-fonts.fira-code
       pkgs.nerd-fonts.droid-sans-mono
     ];
     fonts.fontconfig.enable = true;
+    xdg.configFile."neomutt/neomuttrc".source = ./neomuttrc;
     programs.wezterm = {
       enable = true;
       enableZshIntegration = true;
