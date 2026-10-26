@@ -7,6 +7,7 @@
       privateUsers = "pick";
       # ephemeral = true;
       hostBridge = "br-isolated";
+      localAddress6 = "fdcf:4b47:cf30::14/64";
       extraFlags = [
         "--load-credential=anki-sync-server-password:${config.sops.secrets."anki-sync-server/password".path}"
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"

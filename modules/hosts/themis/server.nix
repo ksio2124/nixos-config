@@ -24,6 +24,9 @@
         # ULA IPv6 address (see virtualHosts."nextcloud.ksio2124.com"
         # below). IPv6 clients keep going straight to the container.
         "nextcloud.ksio2124.com"
+        "immich.ksio2124.com"
+        "onlyoffice.ksio2124.com"
+        "anki-sync-server.ksio2124.com"
         # Same for mosquitto (mqtt.ksio2124.com) - see streamConfig below.
         "mqtt.ksio2124.com"
       ];
@@ -59,6 +62,16 @@
       # overrides for this same name can leave stale negative-cache
       # entries for _acme-challenge lookups, blocking renewal.
       dnsResolver = "1.1.1.1:53";
+      credentialFiles."CLOUDFLARE_DNS_API_TOKEN_FILE" = config.sops.secrets."garage/cloudflareDnsToken".path;
+    };
+    security.acme.certs."ipv4-container-proxies" = {
+      group = "nginx";
+      domain = "immich.ksio2124.com";
+      extraDomainNames = [
+        "onlyoffice.ksio2124.com"
+        "anki-sync-server.ksio2124.com"
+      ];
+      dnsProvider = "cloudflare";
       credentialFiles."CLOUDFLARE_DNS_API_TOKEN_FILE" = config.sops.secrets."garage/cloudflareDnsToken".path;
     };
     # Host nginx for ACME HTTP-01 challenge for mail subdomain
@@ -123,6 +136,50 @@
             proxy_read_timeout   600s;
             proxy_send_timeout   600s;
             send_timeout         600s;
+          '';
+        };
+      };
+      # IPv4 entry points for the IPv6-only application containers.
+      virtualHosts."immich.ksio2124.com" = {
+        forceSSL = true;
+        useACMEHost = "ipv4-container-proxies";
+        locations."/" = {
+          proxyPass = "https://[fdcf:4b47:cf30::13]";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_ssl_server_name on;
+            proxy_ssl_name immich.ksio2124.com;
+            client_max_body_size 50000M;
+            proxy_read_timeout   600s;
+            proxy_send_timeout   600s;
+            send_timeout         600s;
+          '';
+        };
+      };
+      virtualHosts."onlyoffice.ksio2124.com" = {
+        forceSSL = true;
+        useACMEHost = "ipv4-container-proxies";
+        locations."/" = {
+          proxyPass = "https://[fdcf:4b47:cf30::12]";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_ssl_server_name on;
+            proxy_ssl_name onlyoffice.ksio2124.com;
+          '';
+        };
+      };
+      virtualHosts."anki-sync-server.ksio2124.com" = {
+        forceSSL = true;
+        useACMEHost = "ipv4-container-proxies";
+        locations."/" = {
+          proxyPass = "https://[fdcf:4b47:cf30::14]";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_ssl_server_name on;
+            proxy_ssl_name anki-sync-server.ksio2124.com;
           '';
         };
       };
