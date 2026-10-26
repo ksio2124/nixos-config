@@ -10,6 +10,7 @@
   };
   flake.nixosModules.hostThemis = {
     config,
+    lib,
     pkgs,
     ...
   }: {
@@ -101,7 +102,13 @@
     systemd.targets.suspend.enable = false;
     systemd.targets.hibernate.enable = false;
     systemd.targets.hybrid-sleep.enable = false;
-    virtualisation.vmware.host.enable = true;
+    # machined is also started through D-Bus. On a switch that restarts
+    # machined before sockets.target, its optional Varlink socket cannot
+    # start while the service is already active. NixOS containers register
+    # through machined's D-Bus API, so this socket is unnecessary here.
+    systemd.sockets.systemd-machined.enable = false;
+    # TODO: Re-enable VMware after vmmon and vmnet build for this kernel.
+    virtualisation.vmware.host.enable = false;
 
     # Set your time zone.
     time.timeZone = "America/Los_Angeles";

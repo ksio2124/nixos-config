@@ -1,6 +1,5 @@
 {
   flake.nixosModules.nextcloud = {config, ...}: {
-    sops.secrets."nextcloud/adminpass" = {};
     sops.secrets."nextcloud/postgresqlpass" = {};
 
     # Both nextcloud and postgresql containers autostart in parallel at
@@ -22,7 +21,6 @@
       localAddress6 = "fdcf:4b47:cf30::11/64";
       privateUsers = "pick";
       extraFlags = [
-        "--load-credential=nextcloud-adminpass:${config.sops.secrets."nextcloud/adminpass".path}"
         "--load-credential=nextcloud-postgresqlpass:${config.sops.secrets."nextcloud/postgresqlpass".path}"
         "--load-credential=cloudflare-ddns-credentials:${config.sops.secrets."cloudflare-ddns/credentials".path}"
         "--bind=/mypool/nextcloud:/mypool/nextcloud:idmap"
@@ -89,11 +87,9 @@
             "opcache.interned_strings_buffer" = 32;
           };
           config = {
-            adminuser = "ksio2124";
             dbtype = "pgsql";
             dbpassFile = "/run/credentials/@system/nextcloud-postgresqlpass";
             dbhost = "postgresql.home:5432";
-            adminpassFile = "/run/credentials/@system/nextcloud-adminpass";
           };
           appstoreEnable = false;
         };

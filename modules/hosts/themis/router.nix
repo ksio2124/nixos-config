@@ -386,12 +386,18 @@
     };
     services.avahi = {
       enable = true;
-      allowInterfaces = ["br0"];
       nssmdns6 = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        workstation = true;
+      # Sunshine still supplies these legacy defaults. Use settings below.
+      publish.enable = null;
+      publish.userServices = null;
+      settings = {
+        server.allow-interfaces = ["br0"];
+        publish = {
+          disable-publishing = false;
+          disable-user-service-publishing = false;
+          publish-addresses = true;
+          publish-workstation = true;
+        };
       };
     };
     # Firewall, NAT and reverse-path filtering: see firewall.nix.

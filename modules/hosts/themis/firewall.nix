@@ -26,7 +26,7 @@
           allowedUDPPorts = [41641]; # tailscale
         };
         br0 = {
-          allowedTCPPorts = [22 80 443] ++ sunshineTCP;
+          allowedTCPPorts = [22 53 80 443] ++ sunshineTCP;
           allowedUDPPorts = [53 67 68 5353] ++ sunshineUDP;
         };
         tailscale0 = {
@@ -75,6 +75,12 @@
         chain prerouting {
           type nat hook prerouting priority dstnat; policy accept;
           iifname "wan" tcp dport { ${lib.concatMapStringsSep ", " toString mailPorts} } dnat to 10.0.0.14
+          # LAN clients may use public DNS or a cached WAN address instead
+          # of the split-horizon answer. Match only this router's addresses
+          # so connections to external mail providers remain untouched.
+          # The container routes replies through us, so no SNAT is needed.
+          iifname "br0" fib daddr type local tcp dport { ${lib.concatMapStringsSep ", " toString mailPorts} } dnat to 10.0.0.14
+          iifname "br-isolated" fib daddr type local tcp dport { ${lib.concatMapStringsSep ", " toString mailPorts} } dnat to 10.0.0.14
         }
       '';
     };

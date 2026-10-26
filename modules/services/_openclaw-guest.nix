@@ -147,7 +147,7 @@ in {
     enable = true;
     # Explicit: the module's default picks pkgs.openclaw whenever nixpkgs
     # has it, which is nixpkgs' older build flagged insecure.
-    package = inputs.nix-openclaw.packages.${pkgs.stdenv.hostPlatform.system}.openclaw-gateway;
+    package = (import ./_openclaw-packages.nix {inherit inputs pkgs;}).openclaw-gateway;
     execStartPre = ["+${writeEnv}"];
     environmentFiles = ["-/run/openclaw-env/env"];
     # Tools the agent can use (tool sandbox is off: the VM is the sandbox).
