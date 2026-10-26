@@ -38,39 +38,6 @@
       self.nixosModules.nix
       self.nixosModules.cuda
     ];
-    # Passwordless sudo for jack: host/container diagnostics and command
-    # execution as root inside the headscale container.
-    # sudo matches the path the command resolves to via PATH
-    # (/run/current-system/sw/bin/...), not the /nix/store target, so
-    # ${pkgs.systemd}/bin/... rules never matched a plain `sudo journalctl`.
-    security.sudo.extraRules = [
-      {
-        users = ["jack"];
-        commands = [
-          {
-            command = "/run/current-system/sw/bin/journalctl *";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/systemctl status *";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/machinectl status *";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/machinectl list";
-            options = ["NOPASSWD"];
-          }
-          {
-            command = "/run/current-system/sw/bin/nixos-container run headscale -- *";
-            options = ["NOPASSWD"];
-          }
-        ];
-      }
-    ];
-
     sops.defaultSopsFile = ./secrets/config.yaml;
     sops.defaultSopsFormat = "yaml";
     sops.age.sshKeyPaths = ["/home/jack/.ssh/themis"];
