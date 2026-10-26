@@ -56,6 +56,7 @@
       extraForwardRules = ''
         oifname "br-isolated" tcp dport { 80, 443, 8883 } accept comment "container web + mqtts (IPv6 direct, IPv4 via host proxy)"
         ip daddr 10.0.0.14 tcp dport { ${lib.concatMapStringsSep ", " toString mailPorts} } accept comment "mailserver from LAN (split-horizon DNS)"
+        iifname "br-isolated" oifname "ve-mailserver" ip6 daddr fdcf:4b47:cf30:1::2 tcp dport { 465, 993 } accept comment "Nextcloud to mailserver"
       '';
     };
 

@@ -284,6 +284,7 @@
             ''"nextcloud.home. IN AAAA fdcf:4b47:cf30::11"''
             ''"immich.home. IN AAAA fdcf:4b47:cf30::13"''
             ''"mail.ksio2124.com. IN A 10.0.0.14"''
+            ''"mail.ksio2124.com. IN AAAA fdcf:4b47:cf30:1::2"''
             # Split-horizon: without this, LAN clients resolve the public
             # AAAA (kept current by cloudflare-ddns) and try to reach
             # themis via its own WAN address, which fails with "No route

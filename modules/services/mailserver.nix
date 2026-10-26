@@ -10,14 +10,18 @@
     ...
   }: {
     sops.secrets."mailserver/hashedPasswordFile/k" = {};
+    sops.secrets."mailtrap/api_token" = {};
     containers.mailserver = {
       autoStart = true;
       privateNetwork = true;
       hostAddress = "10.0.0.13";
       localAddress = "10.0.0.14";
+      hostAddress6 = "fdcf:4b47:cf30:1::1";
+      localAddress6 = "fdcf:4b47:cf30:1::2";
       privateUsers = "pick";
       extraFlags = [
         "--load-credential=mailserver-hashedPasswordFile-k:${config.sops.secrets."mailserver/hashedPasswordFile/k".path}"
+        "--load-credential=mailtrap-api-token:${config.sops.secrets."mailtrap/api_token".path}"
         "--bind=/mypool/mailserver/vmail:/mypool/mailserver/vmail:idmap"
         "--bind=/mypool/mailserver/dkim:/mypool/mailserver/dkim:idmap"
         "--bind=/mypool/mailserver/dovecot:/mypool/mailserver/dovecot:idmap"
@@ -47,6 +51,30 @@
             995
           ];
         };
+
+        services.postfix = {
+          settings.main = {
+            relayhost = ["[live.smtp.mailtrap.io]:587"];
+            smtp_tls_security_level = lib.mkForce "encrypt";
+            smtp_sasl_auth_enable = "yes";
+            smtp_sasl_password_maps = "hash:/etc/postfix/sasl_passwd";
+            smtp_sasl_security_options = "noanonymous";
+            smtp_sasl_tls_security_options = "noanonymous";
+            # The private IPv6 link is for internal clients. Keep outbound
+            # SMTP on IPv4 while using Mailtrap as the smarthost.
+            smtp_address_preference = "ipv4";
+          };
+          mapFiles."sasl_passwd" = "/run/mailserver-secrets/sasl_passwd";
+        };
+
+        # Generate Postfix's password map at runtime so the API key never
+        # enters the Nix store. postfix-setup compiles the map immediately
+        # after this pre-start hook runs.
+        systemd.services.postfix-setup.preStart = ''
+          token="$(cat /run/credentials/@system/mailtrap-api-token)"
+          umask 077
+          printf '%s\n' "[live.smtp.mailtrap.io]:587 api:$token" > /run/mailserver-secrets/sasl_passwd
+        '';
         systemd.tmpfiles.rules = [
           "d /run/mailserver-secrets 0750 root root -"
           "C /run/mailserver-secrets/hashedPasswordFile-k 0444 root root - /run/credentials/@system/mailserver-hashedPasswordFile-k"

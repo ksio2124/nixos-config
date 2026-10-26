@@ -31,6 +31,10 @@
         ...
       }: {
         networking.nameservers = ["fdcf:4b47:cf30::1"];
+        # The mailserver has an IPv6 address on its private veth. Pin this
+        # hostname here because the internal DNS A record still serves LAN
+        # clients that use the mailserver's IPv4 address.
+        networking.hosts."fdcf:4b47:cf30:1::2" = ["mail.ksio2124.com"];
 
         # nextcloud-setup.service (occ install/upgrade) runs once at boot
         # with no retry, and has been observed failing transiently right
