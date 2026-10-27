@@ -162,6 +162,18 @@
 
     environment.systemPackages = [];
 
+    security.sudo.extraRules = [
+      {
+        users = ["jack"];
+        commands = [
+          {
+            command = "ALL";
+            options = ["NOPASSWD"];
+          }
+        ];
+      }
+    ];
+
     # Enable the OpenSSH daemon.
     services.openssh = {
       enable = true;
@@ -202,8 +214,8 @@
       capSysAdmin = true; # Necessary for capture
       openFirewall = false;
       settings = {
-        # Force Sunshine to use Wayland/wlr capture
-        #capture_method = "wlr";
+        # Avoid blocking startup on GNOME's interactive screen-sharing portal.
+        capture = "kms";
         # Define the encoder (nvenc for NVIDIA, vaapi for AMD/Intel)
         encoder = "nvenc";
         address_family = "both";
