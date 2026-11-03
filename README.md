@@ -13,8 +13,10 @@ Home Manager also manages a standalone user environment on a non-NixOS machine.
 
 | Flake output | Platform | Purpose |
 | --- | --- | --- |
+| `nixosConfigurations.deli13` | `x86_64-linux` | NixOS Plasma desktop for deli13 |
 | `nixosConfigurations.themis` | `x86_64-linux` | NixOS host with routing, storage, and self-hosted services |
 | `nixosConfigurations.xieshi` | `x86_64-linux` | NixOS host with desktop and device configuration |
+| `homeConfigurations."jack@deli13"` | `x86_64-linux` | User applications and development environment for deli13 |
 | `homeConfigurations."jack@themis"` | `x86_64-linux` | User applications and development environment for themis |
 | `homeConfigurations."jack@xieshi"` | `x86_64-linux` | User applications and development environment for xieshi |
 | `homeConfigurations."droid@pixy-vm"` | `aarch64-linux` | Standalone Home Manager environment for droid |
@@ -79,6 +81,16 @@ Secrets are managed with sops-nix and age. Activation of secret-backed services
 requires the appropriate decryption keys on the target machine. Never commit
 plaintext credentials or private keys. Agent work must not read or expose
 `modules/hosts/*/secrets/` or `.env` files.
+
+## deli13 TODO
+
+- [x] Set up Lanzaboote for Secure Boot.
+- [x] Configure encrypted swap and zswap.
+- [ ] Move swap onto persistent storage when setting up Preservation.
+- [ ] Set up preservation.
+- [ ] Keep `/tmp` and `/var/tmp` on the encrypted SSD using persistent bind mounts, with mode `1777` and `boot.tmp.useTmpfs = false`.
+- [ ] Keep `/home` persistent, including `/home/jack/.cache`, and `/nix` on disk.
+- [ ] Configure age-based cleanup for persistent temporary directories.
 
 ## Inspiration
 
