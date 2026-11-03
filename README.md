@@ -86,11 +86,14 @@ plaintext credentials or private keys. Agent work must not read or expose
 
 - [x] Set up Lanzaboote for Secure Boot.
 - [x] Configure encrypted swap and zswap.
-- [ ] Move swap onto persistent storage when setting up Preservation.
-- [ ] Set up preservation.
-- [ ] Keep `/tmp` and `/var/tmp` on the encrypted SSD using persistent bind mounts, with mode `1777` and `boot.tmp.useTmpfs = false`.
-- [ ] Keep `/home` persistent, including `/home/jack/.cache`, and `/nix` on disk.
-- [ ] Configure age-based cleanup for persistent temporary directories.
+- [x] Move swap onto persistent storage when setting up Preservation.
+- [x] Set up preservation.
+- [x] Keep `/tmp` and `/var/tmp` on the encrypted SSD using persistent bind mounts, with mode `1777` and `boot.tmp.useTmpfs = false`.
+- [x] Keep `/home` persistent, including `/home/jack/.cache`, and `/nix` on disk.
+- [x] Configure age-based cleanup for persistent temporary directories.
+
+See [deli13 Preservation setup and recovery](modules/hosts/deli13/PRESERVATION.md)
+for the filesystem layout, validation commands, and recovery instructions.
 
 ## Inspiration
 

@@ -21,8 +21,15 @@
     boot.extraModulePackages = [];
 
     fileSystems."/" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = ["size=1G" "mode=0755"];
+    };
+
+    fileSystems."/persistent" = {
       device = "/dev/mapper/luks-6e71c670-7288-401d-8f78-0752b03ac28c";
       fsType = "ext4";
+      neededForBoot = true;
     };
 
     boot.initrd.luks.devices."luks-6e71c670-7288-401d-8f78-0752b03ac28c".device = "/dev/disk/by-uuid/6e71c670-7288-401d-8f78-0752b03ac28c";
@@ -39,7 +46,7 @@
     # Stored inside the LUKS-encrypted root filesystem, using its existing key.
     swapDevices = [
       {
-        device = "/var/lib/swapfile";
+        device = "/persistent/var/lib/swapfile";
         size = 16 * 1024; # MiB
       }
     ];

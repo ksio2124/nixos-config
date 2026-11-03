@@ -30,6 +30,7 @@
     boot.zswap.enable = true;
 
     hardware.enableAllFirmware = true;
+    hardware.intel-gpu-tools.enable = true;
 
     networking.hostName = "deli13";
     networking.networkmanager.enable = true;
