@@ -1,8 +1,5 @@
 _: {
-  flake.homeModules.homeSystem_tools = {
-    pkgs,
-    ...
-  }: {
+  flake.homeModules.homeSystem_tools = {pkgs, ...}: {
     nixpkgs.config.permittedInsecurePackages = [
       "ventoy-1.1.18"
     ];
@@ -63,6 +60,7 @@ _: {
       pkgs.opentofu
       pkgs.neomutt
       pkgs.msmtp
+      pkgs.picocom
       # pkgs.rclone-ui
     ];
     programs = {
