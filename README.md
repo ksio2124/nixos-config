@@ -95,6 +95,44 @@ plaintext credentials or private keys. Agent work must not read or expose
 See [deli13 Preservation setup and recovery](modules/hosts/deli13/PRESERVATION.md)
 for the filesystem layout, validation commands, and recovery instructions.
 
+### CPU performance profile and fan control — 2026-11-03
+
+Target: Dell XPS 13 9370, Intel Core i5-8250U / UHD 620, BIOS 1.21.0.
+
+- [x] Add and activate the Dell-specific [fan controller](modules/hosts/deli13/fan-control.nix), using CPU package temperature and both fans.
+- [x] Configure fan hysteresis: low at 55°C, high at 70°C, back to low below 62°C, and off below 48°C. Observed speeds are approximately 4,400 / 7,000 RPM.
+- [x] Add BIOS-control restoration on service stop/failure, a watchdog, stalled-fan detection, and suspend/resume hooks. Simulated failure tests and the NixOS build passed; live fan transitions were verified.
+- [x] Record CPU/GPU benchmarks and diagnose the sustained CPU power cap: MSR PL1 reports 27 W, but the separate enabled MMIO PL1 is 15 W, with an approximately 28-second window. Both report a 51 W burst limit.
+- [x] Test a temporary 18 W MMIO PL1 setting and restore 15 W afterward. The setting held during the test; settled power increased from 14.78 to 17.86 W, effective clocks from 2.65 to 2.83 GHz, and throughput from 2,212 to 2,364 events/s (about 7%). Settled peak temperature increased from 67°C to 73°C, with no active thermal/current-limit flags in that window. The initial burst peaked at 90°C during the 18 W trial.
+- [x] Add a persistent [25 W MMIO sustained limit](modules/hosts/deli13/cpu-power-limit.nix), as requested on 2026-11-04 after testing fresh MX-4. Apply at boot and resume, verify readback, and restore 15 W on service stop/failure. Stop the raised limit if the custom fan controller stops. BIOS, voltage, MSR limits, and burst limits are unchanged.
+- [ ] Add selectable 15 W / enhanced performance profiles coordinated with power-profiles-daemon. The current fixed 25 W configuration applies on both AC and battery, independently of the selected desktop power profile.
+- [ ] Verify power-limit write/readback, firmware overrides, reboot and suspend/resume behavior, and restoration on service failure. Avoid repeatedly fighting firmware if it rejects a setting.
+- [ ] Validate the fan controller's real suspend/resume, restart, and BIOS-fallback behavior; tune noise and temperature thresholds against sustained workloads if needed.
+- [ ] Run longer CPU and combined CPU/GPU tests with temperatures, actual package watts, effective clocks, fan RPM, and active limit flags recorded. Compare repeated runs under matching conditions before choosing a persistent limit or testing a higher one.
+- [ ] Build-check the profile configuration and obtain explicit approval before switching generations. Document profile selection, rollback, and benchmark results.
+
+The declarative CPU setting is **25 W** and was activated on 2026-11-04.
+The service applies it once at startup and resume; it does not
+continuously override firmware changes. To return temporarily to 15 W after
+activation, run `sudo systemctl stop dell-cpu-power-limit`; to reapply 25 W, run
+`sudo systemctl start dell-cpu-power-limit`. Removing the module and rebuilding
+returns to the factory baseline. The custom fan curve remains configured.
+
+Benchmark scripts, raw results, and reports are saved locally under
+`/home/jack/benchmarks/`, including `power-20261103-154106/REPORT.md` (15 W)
+and `power-20261103-154731/REPORT.md` (18 W). These artifacts are outside this
+repository. The 18 W result is a short CPU-only experiment, not a long stability
+or battery-life validation. Fresh MX-4 results are in
+`power25-alltemps-20261104-103904/REPORT.md` (25 W: 86.8°C final-minute CPU
+average, 92°C overall peak) and `power22-alltemps-20261104-104839/REPORT.md`
+(matched 22 W paste comparison). These short CPU-only tests do not validate
+continuous motherboard regulator temperatures or battery operation.
+The later stress run `stress25-hwthrottle-20261104-110241/` reached 99°C during
+the initial load, recorded thermal throttling, and averaged 91.3°C in its final
+minute before being stopped manually after about 222 seconds. The persistent
+25 W setting remains selected; longer-load thermal behavior is not validated.
+No custom BIOS is needed for the tested power-limit change.
+
 ## Inspiration
 
 - [Misterio77/nix-starter-configs](https://github.com/Misterio77/nix-starter-configs)
