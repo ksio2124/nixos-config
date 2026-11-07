@@ -31,6 +31,10 @@
 
     hardware.enableAllFirmware = true;
     hardware.intel-gpu-tools.enable = true;
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
 
     networking.hostName = "deli13";
     networking.networkmanager.enable = true;
@@ -93,10 +97,14 @@
     programs.git.enable = true;
 
     environment.systemPackages = with pkgs; [
-      codex
       kdePackages.kate
       sbctl
     ];
+    services.tailscale = {
+      enable = true;
+      openFirewall = true;
+      useRoutingFeatures = "client";
+    };
 
     system.stateVersion = "26.05";
   };
