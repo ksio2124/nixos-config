@@ -10,6 +10,8 @@
     ...
   }: {
     sops.secrets."mailserver/hashedPasswordFile/k" = {};
+    sops.secrets."mailserver/hashedPasswordFile/i" = {};
+    sops.secrets."mailserver/hashedPasswordFile/c" = {};
     sops.secrets."mailtrap/api_token" = {};
     containers.mailserver = {
       autoStart = true;
@@ -21,6 +23,8 @@
       privateUsers = "pick";
       extraFlags = [
         "--load-credential=mailserver-hashedPasswordFile-k:${config.sops.secrets."mailserver/hashedPasswordFile/k".path}"
+        "--load-credential=mailserver-hashedPasswordFile-i:${config.sops.secrets."mailserver/hashedPasswordFile/i".path}"
+        "--load-credential=mailserver-hashedPasswordFile-c:${config.sops.secrets."mailserver/hashedPasswordFile/c".path}"
         "--load-credential=mailtrap-api-token:${config.sops.secrets."mailtrap/api_token".path}"
         "--bind=/mypool/mailserver/vmail:/mypool/mailserver/vmail:idmap"
         "--bind=/mypool/mailserver/dkim:/mypool/mailserver/dkim:idmap"
@@ -78,6 +82,8 @@
         systemd.tmpfiles.rules = [
           "d /run/mailserver-secrets 0750 root root -"
           "C /run/mailserver-secrets/hashedPasswordFile-k 0444 root root - /run/credentials/@system/mailserver-hashedPasswordFile-k"
+          "C /run/mailserver-secrets/hashedPasswordFile-i 0444 root root - /run/credentials/@system/mailserver-hashedPasswordFile-i"
+          "C /run/mailserver-secrets/hashedPasswordFile-c 0444 root root - /run/credentials/@system/mailserver-hashedPasswordFile-c"
         ];
 
         # System
@@ -128,6 +134,12 @@
           accounts = {
             "k@ksio2124.com" = {
               hashedPasswordFile = "/run/mailserver-secrets/hashedPasswordFile-k";
+            };
+            "i@ksio2124.com" = {
+              hashedPasswordFile = "/run/mailserver-secrets/hashedPasswordFile-i";
+            };
+            "c@ksio2124.com" = {
+              hashedPasswordFile = "/run/mailserver-secrets/hashedPasswordFile-c";
             };
           };
 

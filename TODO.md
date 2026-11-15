@@ -1,5 +1,18 @@
 # TODO
 
+## Remove temporary GNU config download workaround
+
+- [ ] Remove `scripts/prefetch-gnu-config.sh` once the pinned nixpkgs GNU config downloads work reliably through their original URLs or an upstream mirror fix is included in `flake.lock`.
+
+Workaround: run `bash scripts/prefetch-gnu-config.sh` before building if Savannah
+returns 404 or times out for `config.sub` / `config.guess`. It imports the files
+from `cgit.git.savannah.gnu.org` using nixpkgs' exact revision, store names, and
+SHA-256 hashes; it does not change package definitions or flake pins. Garbage
+collection can remove these unrooted files, so rerun if necessary. Before removing
+the script, verify the upstream downloads independently of the prefetched store
+files, then build Themis successfully. Related endpoint report:
+https://github.com/NixOS/nixpkgs/pull/483034 (not an exact report for this failure).
+
 ## Package ixgbe in nixpkgs, following ixgbevf
 
 Draft PR: https://github.com/NixOS/nixpkgs/pull/583326 (`linuxPackages.ixgbe: init at 6.4.5`). Builds on x86_64-linux with Linux 6.18.60; Linux >= 7.3 is marked broken after a devlink API build failure on 7.3.1. Runtime hardware validation and maintainer assignment remain before marking ready.
