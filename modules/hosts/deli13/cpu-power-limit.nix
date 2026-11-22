@@ -7,7 +7,7 @@ _: {
     controller = "${pkgs.python3}/bin/python3 ${./_cpu-power-limit.py}";
   in {
     systemd.services.dell-cpu-power-limit = {
-      description = "XPS 9370 25 W sustained CPU package power";
+      description = "XPS 9370 28 W sustained CPU package power";
       wantedBy = ["multi-user.target"];
       after = [
         "systemd-modules-load.service"

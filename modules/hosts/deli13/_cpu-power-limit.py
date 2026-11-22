@@ -28,7 +28,7 @@ def set_limit(watts, root=Path('/sys'), sleep=time.sleep):
 
 if __name__ == '__main__':
     if sys.argv[1:] == ['--apply']:
-        set_limit(25)
+        set_limit(28)
     elif sys.argv[1:] == ['--restore']:
         set_limit(15)
     else:
